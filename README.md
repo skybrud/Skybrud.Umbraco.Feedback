@@ -2,7 +2,7 @@
 
 ### Brug i frontend ###
 
-Her et eksempel, der tager udgangspunkt i Aabenraa Kommune's løsning.
+Her et eksempel, der tager udgangspunkt i DC intranet's løsning.
 
 Felterne *navn*, *email* og *comment* er alle valgfri. Feltet *rating* kan konfigureres med ønskede muligheder for bedømmelse. Standard i modulet er *tilfreds*, *neutral* og *utilfreds*. 
 
