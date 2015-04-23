@@ -1,0 +1,13 @@
+﻿<div class="feedback-change-status" ng-controller="Skybrud.Feedback.ChangeStatusController" ng-class="{loading: loading}">
+    <h3>Change status</h3>
+    <loader></loader>
+    <div ng-if="!loading && statuses != null">
+        <ul>
+            <li ng-repeat="status in statuses" ng-class="{selected: entry.status.alias == status.alias}">
+                <div class="circle {{status.alias}}"></div>
+                <a href="#" prevent-default="" ng-click="selectStatus(status);">{{status.name}}</a>
+            </li>
+        </ul>
+    </div>
+    <a href="#" prevent-default="" ng-click="close()" class="btn">Cancel</a>
+</div>

@@ -1,0 +1,194 @@
+﻿<div class="feedback-overview" ng-controller="Skybrud.Feedback.SiteListController">
+
+    <div class="list" ng-class="{loading: loading}">
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        <a href="#" prevent-default="" ng-click="sort('pagename', 'asc');">Page</a>
+                        <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('pagename', 'asc'), 'icon-navigation-up': isSortDirection('pagename', 'desc')}"></i>
+                    </th>
+                    <th ng-if="model.config.showAssignedToColumn">Assigned to</th>
+                    <th ng-if="model.config.showNameColumn">Name</th>
+                    <th>Comment</th>
+                    <th>
+                        <a href="#" prevent-default="" ng-click="sort('rating', 'asc');">Rating</a>
+                        <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('rating', 'asc'), 'icon-navigation-up': isSortDirection('rating', 'desc')}"></i>
+                    </th>
+                    <th>
+                        <a href="#" prevent-default="" ng-click="sort('status', 'asc');">Status</a>
+                        <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('status', 'asc'), 'icon-navigation-up': isSortDirection('status', 'desc')}"></i>
+                    </th>
+                    <th>
+                        <a href="#" prevent-default="" ng-click="sort('created', 'desc');">Added</a>
+                        <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('created', 'asc'), 'icon-navigation-up': isSortDirection('created', 'desc')}"></i>
+                    </th>
+                </tr>
+            </thead>
+            <tbody ng-if="!items || items.length == 0" class="empty">
+                <tr>
+                    <td colspan="6"></td>
+                </tr>
+            </tbody>
+            <tbody ng-repeat="item in items">
+                <tr ng-click="item.expanded = (item.expanded ? false : true);" style="cursor: pointer;" ng-class="{expanded: item.expanded}">
+                    <td class="page">
+                        <span ng-show="item.page">{{item.page.name}}</span>
+                        <span ng-show="!item.page"><em>Siden findes ikke længere (ID: {{item.pageId}})</em></span>
+                    </td>
+                    <td class="nowrap" ng-if="model.config.showAssignedToColumn">
+                        <span ng-show="item.assignedTo">{{item.assignedTo.name}}</span>
+                        <span ng-show="!item.assignedTo"><em>Not assigned</em></span>
+                    </td>
+                    <td class="nowrap" ng-if="model.config.showNameColumn">
+                        <span ng-show="item.name">{{item.name}}</span>
+                        <span ng-show="!item.name"><em>N/A</em></span>
+                    </td>
+                    <td class="nowrap">
+                        {{item.comment.length > 0 ? 'Yes' : 'No'}}
+                    </td>
+                    <td class="nowrap rating">
+                        <div>
+                            <div class="circle {{item.rating.alias}}"></div>
+                            {{item.rating.name}}
+                        </div>
+                    </td>
+                    <td class="nowrap status">
+                        <div>
+                            <div class="circle {{item.status.alias}}"></div>
+                            {{item.status.name}}
+                        </div>
+                    </td>
+                    <td class="nowrap">
+                        {{item.created}}
+                    </td>
+                </tr>
+                <tr ng-show="item.expanded">
+                    <td colspan="7" style="padding: 0;">
+                        
+                        <div class="spacer"></div>
+                        
+                        <table class="data">
+                            <tr>
+                                <th>ID</th>
+                                <td>{{item.id}}</td>
+                            </tr>
+                            <tr>
+                                <th>Page ID</th>
+                                <td>{{item.pageId}}</td>
+                            </tr>
+                            <tr>
+                                <th>Page Title</th>
+                                <td>
+                                    <span ng-show="item.page">{{item.page.name}}</span>
+                                    <span ng-show="!item.page"><em>The page no longer exists</em></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>URL</th>
+                                <td>
+                                    <span ng-show="item.page">
+                                        {{item.page.url}}
+                                    </span>
+                                    <span ng-show="!item.page"><em>The page no longer exists</em></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Assigned to</th>
+                                <td>
+                                    <span ng-show="item.assignedTo">
+                                        {{item.assignedTo.name}}
+                                    </span>
+                                    <span ng-show="!item.assignedTo"><em>Not assigned</em></span>
+                                </td>
+                            </tr>
+                            <tr class="rating">
+                                <th>Rating</th>
+                                <td>
+                                    <div>
+                                        <div class="circle {{item.rating.alias}}"></div>
+                                        {{item.rating.name}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Name</th>
+                                <td>
+                                    <span ng-show="item.name">{{item.name}}</span>
+                                    <span ng-show="!item.name"><em>N/A</em></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>E-mail</th>
+                                <td>
+                                    <span ng-show="item.email">{{item.email}}</span>
+                                    <span ng-show="!item.email"><em>N/A</em></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Added</th>
+                                <td>{{item.created}}</td>
+                            </tr>
+                            <tr class="status">
+                                <th>Status</th>
+                                <td>
+                                    <div>
+                                        <div class="circle {{item.status.alias}}"></div>
+                                        {{item.status.name}}
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Comment</th>
+                                <td>
+                                    <div ng-show="item.comment.length > 0" ng-repeat="line in item.comment">
+                                        <div style="min-height: 11px;">{{line}}</div>
+                                    </div>
+                                    <span ng-show="item.comment.length == 0"><em>N/A</em></span>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <div class="options">
+                            <a href="#" class="btn" ng-click="archive(item.id)" prevent-default="">Archive</a>
+                            <a href="#" class="btn" ng-click="openChangeStatus(item)" prevent-default="">Change status</a>
+                            <a href="#" class="btn" ng-click="openSelectResponsible(item)" prevent-default="">Select responsible</a>
+                            <a ng-show="item.page" href="/umbraco/#/content/content/edit/{{item.pageId}}" class="btn">Show in Umbraco</a>
+                            <a ng-show="item.page" href="{{item.page.url}}" target="_blank" class="btn">Show at website</a>
+                        </div>
+                        
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="7">
+                        <div class="pull-left"></div>
+                        <div class="pagination pagination-right" style="margin: 0;">
+                            <ul>
+                                <li ng-class="{disabled:pagination.page <= 1}">
+                                    <a href="#" ng-click="prev()" prevent-default="">
+                                        <localize key="general_previous" class="ng-isolate-scope ng-scope">Previous</localize>
+                                    </a>
+                                </li>
+                                <li ng-repeat="pgn in pagination.pagination" ng-class="{active: pgn.isActive}">
+                                    <a href="#" ng-click="updateList(pgn.val)" prevent-default="">{{pgn.val}}</a>
+                                </li>
+                                <li ng-class="{disabled:pagination.page >= pagination.pages}" class="">
+                                    <a href="#" ng-click="next()" prevent-default="">
+                                        <localize key="general_next" class="ng-isolate-scope ng-scope">Next</localize>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </th>
+                </tr>
+            </tfoot>
+            
+
+        </table>
+        <loader></loader>
+    </div>
+    
+</div>

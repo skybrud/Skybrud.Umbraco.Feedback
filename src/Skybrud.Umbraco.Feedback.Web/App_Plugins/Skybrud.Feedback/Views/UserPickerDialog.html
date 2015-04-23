@@ -1,0 +1,15 @@
+﻿<div class="FeedbackUserPickerDialog" ng-controller="Skybrud.Feedback.UserPickerDialogController" ng-class="{loading: loading}">
+    
+    <h3>Select user</h3>
+    <loader></loader>
+    <div ng-if="!loading && users != null">
+        <ul>
+            <li ng-repeat="user in users">
+                <i class="icon-user"></i>
+                <a href="#" prevent-default="" ng-click="select(user);">{{user.name}}</a> <span style="font-size: 12px;">({{user.email}})</span>
+            </li>
+        </ul>
+    </div>
+    <a href="#" prevent-default="" ng-click="close()" class="btn">Cancel</a>
+    
+</div>

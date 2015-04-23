@@ -1,0 +1,51 @@
+﻿{
+	propertyEditors: [
+		{ 
+			alias: "Skybrud.Feedback.SiteList",
+			name: "Skybrud.Feedback - Feedback på sideniveau",
+			editor: {
+				view: "~/App_Plugins/Skybrud.Feedback/Views/List.html",
+				hideLabel: true
+			},
+			prevalues: {
+				fields: [
+					{
+						label: "Limit",
+						description: "The amount of items to show on each page.",
+						key: "limit",
+						view: "number"
+					},
+					{
+						label: "Show \"Assigned To\" column",
+						key: "showAssignedToColumn",
+						view: "boolean"
+					},
+					{
+						label: "Show \"Name\" column",
+						key: "showNameColumn",
+						view: "boolean"
+					}
+				]
+			}
+		},
+		{ 
+			alias: "Skybrud.Feedback.UserPicker",
+			name: "Skybrud.Feedback - User Picker",
+			editor: {
+				view: "~/App_Plugins/Skybrud.Feedback/Views/UserPicker.html"
+			}
+		}
+	],
+	javascript: [
+		'~/App_Plugins/Skybrud.Feedback/Resources/feedbackService.js',
+		'~/App_Plugins/Skybrud.Feedback/Directives/loader.js',
+		'~/App_Plugins/Skybrud.Feedback/Controllers/SiteList.js',
+		'~/App_Plugins/Skybrud.Feedback/Controllers/ChangeStatus.js',
+		'~/App_Plugins/Skybrud.Feedback/Controllers/SelectResponsible.js',
+		'~/App_Plugins/Skybrud.Feedback/Controllers/UserPicker.js',
+		'~/App_Plugins/Skybrud.Feedback/Controllers/UserPickerDialog.js'
+	],
+	css: [
+		'~/App_Plugins/Skybrud.Feedback/Feedback.css'
+	] 
+}
