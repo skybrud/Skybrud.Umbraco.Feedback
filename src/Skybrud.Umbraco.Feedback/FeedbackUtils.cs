@@ -3,7 +3,6 @@ using System.Linq;
 using Skybrud.Umbraco.Feedback.Interfaces;
 using Skybrud.Umbraco.Feedback.Model;
 using Umbraco.Core;
-using Umbraco.Core.Logging;
 using Umbraco.Core.Persistence;
 
 namespace Skybrud.Umbraco.Feedback {
@@ -33,8 +32,11 @@ namespace Skybrud.Umbraco.Feedback {
             // Call this to make sure the users have been loaded before quering the database (otherwise we might exceptions depending on the database provider)
             Dictionary<int, IFeedbackUser> users = FeedbackModule.Instance.GetUsers();
 
+            //Sql sql = new Sql().Select("*").From("SkybrudFeedback").OrderBy("created DESC");
+            Sql sql = new Sql("SELECT * FROM SkybrudFeedback WHERE Archived = 0 ORDER BY created DESC");
+
             return (
-                from entry in Database.Query<FeedbackDatabaseEntry>(new Sql().Select("*").From("SkybrudFeedback").OrderBy("created DESC"))
+                from entry in Database.Query<FeedbackDatabaseEntry>(sql)
                 select new FeedbackEntry(entry, users)
             ).ToArray();
 
@@ -53,8 +55,11 @@ namespace Skybrud.Umbraco.Feedback {
             // Call this to make sure the users have been loaded before quering the database (otherwise we might exceptions depending on the database provider)
             Dictionary<int, IFeedbackUser> users = FeedbackModule.Instance.GetUsers();
 
+            //Sql sql = new Sql().Select("*").From("SkybrudFeedback").Where<FeedbackDatabaseEntry>(x => x.SiteId == siteId && !x.IsArchived).OrderBy("created DESC");
+            Sql sql = new Sql("SELECT * FROM SkybrudFeedback WHERE SiteId = @0 AND Archived = 0 ORDER BY created DESC", siteId);
+
             // Make sure to convert to an array or similar here so the database is queried immidiately (otherwise we might exceptions depending on the database provider)
-            FeedbackDatabaseEntry[] entries = Database.Query<FeedbackDatabaseEntry>(new Sql().Select("*").From("SkybrudFeedback").Where<FeedbackDatabaseEntry>(x => x.SiteId == siteId && !x.IsArchived).OrderBy("created DESC")).ToArray();
+            FeedbackDatabaseEntry[] entries = Database.Query<FeedbackDatabaseEntry>(sql).ToArray();
 
             return (
                 from entry in entries
