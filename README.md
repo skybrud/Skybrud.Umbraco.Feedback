@@ -4,7 +4,7 @@
 
 Her et eksempel, der tager udgangspunkt i DC intranet's løsning.
 
-Felterne *navn*, *email* og *comment* er alle valgfri. Feltet *rating* kan konfigureres med ønskede muligheder for bedømmelse. Standard i modulet er *tilfreds*, *neutral* og *utilfreds*. 
+Felterne *navn*, *email* og *comment* er alle valgfri. Feltet *rating* kan konfigureres med ønskede muligheder for bedømmelse. Standard i modulet er *positive* og *negative*. 
 
 ```javascript
 $.ajax({
@@ -15,10 +15,14 @@ $.ajax({
         pageId: $('body').data('pageid'),
         name: 'Filip Bech Bruun-Larsen',
         email: 'fbruun@skybrud.dk',
-        rating: 'tilfreds',
+        rating: 'positive',
         comment: 'Ham Bjerner er faktisk ret flink'
     }
 }).done(function(r){
+
+    console.log( JSON.stringify(r, null, '  ') );
+
+}).error(function(r){
 
     console.log( JSON.stringify(r, null, '  ') );
 
@@ -35,4 +39,4 @@ Tilsvarende hvis noget går galt, vil serveren svare tilbage noget i stil med:
 
 `{ "meta": { "code": 500, "error": "Øv!" }, "data": null }`
 
-Værdien i error vil være en fejlbeskrivelse på dansk, som gerne må vises til brugeren.
+Værdien i error vil være en fejlbeskrivelse, som gerne må vises til brugeren.
