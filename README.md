@@ -17,7 +17,7 @@
 
 Her et eksempel, der tager udgangspunkt i DC intranet's løsning.
 
-Felterne `name`, `email` og `comment` er som udgangspunkt alle valgfri, men kan konfigureres til, at skulle udfyldes. Feltet *rating* angives til aliaset for den ønskede rating (se mere under [ratings](#markdown-header-ratings)). Standard ratings i modulet er **Positive** (alias: `positive`) og **Negative** (alias: `negative`). 
+Felterne `name`, `email` og `comment` er som udgangspunkt alle valgfri, men kan konfigureres til, at skulle udfyldes. Feltet `rating` angives til aliaset for den ønskede rating (se mere under [ratings](#markdown-header-ratings)). Standard ratings i modulet er **Positive** (alias: `positive`) og **Negative** (alias: `negative`). 
 
 ```javascript
 $.ajax({
