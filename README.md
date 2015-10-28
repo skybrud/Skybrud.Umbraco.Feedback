@@ -4,12 +4,20 @@
 
 * [Brug i frontend](#markdown-header-brug-i-frontend)
 * [Plugins](#markdown-header-plugins)
+    * [GetUsers](#markdown-header-getusers)
+    * [OnEntrySubmitting](#markdown-header-onentrysubmitting)
+    * [OnEntrySubmitted](#markdown-header-onentrysubmitted)
+    * [OnUserAssigned](#markdown-header-onuserassigned)
+* [Config](#markdown-header-config)
+    * [Statuses](#markdown-header-statuses)
+    * [Profiles](#markdown-header-profiles)
+        * [Ratings](#markdown-header-ratings)
 
 ## Brug i frontend ##
 
 Her et eksempel, der tager udgangspunkt i DC intranet's løsning.
 
-Felterne *name*, *email* og *comment* er som udgangspunkt alle valgfri, men kan konfigureres til, at skulle udfyldes. Feltet *rating* kan konfigureres med ønskede muligheder for bedømmelse. Standard i modulet er *positive* og *negative*. 
+Felterne `name`, `email` og `comment` er som udgangspunkt alle valgfri, men kan konfigureres til, at skulle udfyldes. Feltet *rating* angives til aliaset for den ønskede rating (se mere under [ratings](#markdown-header-ratings)). Standard ratings i modulet er **Positive** (alias: `positive`) og **Negative** (alias: `negative`). 
 
 ```javascript
 $.ajax({
@@ -48,7 +56,7 @@ Værdien i error vil være en fejlbeskrivelse, som gerne må vises til brugeren.
 
 ## Plugins
 
-Konfigurationen af Feedback-modulet sker gennem kode, hvor man i så fald kan lave en klasse, der implementerer interfacet `IFeedbackPlugin` (eller blot nedarver fra den abstrakte klasse `IFeedbackPlugin`).
+Konfigurationen af Feedback-modulet sker gennem kode, hvor man i så fald kan lave en klasse, der implementerer interfacet `IFeedbackPlugin` (eller blot nedarver fra den abstrakte klasse `FeedbackPlugin`).
 
 Et custom plugin kan registreres som følgende:
 
@@ -282,3 +290,30 @@ public override void OnEntryResultRender(FeedbackModule module, FeedbackEntryRes
 
 }
 ```
+
+## Config
+
+I forhold til konfigurationen, var det tanken, at man kunne angive denne i `~/config/SkybrudFeedback.config`, men dette er endnu ikke blevet implementeret. Feedback-modulet kører derfor med en fast konfiguration.
+
+### Statuses
+
+Konfiguration definerer tre valgmuligheder ift. til en kommentar's status. I standardkonfigurationen er der defineres disse tre:
+
+* New (ny)
+* In progress (inprogress)
+* Closed (closed)
+
+En ny kommentar vil indledelsesvist blive markeret som **New**, mens en redaktør i backoffice efterfølgende kan ændre til en anden status - eller tilbage til **New** for den sags skyld.
+
+### Profiles
+
+Konfigurationen definerer også en eller flere profiler. Feedback-modulet har en standardprofil for hele løsningen, men det er desuden muligt, at definere et profil for et givent site, som så tager over i stedet.
+
+#### Ratings
+
+Hver enkelt profil definerer en række ratings, som det er muligt for brugeren af hjemmesiden at vælge mellem, når han eller hun skal tilføje en ny kommentar. I den globale standardprofil er der defineret følgende ratings:
+
+* Positive (positive)
+* Negative (negative)
+
+Såfremt der skal tilføjes flere rating (eller andre profile), skal koden udvides, da det pt. ikke er understøttet.
