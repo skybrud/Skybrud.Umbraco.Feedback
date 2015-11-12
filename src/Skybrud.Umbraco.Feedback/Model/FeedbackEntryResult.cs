@@ -61,23 +61,28 @@ namespace Skybrud.Umbraco.Feedback.Model {
 
         }
 
+        private FeedbackEntryResult(FeedbackEntry entry, UmbracoHelper helper, CultureInfo culture) {
+
+            IPublishedContent content = helper.TypedContent(entry.PageId);
+            
+            Entry = entry;
+            Id = entry.Id;
+            SiteId = entry.SiteId;
+            PageId = entry.PageId;
+            Page = PageInfo.GetFromContent(content);
+            Name = entry.Name;
+            Email = entry.Email;
+            Rating = B.GetFromRating(entry.Rating);
+            Comment = String.IsNullOrWhiteSpace(entry.Comment) ? new string[0] : entry.Comment.Trim().Split('\n');
+            Status = B.GetFromStatus(entry.Status);
+            CreatedDateTime = entry.Created;
+            Created = entry.Created.ToLocalTime().ToString("dd-MM-yyyy HH:mm", culture);
+            AssignedTo = entry.AssignedTo;
+
+        }
+
         public static FeedbackEntryResult GetFromEntry(FeedbackEntry entry, UmbracoHelper helper, CultureInfo culture) {
-            IPublishedContent content = helper.TypedContent(entry.Page.Id);
-            return new FeedbackEntryResult {
-                Entry = entry,
-                Id = entry.Id,
-                SiteId = entry.SiteId,
-                PageId = entry.Page.Id,
-                Page = PageInfo.GetFromContent(content),
-                Name = entry.Name,
-                Email = entry.Email,
-                Rating = B.GetFromRating(entry.Rating),
-                Comment = String.IsNullOrWhiteSpace(entry.Comment) ? new string[0] : entry.Comment.Trim().Split('\n'),
-                Status = B.GetFromStatus(entry.Status),
-                CreatedDateTime = entry.Created,
-                Created = entry.Created.ToLocalTime().ToString("dd-MM-yyyy HH:mm", culture),
-                AssignedTo = entry.AssignedTo
-            };
+            return new FeedbackEntryResult(entry, helper, culture);
         }
 
         [JsonProperty("id")]
