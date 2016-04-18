@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Newtonsoft.Json;
 using Skybrud.Umbraco.Feedback.Model;
 
 namespace Skybrud.Umbraco.Feedback.Config {
     
     public class FeedbackConfig {
+
+        private static FeedbackConfig _config;
 
         #region Properties
 
@@ -23,11 +24,7 @@ namespace Skybrud.Umbraco.Feedback.Config {
         public FeedbackStatus[] Statuses { get; private set; }
 
         public static FeedbackConfig Current {
-            get {
-                FeedbackConfig cfg = HttpContext.Current.Items["SkybrudFeedbackConfig"] as FeedbackConfig;
-                if (cfg == null) HttpContext.Current.Items["SkybrudFeedbackConfig"] = cfg = Load();
-                return cfg;
-            }
+            get { return _config ?? (_config = Load()); }
         }
 
         #endregion
