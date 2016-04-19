@@ -316,4 +316,31 @@ Hver enkelt profil definerer en række ratings, som det er muligt for brugeren a
 * Positive (positive)
 * Negative (negative)
 
-Såfremt der skal tilføjes flere rating (eller andre profile), skal koden udvides, da det pt. ikke er understøttet.
+##### Konfigurationsfil
+
+Planen var oprindeligt, at der skulle være en konfigurationsfil i løsning, som blev brugt som udgangspunkt, men at konfiguration (i hukommelsen) så senere (fx ved app start) kunne ændres fra koden. Delen med konfigurationsfilen er endnu ikke blevet implementeret, men det muligt, at ændre konfiguration fra koden.
+
+##### Kodeeksempler
+
+Ifølge standardprofilen er brugerens emailadresse obligatorisk, mens navn og selve beskeden er valgfri. Hvis du fx vil ændre standardprofilen til, at emailadresse også er valgfri, kan det eksempelvis gøres med følgende stump kode:
+
+```
+#!C
+FeedbackConfig.Current.Profiles[0].Fields.Email = FeedbackFieldType.Optional;
+```
+
+Alternativt kan der tilføjes en ny profil for et givent site - dette kan gøres med nedenstående stump kode:
+
+```
+#!C
+FeedbackConfig.Current.Profiles.Add(1234, new FeedbackProfile {
+    Fields = new FeedbackProfileFields {
+        Name = FeedbackFieldType.Optional,
+        Email = FeedbackFieldType.Optional,
+        Comment = FeedbackFieldType.Optional
+    },
+    Ratings = FeedbackConfig.Current.Profiles[0].Ratings
+});
+```
+
+I eksemplet tilføjes en ny profil for sitet med id'et `1234`, hvor alle tre felter (email, navn og besked) sættes til valgfri. Profilen definerer ligeledes de mulige rating, men her refereres blot de rating, der er defineret for standardprofilen.
