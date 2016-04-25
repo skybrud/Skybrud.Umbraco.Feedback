@@ -63,8 +63,12 @@
     <Content Include="App_Plugins\Skybrud.Feedback\Controllers\SiteList.js" />
     <Content Include="App_Plugins\Skybrud.Feedback\Controllers\UserPicker.js" />
     <Content Include="App_Plugins\Skybrud.Feedback\Directives\loader.js" />
-    <Content Include="App_Plugins\Skybrud.Feedback\Feedback.css" />
-    <Content Include="App_Plugins\Skybrud.Feedback\Feedback.min.css" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Feedback.css">
+      <DependentUpon>Feedback.less</DependentUpon>
+    </Content>
+    <Content Include="App_Plugins\Skybrud.Feedback\Feedback.min.css">
+      <DependentUpon>Feedback.css</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Skybrud.Feedback\Resources\feedbackService.js" />
     <Content Include="App_Plugins\Skybrud.Feedback\Views\ChangeStatus.html" />
     <Content Include="App_Plugins\Skybrud.Feedback\Views\UserPickerDialog.html" />
@@ -79,6 +83,9 @@
   <ItemGroup>
     <Content Include="App_Plugins\Skybrud.Feedback\Feedback.less" />
     <Content Include="App_Plugins\Skybrud.Feedback\package.manifest" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Feedback.css.map">
+      <DependentUpon>Feedback.css</DependentUpon>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

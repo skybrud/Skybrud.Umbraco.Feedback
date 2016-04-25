@@ -1,4 +1,4 @@
-.list {
+﻿.list {
   position: relative;
 }
 .list.loading > table > tbody > tr {
@@ -124,6 +124,11 @@
 .list .pagination ul > li.disabled > a,
 .list .pagination ul > li.disabled > a:hover {
   color: #d9d9d9;
+}
+.feedback-overview.umb-modal.fade.in,
+.feedback-modal.umb-modal.fade.in {
+  bottom: 0;
+  overflow-y: auto;
 }
 .feedback-overview .rating > div,
 .feedback-modal .rating > div,
@@ -324,3 +329,4 @@
     -webkit-transform: scale(1);
   }
 }
+/*# sourceMappingURL=Feedback.css.map */
