@@ -70,6 +70,7 @@
       <DependentUpon>Feedback.css</DependentUpon>
     </Content>
     <Content Include="App_Plugins\Skybrud.Feedback\Lang\da-DK.xml" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Lang\en-US.xml" />
     <Content Include="App_Plugins\Skybrud.Feedback\Lang\en-GB.xml" />
     <Content Include="App_Plugins\Skybrud.Feedback\Resources\feedbackService.js" />
     <Content Include="App_Plugins\Skybrud.Feedback\Views\ChangeStatus.html" />
