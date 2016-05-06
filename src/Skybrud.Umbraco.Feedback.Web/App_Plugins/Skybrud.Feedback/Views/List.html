@@ -5,22 +5,22 @@
             <thead>
                 <tr>
                     <th>
-                        <a href="#" prevent-default="" ng-click="sort('pagename', 'asc');">Page</a>
+                        <a href="#" prevent-default="" ng-click="sort('pagename', 'asc');"><localize key="feedback_labelPage">Page</localize></a>
                         <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('pagename', 'asc'), 'icon-navigation-up': isSortDirection('pagename', 'desc')}"></i>
                     </th>
-                    <th ng-if="model.config.showAssignedToColumn">Assigned to</th>
-                    <th ng-if="model.config.showNameColumn">Name</th>
-                    <th>Comment</th>
+                    <th ng-if="model.config.showAssignedToColumn"><localize key="feedback_labelAssignedTo">Assigned to</localize></th>
+                    <th ng-if="model.config.showNameColumn"><localize key="feedback_labelName">Name</localize></th>
+                    <th><localize key="feedback_labelComment">Comment</localize></th>
                     <th>
-                        <a href="#" prevent-default="" ng-click="sort('rating', 'asc');">Rating</a>
+                        <a href="#" prevent-default="" ng-click="sort('rating', 'asc');"><localize key="feedback_labelRating">Rating</localize></a>
                         <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('rating', 'asc'), 'icon-navigation-up': isSortDirection('rating', 'desc')}"></i>
                     </th>
                     <th>
-                        <a href="#" prevent-default="" ng-click="sort('status', 'asc');">Status</a>
+                        <a href="#" prevent-default="" ng-click="sort('status', 'asc');"><localize key="feedback_labelStatus">Status</localize></a>
                         <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('status', 'asc'), 'icon-navigation-up': isSortDirection('status', 'desc')}"></i>
                     </th>
                     <th>
-                        <a href="#" prevent-default="" ng-click="sort('created', 'desc');">Added</a>
+                        <a href="#" prevent-default="" ng-click="sort('created', 'desc');"><localize key="feedback_labelAdded">Added</localize></a>
                         <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('created', 'asc'), 'icon-navigation-up': isSortDirection('created', 'desc')}"></i>
                     </th>
                 </tr>
@@ -38,14 +38,15 @@
                     </td>
                     <td class="nowrap" ng-if="model.config.showAssignedToColumn">
                         <span ng-show="item.assignedTo">{{item.assignedTo.name}}</span>
-                        <span ng-show="!item.assignedTo"><em>Not assigned</em></span>
+                        <span ng-show="!item.assignedTo"><em><localize key="feedback_labelNoResponsible">No responsible</localize></em></span>
                     </td>
                     <td class="nowrap" ng-if="model.config.showNameColumn">
                         <span ng-show="item.name">{{item.name}}</span>
-                        <span ng-show="!item.name"><em>N/A</em></span>
+                        <span ng-show="!item.name"><em><localize key="feedback_labelNotSpecified">Not specified</localize></em></span>
                     </td>
                     <td class="nowrap">
-                        {{item.comment.length > 0 ? 'Yes' : 'No'}}
+                        <div ng-show="item.comment.length > 0"><localize key="feedback_labelYes">Yes</localize></div>
+                        <div ng-show="item.comment.length < 1"><localize key="feedback_labelNo">No</localize></div>
                     </td>
                     <td class="nowrap rating">
                         <div>
@@ -65,27 +66,27 @@
                 </tr>
                 <tr ng-show="item.expanded">
                     <td colspan="7" style="padding: 0;">
-                        
+
                         <div class="spacer"></div>
-                        
+
                         <table class="data">
                             <tr>
-                                <th>ID</th>
+                                <th><localize key="feedback_labelId">ID</localize></th>
                                 <td>{{item.id}}</td>
                             </tr>
                             <tr>
-                                <th>Page ID</th>
+                                <th><localize key="feedback_labelPageId">Page ID</localize></th>
                                 <td>{{item.pageId}}</td>
                             </tr>
                             <tr>
-                                <th>Page Title</th>
+                                <th><localize key="feedback_labelPageTitle">Page Title</localize></th>
                                 <td>
                                     <span ng-show="item.page">{{item.page.name}}</span>
                                     <span ng-show="!item.page"><em>The page no longer exists</em></span>
                                 </td>
                             </tr>
                             <tr>
-                                <th>URL</th>
+                                <th><localize key="feedback_labelPageUrl">URL</localize></th>
                                 <td>
                                     <span ng-show="item.page">
                                         {{item.page.url}}
@@ -94,16 +95,16 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Assigned to</th>
+                                <th><localize key="feedback_labelAssignedTo">Assigned to</localize></th>
                                 <td>
                                     <span ng-show="item.assignedTo">
                                         {{item.assignedTo.name}}
                                     </span>
-                                    <span ng-show="!item.assignedTo"><em>Not assigned</em></span>
+                                    <span ng-show="!item.assignedTo"><em><localize key="feedback_labelNoResponsible">No responsible</localize></em></span>
                                 </td>
                             </tr>
                             <tr class="rating">
-                                <th>Rating</th>
+                                <th><localize key="feedback_labelRating">Rating</localize></th>
                                 <td>
                                     <div>
                                         <div class="circle {{item.rating.alias}}"></div>
@@ -112,25 +113,25 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Name</th>
+                                <th><localize key="feedback_labelName">Name</localize></th>
                                 <td>
                                     <span ng-show="item.name">{{item.name}}</span>
-                                    <span ng-show="!item.name"><em>N/A</em></span>
+                                    <span ng-show="!item.name"><em><localize key="feedback_labelNotSpecified">Not specified</localize></em></span>
                                 </td>
                             </tr>
                             <tr>
-                                <th>E-mail</th>
+                                <th><localize key="feedback_labelEmail">E-mail</localize></th>
                                 <td>
                                     <span ng-show="item.email">{{item.email}}</span>
-                                    <span ng-show="!item.email"><em>N/A</em></span>
+                                    <span ng-show="!item.email"><em><localize key="feedback_labelNotSpecified">Not specified</localize></em></span>
                                 </td>
                             </tr>
                             <tr>
-                                <th>Added</th>
+                                <th><localize key="feedback_labelAdded">Added</localize></th>
                                 <td>{{item.created}}</td>
                             </tr>
                             <tr class="status">
-                                <th>Status</th>
+                                <th><localize key="feedback_labelStatus">Status</localize></th>
                                 <td>
                                     <div>
                                         <div class="circle {{item.status.alias}}"></div>
@@ -139,24 +140,24 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Comment</th>
+                                <th><localize key="feedback_labelComment">Comment</localize></th>
                                 <td>
                                     <div ng-show="item.comment.length > 0" ng-repeat="line in item.comment">
                                         <div style="min-height: 11px;">{{line}}</div>
                                     </div>
-                                    <span ng-show="item.comment.length == 0"><em>N/A</em></span>
+                                    <span ng-show="item.comment.length == 0"><em><localize key="feedback_labelNotSpecified">Not specified</localize></em></span>
                                 </td>
                             </tr>
                         </table>
-                        
+
                         <div class="options">
-                            <a href="#" class="btn" ng-click="archive(item.id)" prevent-default="">Archive</a>
-                            <a href="#" class="btn" ng-click="openChangeStatus(item)" prevent-default="">Change status</a>
-                            <a href="#" class="btn" ng-click="openSelectResponsible(item)" prevent-default="">Select responsible</a>
-                            <a ng-show="item.page" href="/umbraco/#/content/content/edit/{{item.pageId}}" class="btn">Show in Umbraco</a>
-                            <a ng-show="item.page" href="{{item.page.url}}" target="_blank" class="btn">Show at website</a>
+                            <a href="#" class="btn" ng-click="archive(item.id)" prevent-default=""><localize key="feedback_btnArchive">Archive</localize></a>
+                            <a href="#" class="btn" ng-click="openChangeStatus(item)" prevent-default=""><localize key="feedback_btnSelectStatus">Select status</localize></a>
+                            <a href="#" class="btn" ng-click="openSelectResponsible(item)" prevent-default=""><localize key="feedback_btnSelectResponsible">Select responsible</localize></a>
+                            <a ng-show="item.page" href="/umbraco/#/content/content/edit/{{item.pageId}}" class="btn"><localize key="feedback_btnShowInUmbraco">Show in Umbraco</localize></a>
+                            <a ng-show="item.page" href="{{item.page.url}}" target="_blank" class="btn"><localize key="feedback_btnShowAtWebsite">Show at website</localize></a>
                         </div>
-                        
+
                     </td>
                 </tr>
             </tbody>
@@ -185,10 +186,10 @@
                     </th>
                 </tr>
             </tfoot>
-            
+
 
         </table>
         <loader></loader>
     </div>
-    
+
 </div>

@@ -69,6 +69,8 @@
     <Content Include="App_Plugins\Skybrud.Feedback\Feedback.min.css">
       <DependentUpon>Feedback.css</DependentUpon>
     </Content>
+    <Content Include="App_Plugins\Skybrud.Feedback\Lang\da-DK.xml" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Lang\en-GB.xml" />
     <Content Include="App_Plugins\Skybrud.Feedback\Resources\feedbackService.js" />
     <Content Include="App_Plugins\Skybrud.Feedback\Views\ChangeStatus.html" />
     <Content Include="App_Plugins\Skybrud.Feedback\Views\UserPickerDialog.html" />

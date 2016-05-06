@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+
+<language alias="da" intName="Danish" localName="dansk" lcid="6" culture="da-DK">
+  <area alias="feedback">
+    <key alias="labelId">ID</key>v
+    <key alias="labelSite">Site</key>
+    <key alias="labelPage">Side</key>
+    <key alias="labelPageId">Side-ID</key>
+    <key alias="labelPageTitle">Sidetitel</key>
+    <key alias="labelPageUrl">URL</key>
+    <key alias="labelAssignedTo">Tildelt til</key>
+    <key alias="labelRating">Rating</key>
+    <key alias="labelName">Navn</key>
+    <key alias="labelEmail">E-mail</key>
+    <key alias="labelAdded">Tilføjet</key>
+    <key alias="labelStatus">Status</key>
+    <key alias="labelComment">Kommentar</key>
+    <key alias="labelNoResponsible">Ingen ansvarlig</key>
+    <key alias="labelNotSpecified">Ikke angivet</key>
+    <key alias="labelYes">Ja</key>
+    <key alias="labelNo">Nej</key>
+    <key alias="btnArchive">Arkivér</key>
+    <key alias="btnSelectStatus">Vælg status</key>
+    <key alias="btnSelectResponsible">Vælg ansvarlig</key>
+    <key alias="btnShowInUmbraco">Se i Umbraco</key>
+    <key alias="btnShowAtWebsite">Se på hjemmesiden</key>
+    <key alias="statusNew">Ny</key>
+    <key alias="statusInprogress">Igangværende</key>
+    <key alias="statusInProgress">Igangværende</key>
+    <key alias="statusClosed">Lukket</key>
+    <key alias="ratingPositive">Positiv</key>
+    <key alias="ratingNegative">Negativ</key>
+    <key alias="headerSelectStatus">Vælg status</key>
+    <key alias="headerSelectUser">Vælg bruger</key>
+    <key alias="headerSelectResponsible">Vælg ansvarlig</key>
+  </area>
+</language>

@@ -1,6 +1,6 @@
 ﻿<div class="FeedbackUserPickerDialog" ng-controller="Skybrud.Feedback.UserPickerDialogController" ng-class="{loading: loading}">
-    
-    <h3>Select user</h3>
+
+    <h3><localize key="feedback_headerSelectUser">Select user</localize></h3>
     <loader></loader>
     <div ng-if="!loading && users != null">
         <ul>
@@ -10,6 +10,6 @@
             </li>
         </ul>
     </div>
-    <a href="#" prevent-default="" ng-click="close()" class="btn">Cancel</a>
-    
+    <a href="#" prevent-default="" ng-click="close()" class="btn"><localize key="cancel">Cancel</localize></a>
+
 </div>

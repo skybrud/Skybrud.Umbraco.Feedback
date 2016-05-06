@@ -1,16 +1,16 @@
 ﻿<div class="FeedbackUserPicker" ng-controller="Skybrud.Feedback.UserPickerController">
-    
+
     <div ng-show="model.value">
         <div>
             <div style="margin-bottom: 5px;">
                 <strong>{{model.value.name}}</strong> <span style="font-size: 12px;">({{model.value.email}})</span>
             </div>
-            <button ng-click="clear()" prevent-default="">Clear</button>
+            <button ng-click="clear()" prevent-default=""><localize key="feedback_btnClear">Clear</localize></button>
         </div>
     </div>
-    
+
     <div ng-show="!model.value">
-        <button ng-click="select()" prevent-default="" class="btn">Select</button>
+        <button ng-click="select()" prevent-default="" class="btn"><localize key="feedback_btnSelect">Select</localize></button>
     </div>
-    
+
 </div>

@@ -1,5 +1,5 @@
 ﻿<div class="feedback-change-status" ng-controller="Skybrud.Feedback.ChangeStatusController" ng-class="{loading: loading}">
-    <h3>Change status</h3>
+    <h3><localize key="feedback_headerSelectStatus">Change status</localize></h3>
     <loader></loader>
     <div ng-if="!loading && statuses != null">
         <ul>
@@ -9,5 +9,5 @@
             </li>
         </ul>
     </div>
-    <a href="#" prevent-default="" ng-click="close()" class="btn">Cancel</a>
+    <a href="#" prevent-default="" ng-click="close()" class="btn"><localize key="cancel">Cancel</localize></a>
 </div>
