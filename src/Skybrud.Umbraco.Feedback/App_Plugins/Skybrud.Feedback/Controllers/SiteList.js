@@ -59,6 +59,13 @@
 
             $scope.loading = false;
 
+            angular.forEach(r.data, function(item) {
+                item.$comment = [];
+                angular.forEach(item.comment, function(line) {
+                    item.$comment.push({text:line});
+                });
+            });
+
             $scope.items = r.data;
 
             pagination.page = r.pagination.page;

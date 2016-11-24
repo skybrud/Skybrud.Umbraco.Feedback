@@ -142,8 +142,8 @@
                             <tr>
                                 <th><localize key="feedback_labelComment">Comment</localize></th>
                                 <td>
-                                    <div ng-show="item.comment.length > 0" ng-repeat="line in item.comment">
-                                        <div style="min-height: 11px;">{{line}}</div>
+                                    <div ng-show="item.comment.length > 0" ng-repeat="line in item.$comment">
+                                        <div style="min-height: 11px;">{{line.text}}</div>
                                     </div>
                                     <span ng-show="item.comment.length == 0"><em><localize key="feedback_labelNotSpecified">Not specified</localize></em></span>
                                 </td>
