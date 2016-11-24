@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skybrud.Umbraco.Feedback", "Skybrud.Umbraco.Feedback\Skybrud.Umbraco.Feedback.csproj", "{B9F1D48D-973C-4A0C-8DBA-4B62A762E01C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skybrud.Umbraco.Feedback.Web", "Skybrud.Umbraco.Feedback.Web\Skybrud.Umbraco.Feedback.Web.csproj", "{164BD824-A0E5-42EC-A620-B18553F182C1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,6 @@ Global
 		{B9F1D48D-973C-4A0C-8DBA-4B62A762E01C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9F1D48D-973C-4A0C-8DBA-4B62A762E01C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9F1D48D-973C-4A0C-8DBA-4B62A762E01C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{164BD824-A0E5-42EC-A620-B18553F182C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{164BD824-A0E5-42EC-A620-B18553F182C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{164BD824-A0E5-42EC-A620-B18553F182C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{164BD824-A0E5-42EC-A620-B18553F182C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
