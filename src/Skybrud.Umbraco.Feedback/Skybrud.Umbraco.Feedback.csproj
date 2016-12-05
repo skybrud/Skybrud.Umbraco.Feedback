@@ -289,11 +289,31 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyInfoGenerated.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Json\Converters\" />
+    <None Include="App_Plugins\Skybrud.Feedback\Feedback.css.map" />
+    <None Include="App_Plugins\Skybrud.Feedback\Feedback.less" />
+    <None Include="App_Plugins\Skybrud.Feedback\package.manifest" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Controllers\ChangeStatus.js" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Controllers\SelectResponsible.js" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Controllers\SiteList.js" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Controllers\UserPicker.js" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Controllers\UserPickerDialog.js" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Directives\loader.js" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Feedback.css" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Feedback.min.css" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Lang\da-DK.xml" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Lang\en-GB.xml" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Lang\en-US.xml" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Resources\feedbackService.js" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Views\ChangeStatus.html" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Views\List.html" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Views\SelectResponsible.html" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Views\UserPicker.html" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Views\UserPickerDialog.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
