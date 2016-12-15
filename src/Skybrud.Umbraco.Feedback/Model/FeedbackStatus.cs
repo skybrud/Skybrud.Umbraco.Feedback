@@ -7,6 +7,18 @@ namespace Skybrud.Umbraco.Feedback.Model {
 
     public class FeedbackStatus {
 
+        #region Constants
+
+        public static readonly FeedbackStatus New = new FeedbackStatus { Alias = "new", IsActive = true };
+
+        public static readonly FeedbackStatus InProgress = new FeedbackStatus { Alias = "inprogress", IsActive = true };
+
+        public static readonly FeedbackStatus Closed = new FeedbackStatus { Alias = "closed", IsActive = true };
+
+        #endregion
+
+        #region Properties
+
         [JsonProperty("name")]
         public string Name {
             get {
@@ -22,6 +34,20 @@ namespace Skybrud.Umbraco.Feedback.Model {
 
         [JsonProperty("active")]
         public bool IsActive { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        public FeedbackStatus() {
+            IsActive = true;
+        }
+
+        public FeedbackStatus(string alias) : this() {
+            Alias = alias;
+        }
+
+        #endregion
 
     }
 

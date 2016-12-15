@@ -4,7 +4,7 @@ using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
 using Umbraco.Web;
 
-namespace Skybrud.Umbraco.Feedback.Model {
+namespace Skybrud.Umbraco.Feedback.Model.Entries {
 
     [TableName("SkybrudFeedback")]
     [PrimaryKey("Id", autoIncrement = true)]
@@ -14,6 +14,9 @@ namespace Skybrud.Umbraco.Feedback.Model {
         [Column("Id")]
         [PrimaryKeyColumn(AutoIncrement = true)]
         public int Id { get; set; }
+
+        [Column("UniqueId")]
+        public string UniqueId { get; set; }
 
         [Column("SiteId")]
         public int SiteId { get; set; }
@@ -43,6 +46,9 @@ namespace Skybrud.Umbraco.Feedback.Model {
         [Column("Created")]
         public DateTime Created { get; set; }
 
+        [Column("Updated")]
+        public DateTime Updated { get; set; }
+
         [Column("AssignedTo")]
         public int AssignedTo { get; set; }
 
@@ -56,7 +62,7 @@ namespace Skybrud.Umbraco.Feedback.Model {
         }
 
         public void SetAssignedTo(IFeedbackUser user) {
-            AssignedTo = (user == null ? 0 : user.Id);
+            AssignedTo = (user == null ? -1 : user.Id);
             UmbracoDatabase db = UmbracoContext.Current.Application.DatabaseContext.Database;
             db.Update("SkybrudFeedback", "Id", this);
         }

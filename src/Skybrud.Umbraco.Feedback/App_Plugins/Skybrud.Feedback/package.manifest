@@ -1,51 +1,53 @@
 ﻿{
-	propertyEditors: [
+	"propertyEditors": [
 		{ 
-			alias: "Skybrud.Feedback.SiteList",
-			name: "Skybrud.Feedback - Feedback på sideniveau",
-			editor: {
-				view: "~/App_Plugins/Skybrud.Feedback/Views/List.html",
-				hideLabel: true
+			"alias": "Skybrud.Feedback.SiteList",
+			"name": "Skybrud.Feedback - Feedback på sideniveau",
+			"editor": {
+				"view": "~/App_Plugins/Skybrud.Feedback/Views/List.html",
+				"hideLabel": true
 			},
-			prevalues: {
-				fields: [
+			"prevalues": {
+				"fields": [
 					{
-						label: "Limit",
+						"label": "Limit",
 						description: "The amount of items to show on each page.",
-						key: "limit",
-						view: "number"
+						"key": "limit",
+						"view": "number"
 					},
 					{
-						label: "Show \"Assigned To\" column",
-						key: "showAssignedToColumn",
-						view: "boolean"
+						"label": "Columns",
+						"key": "columns",
+						"view": "~/App_Plugins/Skybrud.Feedback/Views/PreValues/Columns.html"
 					},
 					{
-						label: "Show \"Name\" column",
-						key: "showNameColumn",
-						view: "boolean"
+						"label": "Filters",
+						"key": "filters",
+						"view": "~/App_Plugins/Skybrud.Feedback/Views/PreValues/Filters.html"
 					}
 				]
 			}
 		},
 		{ 
-			alias: "Skybrud.Feedback.UserPicker",
-			name: "Skybrud.Feedback - User Picker",
-			editor: {
-				view: "~/App_Plugins/Skybrud.Feedback/Views/UserPicker.html"
+			"alias": "Skybrud.Feedback.UserPicker",
+			"name": "Skybrud.Feedback - User Picker",
+			"editor": {
+				"view": "~/App_Plugins/Skybrud.Feedback/Views/UserPicker.html"
 			}
 		}
 	],
-	javascript: [
-		'~/App_Plugins/Skybrud.Feedback/Resources/feedbackService.js',
-		'~/App_Plugins/Skybrud.Feedback/Directives/loader.js',
-		'~/App_Plugins/Skybrud.Feedback/Controllers/SiteList.js',
-		'~/App_Plugins/Skybrud.Feedback/Controllers/ChangeStatus.js',
-		'~/App_Plugins/Skybrud.Feedback/Controllers/SelectResponsible.js',
-		'~/App_Plugins/Skybrud.Feedback/Controllers/UserPicker.js',
-		'~/App_Plugins/Skybrud.Feedback/Controllers/UserPickerDialog.js'
+	"javascript": [
+		"~/App_Plugins/Skybrud.Feedback/Resources/feedbackService.js",
+		"~/App_Plugins/Skybrud.Feedback/Directives/loader.js",
+		"~/App_Plugins/Skybrud.Feedback/Controllers/SiteList.js",
+		"~/App_Plugins/Skybrud.Feedback/Controllers/ChangeStatus.js",
+		"~/App_Plugins/Skybrud.Feedback/Controllers/SelectResponsible.js",
+		"~/App_Plugins/Skybrud.Feedback/Controllers/UserPicker.js",
+		"~/App_Plugins/Skybrud.Feedback/Controllers/UserPickerDialog.js",
+		"~/App_Plugins/Skybrud.Feedback/Controllers/ColumnsPreValueEditor.js",
+		"~/App_Plugins/Skybrud.Feedback/Controllers/FiltersPreValueEditor.js"
 	],
-	css: [
-		'~/App_Plugins/Skybrud.Feedback/Feedback.css'
+	"css": [
+		"~/App_Plugins/Skybrud.Feedback/Styles/Feedback.css"
 	] 
 }

@@ -1,25 +1,46 @@
 ﻿<div class="feedback-overview" ng-controller="Skybrud.Feedback.SiteListController">
+    
+    <!--<div class="feedbackHeader">
+        <h3>
+            Listing feedback for site
+        </h3>
+    </div>-->
 
-    <div class="list" ng-class="{loading: loading}">
+    <div class="feedbackListOptions">
+        <div class="feedbackListFilters">
+            <select ng-if="model.config.filters.rating" ng-options="item as item.name for item in filters.ratings track by item.value" ng-model="selected.rating"></select>
+            <select ng-if="model.config.filters.responsible" ng-options="item as item.name for item in filters.users track by item.value" ng-model="selected.responsible"></select>
+            <select ng-if="model.config.filters.status" ng-options="item as item.name for item in filters.statuses track by item.value" ng-model="selected.status"></select>
+            <select ng-if="model.config.filters.type" ng-options="item as item.name for item in filters.types track by item.value" ng-model="selected.type"></select>
+        </div>
+        <div class="feedbackListActions">
+            <a href="#" class="btn btn-default" ng-click="refresh()" prevent-default>
+                <i class="icon icon-refresh"></i>
+                <localize key="feedback_labelRefresh">Refresh</localize>
+            </a>
+        </div>
+    </div>
+    
+    <div class="feedbackList" ng-class="{loading: loading}">
         <table>
             <thead>
                 <tr>
-                    <th>
-                        <a href="#" prevent-default="" ng-click="sort('pagename', 'asc');"><localize key="feedback_labelPage">Page</localize></a>
-                        <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('pagename', 'asc'), 'icon-navigation-up': isSortDirection('pagename', 'desc')}"></i>
-                    </th>
-                    <th ng-if="model.config.showAssignedToColumn"><localize key="feedback_labelAssignedTo">Assigned to</localize></th>
-                    <th ng-if="model.config.showNameColumn"><localize key="feedback_labelName">Name</localize></th>
-                    <th><localize key="feedback_labelComment">Comment</localize></th>
-                    <th>
+                    <th ng-if="model.config.columns.rating">
                         <a href="#" prevent-default="" ng-click="sort('rating', 'asc');"><localize key="feedback_labelRating">Rating</localize></a>
                         <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('rating', 'asc'), 'icon-navigation-up': isSortDirection('rating', 'desc')}"></i>
                     </th>
-                    <th>
+                    <th ng-if="model.config.columns.pagename">
+                        <a href="#" prevent-default="" ng-click="sort('pagename', 'asc');"><localize key="feedback_labelPage">Page</localize></a>
+                        <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('pagename', 'asc'), 'icon-navigation-up': isSortDirection('pagename', 'desc')}"></i>
+                    </th>
+                    <th ng-if="model.config.columns.responsible"><localize key="feedback_labelResponsible">Responsible</localize></th>
+                    <th ng-if="model.config.columns.name"><localize key="feedback_labelName">Name</localize></th>
+                    <th ng-if="model.config.columns.comment"><localize key="feedback_labelComment">Comment</localize></th>
+                    <th ng-if="model.config.columns.status">
                         <a href="#" prevent-default="" ng-click="sort('status', 'asc');"><localize key="feedback_labelStatus">Status</localize></a>
                         <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('status', 'asc'), 'icon-navigation-up': isSortDirection('status', 'desc')}"></i>
                     </th>
-                    <th>
+                    <th ng-if="model.config.columns.added">
                         <a href="#" prevent-default="" ng-click="sort('created', 'desc');"><localize key="feedback_labelAdded">Added</localize></a>
                         <i class="icon" ng-class="{'icon-navigation-down': isSortDirection('created', 'asc'), 'icon-navigation-up': isSortDirection('created', 'desc')}"></i>
                     </th>
@@ -27,40 +48,49 @@
             </thead>
             <tbody ng-if="!items || items.length == 0" class="empty">
                 <tr>
-                    <td colspan="6"></td>
+                    <td colspan="7">
+                        <div ng-show="!loading">
+                            <div ng-show="!hasFilter">
+                                <localize key="feedback_labelNoEntriesSite">There are currently no active entries.</localize>
+                            </div>
+                            <div ng-show="hasFilter">
+                                <localize key="feedback_labelNoEntriesSiteWithFilter">There are currently no entries matchign the selected criteria.</localize>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
             <tbody ng-repeat="item in items">
                 <tr ng-click="item.expanded = (item.expanded ? false : true);" style="cursor: pointer;" ng-class="{expanded: item.expanded}">
-                    <td class="page">
-                        <span ng-show="item.page">{{item.page.name}}</span>
-                        <span ng-show="!item.page"><em>Siden findes ikke længere (ID: {{item.pageId}})</em></span>
-                    </td>
-                    <td class="nowrap" ng-if="model.config.showAssignedToColumn">
-                        <span ng-show="item.assignedTo">{{item.assignedTo.name}}</span>
-                        <span ng-show="!item.assignedTo"><em><localize key="feedback_labelNoResponsible">No responsible</localize></em></span>
-                    </td>
-                    <td class="nowrap" ng-if="model.config.showNameColumn">
-                        <span ng-show="item.name">{{item.name}}</span>
-                        <span ng-show="!item.name"><em><localize key="feedback_labelNotSpecified">Not specified</localize></em></span>
-                    </td>
-                    <td class="nowrap">
-                        <div ng-show="item.comment.length > 0"><localize key="feedback_labelYes">Yes</localize></div>
-                        <div ng-show="item.comment.length < 1"><localize key="feedback_labelNo">No</localize></div>
-                    </td>
-                    <td class="nowrap rating">
+                    <td class="nowrap rating" ng-if="model.config.columns.rating">
                         <div>
                             <div class="circle {{item.rating.alias}}"></div>
                             {{item.rating.name}}
                         </div>
                     </td>
-                    <td class="nowrap status">
+                    <td class="page" ng-if="model.config.columns.pagename">
+                        <span ng-show="item.page">{{item.page.name}}</span>
+                        <span ng-show="!item.page"><em>Siden findes ikke længere (ID: {{item.pageId}})</em></span>
+                    </td>
+                    <td class="nowrap" ng-if="model.config.columns.responsible">
+                        <span ng-show="item.assignedTo">{{item.assignedTo.name}}</span>
+                        <span ng-show="!item.assignedTo"><em><localize key="feedback_labelNoResponsible">No responsible</localize></em></span>
+                    </td>
+                    <td class="nowrap" ng-if="model.config.columns.name">
+                        <span ng-show="item.name">{{item.name}}</span>
+                        <span ng-show="!item.name"><em><localize key="feedback_labelNotSpecified">Not specified</localize></em></span>
+                    </td>
+                    <td class="nowrap" ng-if="model.config.columns.comment">
+                        <div ng-show="item.comment.length > 0"><localize key="feedback_labelYes">Yes</localize></div>
+                        <div ng-show="item.comment.length < 1"><localize key="feedback_labelNo">No</localize></div>
+                    </td>
+                    <td class="nowrap status" ng-if="model.config.columns.status">
                         <div>
                             <div class="circle {{item.status.alias}}"></div>
                             {{item.status.name}}
                         </div>
                     </td>
-                    <td class="nowrap">
+                    <td class="nowrap" ng-if="model.config.columns.added">
                         {{item.created}}
                     </td>
                 </tr>
@@ -189,7 +219,7 @@
 
 
         </table>
-        <loader></loader>
+        <umb-load-indicator></umb-load-indicator>
     </div>
 
 </div>

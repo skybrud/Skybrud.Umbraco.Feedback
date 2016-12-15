@@ -5,6 +5,11 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skybrud.Umbraco.Feedback", "Skybrud.Umbraco.Feedback\Skybrud.Umbraco.Feedback.csproj", "{B9F1D48D-973C-4A0C-8DBA-4B62A762E01C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EF5AF7F0-6822-4276-A673-469C9EA5A624}"
+	ProjectSection(SolutionItems) = preProject
+		WebEssentials-Settings.json = WebEssentials-Settings.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

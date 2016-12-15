@@ -9,16 +9,20 @@
     <key alias="labelPageTitle">Page Title</key>
     <key alias="labelPageUrl">URL</key>
     <key alias="labelAssignedTo">Assigned to</key>
+    <key alias="labelResponsible">Responsible</key>
     <key alias="labelRating">Rating</key>
     <key alias="labelName">Name</key>
     <key alias="labelEmail">E-mail</key>
     <key alias="labelAdded">Added</key>
     <key alias="labelStatus">Status</key>
     <key alias="labelComment">Comment</key>
+    <key alias="labelNoEntriesSite">There are currently no active entries.</key>
+    <key alias="labelNoEntriesSiteWithFilter">There are currently no active entries matchign the selected criteria.</key>
     <key alias="labelNoResponsible">No responsible</key>
     <key alias="labelNotSpecified">Not specified</key>
     <key alias="labelYes">Yes</key>
     <key alias="labelNo">No</key>
+    <key alias="labelRefresh">Refresh</key>
     <key alias="btnArchive">Archive</key>
     <key alias="btnSelectStatus">Select status</key>
     <key alias="btnSelectResponsible">Select responsible</key>
@@ -33,5 +37,12 @@
     <key alias="headerSelectStatus">Select status</key>
     <key alias="headerSelectUser">Select user</key>
     <key alias="headerSelectResponsible">Select responsible</key>
+    <key alias="labelAllRatings">All ratings</key>
+    <key alias="labelAllUsers">All users</key>
+    <key alias="labelMe">Me</key>
+    <key alias="labelAllStatuses">All statuses</key>
+    <key alias="labelAllTypes">All types</key>
+    <key alias="labelOnlyWithRating">Only with rating</key>
+    <key alias="labelRatingAndComment">Rating and comment</key>
   </area>
 </language>

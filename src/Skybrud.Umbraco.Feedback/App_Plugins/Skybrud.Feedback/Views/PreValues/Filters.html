@@ -1,0 +1,9 @@
+﻿<div class="feedbackFiltersPreValueEditor" ng-controller="Skybrud.Feedback.FiltersPreValueEditorController">
+    <ul>
+        <li ng-repeat="filter in filters">
+            <label>
+                <input type="checkbox" ng-model="model.value[filter.alias]" /> {{filter.name}}
+            </label>
+        </li>
+    </ul>
+</div>

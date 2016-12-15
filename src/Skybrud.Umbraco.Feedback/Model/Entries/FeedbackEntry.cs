@@ -6,7 +6,7 @@ using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
-namespace Skybrud.Umbraco.Feedback.Model {
+namespace Skybrud.Umbraco.Feedback.Model.Entries {
 
     public class FeedbackEntry {
 
@@ -29,9 +29,18 @@ namespace Skybrud.Umbraco.Feedback.Model {
 
         #region Properties
 
+        internal FeedbackDatabaseEntry Row {
+            get { return _entry; }
+        }
+
         public int Id {
             get { return _entry.Id; }
             private set { _entry.Id = value; }
+        }
+
+        public string UniqueId {
+            get { return _entry.UniqueId; }
+            internal set { _entry.UniqueId = value; }
         }
 
         public int SiteId {
@@ -100,11 +109,16 @@ namespace Skybrud.Umbraco.Feedback.Model {
             set { _entry.Created = value; }
         }
 
+        public DateTime Updated {
+            get { return _entry.Updated; }
+            set { _entry.Updated = value; }
+        }
+
         public IFeedbackUser AssignedTo {
             get { return _assignedTo; }
             set {
                 _assignedTo = value;
-                _entry.AssignedTo = (value == null ? 0 : value.Id);
+                _entry.AssignedTo = (value == null ? -1 : value.Id);
             }
         }
 
@@ -113,14 +127,35 @@ namespace Skybrud.Umbraco.Feedback.Model {
             set { _entry.IsArchived = value; }
         }
 
+        public bool HasComment {
+            get { return !String.IsNullOrWhiteSpace(Comment); }
+        }
+
+        public bool HasName {
+            get { return !String.IsNullOrWhiteSpace(Name); }
+        }
+
+        public bool HasEmail {
+            get { return !String.IsNullOrWhiteSpace(Email); }
+        }
+
+        public bool HasCommentOrNameOrEmail {
+            get { return !String.IsNullOrWhiteSpace(Comment + Name + Email); }
+        }
+
+        public bool IsRatingOnly {
+            get { return !HasCommentOrNameOrEmail; }
+        }
+
         #endregion
 
         internal FeedbackEntry() {
             _entry = new FeedbackDatabaseEntry();
+            _entry.AssignedTo = -1;
         }
 
         internal FeedbackEntry(FeedbackDatabaseEntry entry, Dictionary<int, IFeedbackUser> users) {
-            
+
             _entry = entry;
             
             SiteId = entry.SiteId;

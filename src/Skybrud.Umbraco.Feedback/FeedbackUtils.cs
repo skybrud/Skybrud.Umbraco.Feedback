@@ -2,6 +2,7 @@
 using System.Linq;
 using Skybrud.Umbraco.Feedback.Interfaces;
 using Skybrud.Umbraco.Feedback.Model;
+using Skybrud.Umbraco.Feedback.Model.Entries;
 using Umbraco.Core;
 using Umbraco.Core.Persistence;
 

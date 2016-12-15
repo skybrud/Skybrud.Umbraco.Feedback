@@ -5,7 +5,7 @@ using Skybrud.Umbraco.Feedback.Interfaces;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
-namespace Skybrud.Umbraco.Feedback.Model {
+namespace Skybrud.Umbraco.Feedback.Model.Entries {
 
     public class FeedbackEntryResult {
 

@@ -7,6 +7,16 @@ namespace Skybrud.Umbraco.Feedback.Model {
 
     public class FeedbackRating {
 
+        #region Constants
+
+        public static readonly FeedbackRating Positive = new FeedbackRating("positive");
+        
+        public static readonly FeedbackRating Negative = new FeedbackRating("negative");
+
+        #endregion
+
+        #region Properties
+
         [JsonProperty("name")]
         public string Name {
             get {
@@ -22,6 +32,20 @@ namespace Skybrud.Umbraco.Feedback.Model {
 
         [JsonProperty("active")]
         public bool IsActive { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        public FeedbackRating() {
+            IsActive = true;
+        }
+
+        public FeedbackRating(string alias) : this() {
+            Alias = alias;
+        }
+
+        #endregion
 
     }
 

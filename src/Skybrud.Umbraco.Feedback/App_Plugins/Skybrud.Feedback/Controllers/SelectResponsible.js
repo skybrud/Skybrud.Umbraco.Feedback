@@ -9,11 +9,11 @@
     $scope.users = null;
 
     var http1 = feedbackService.getEntry($scope.dialogData.id).success(function (r) {
-        $scope.entry = r.data;
+        $scope.entry = r.data ? r.data : r;
     });
 
     var http2 = feedbackService.getUsers().success(function (r) {
-        $scope.users = r.data;
+        $scope.users = r.data ? r.data : r;
     });
     
     $q.all([http1, http2]).then(function () {

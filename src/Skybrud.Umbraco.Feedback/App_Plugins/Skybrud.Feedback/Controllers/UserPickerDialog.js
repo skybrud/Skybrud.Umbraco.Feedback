@@ -5,7 +5,10 @@
     $scope.users = null;
 
     feedbackService.getUsers().success(function (r) {
-        $scope.users = r.data;
+
+        console.log(r);
+
+        $scope.users = r.data ? r.data : r;
         $scope.loading = false;
     }).error(function (r) {
         notificationsService.error('Feedback: Unable to load users' + (r && r.meta && r.meta.error ? ': ' + r.meta.error : ''));

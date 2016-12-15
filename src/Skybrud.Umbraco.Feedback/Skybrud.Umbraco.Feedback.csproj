@@ -269,19 +269,21 @@
   <ItemGroup>
     <Compile Include="Config\FeedbackConfig.cs" />
     <Compile Include="Config\FeedbackEmailConfig.cs" />
+    <Compile Include="Constants\FeedbackConstants.cs" />
     <Compile Include="Controllers\BackofficeController.cs" />
     <Compile Include="Controllers\FrontendController.cs" />
     <Compile Include="Extensions\EnumerableExtensionMethods.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensionMethods.cs" />
-    <Compile Include="FeedbackException.cs" />
+    <Compile Include="Exceptions\FeedbackException.cs" />
     <Compile Include="FeedbackModule.cs" />
     <Compile Include="FeedbackUtils.cs" />
     <Compile Include="Interfaces\IFeedbackPlugin.cs" />
     <Compile Include="Interfaces\IFeedbackUser.cs" />
-    <Compile Include="Model\FeedbackDatabaseEntry.cs" />
-    <Compile Include="Model\FeedbackEntry.cs" />
-    <Compile Include="Model\FeedbackEntryResult.cs" />
-    <Compile Include="Model\FeedbackPlugin.cs" />
+    <Compile Include="Model\Entries\FeedbackEntriesRepository.cs" />
+    <Compile Include="Model\Entries\FeedbackDatabaseEntry.cs" />
+    <Compile Include="Model\Entries\FeedbackEntry.cs" />
+    <Compile Include="Model\Entries\FeedbackEntryResult.cs" />
+    <Compile Include="Model\Plugins\FeedbackPluginBase.cs" />
     <Compile Include="Model\FeedbackProfile.cs" />
     <Compile Include="Model\FeedbackRating.cs" />
     <Compile Include="Model\FeedbackStatus.cs" />
@@ -291,10 +293,15 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="App_Plugins\Skybrud.Feedback\Feedback.css.map" />
-    <None Include="App_Plugins\Skybrud.Feedback\Feedback.less" />
+    <None Include="App_Plugins\Skybrud.Feedback\Styles\Feedback.less" />
     <None Include="App_Plugins\Skybrud.Feedback\package.manifest" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Controllers\FiltersPreValueEditor.js" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Controllers\ColumnsPreValueEditor.js" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Views\PreValues\Filters.html" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Views\PreValues\Columns.html" />
+    <None Include="App_Plugins\Skybrud.Feedback\Styles\_prevalues.less" />
     <None Include="packages.config" />
+    <None Include="Properties\AssemblyInfo.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Skybrud.Feedback\Controllers\ChangeStatus.js" />
@@ -303,8 +310,12 @@
     <Content Include="App_Plugins\Skybrud.Feedback\Controllers\UserPicker.js" />
     <Content Include="App_Plugins\Skybrud.Feedback\Controllers\UserPickerDialog.js" />
     <Content Include="App_Plugins\Skybrud.Feedback\Directives\loader.js" />
-    <Content Include="App_Plugins\Skybrud.Feedback\Feedback.css" />
-    <Content Include="App_Plugins\Skybrud.Feedback\Feedback.min.css" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Styles\Feedback.css">
+      <DependentUpon>Feedback.less</DependentUpon>
+    </Content>
+    <Content Include="App_Plugins\Skybrud.Feedback\Styles\Feedback.min.css">
+      <DependentUpon>Feedback.css</DependentUpon>
+    </Content>
     <Content Include="App_Plugins\Skybrud.Feedback\Lang\da-DK.xml" />
     <Content Include="App_Plugins\Skybrud.Feedback\Lang\en-GB.xml" />
     <Content Include="App_Plugins\Skybrud.Feedback\Lang\en-US.xml" />
@@ -324,6 +335,9 @@
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
     <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>"$(SolutionDir)..\build\UpdateAssemblyInfoJson.exe" "$(ProjectPath)" "$(TargetPath)"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

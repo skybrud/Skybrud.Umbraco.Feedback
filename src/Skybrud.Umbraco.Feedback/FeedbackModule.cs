@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Policy;
+using Skybrud.Umbraco.Feedback.Config;
+using Skybrud.Umbraco.Feedback.Constants;
+using Skybrud.Umbraco.Feedback.Controllers;
+using Skybrud.Umbraco.Feedback.Exceptions;
 using Skybrud.Umbraco.Feedback.Interfaces;
 using Skybrud.Umbraco.Feedback.Model;
+using Skybrud.Umbraco.Feedback.Model.Entries;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Models;
@@ -33,6 +39,19 @@ namespace Skybrud.Umbraco.Feedback {
             get { return _plugins.ToArray(); }
         }
 
+        /// <summary>
+        /// Gets a reference to the entries endpoint.
+        /// </summary>
+        public FeedbackEntriesRepository Entries { get; private set; }
+
+        #endregion
+
+        #region Constructors
+
+        public FeedbackModule() {
+            Entries = new FeedbackEntriesRepository(this);
+        }
+
         #endregion
 
         public void AddPlugin(IFeedbackPlugin plugin) {
@@ -40,6 +59,38 @@ namespace Skybrud.Umbraco.Feedback {
             _plugins.Add(plugin);
         }
 
+        /// <summary>
+        /// Gets an array of all available ratings for the site with the specified <code>siteId</code>.
+        /// </summary>
+        /// <param name="siteId">The ID of the site.</param>
+        public FeedbackRating[] GetRatingsForSite(int siteId) {
+            foreach (IFeedbackPlugin plugin in _plugins) {
+                try {
+                    FeedbackRating[] ratings = plugin.GetRatingsForSite(this, siteId);
+                    if (ratings != null) return ratings;
+                } catch (Exception ex) {
+                    LogHelper.Error<FeedbackModule>("Plugin of type " + plugin.GetType() + " failed for method GetRatingsForSite(" + siteId + ").", ex);
+                }
+            }
+            return new FeedbackRating[0];
+        }
+
+        /// <summary>
+        /// Gets an array of all available statuses for the site with the specified <code>siteId</code>.
+        /// </summary>
+        /// <param name="siteId">The ID of the site.</param>
+        public FeedbackStatus[] GetStatusesForSite(int siteId) {
+            foreach (IFeedbackPlugin plugin in _plugins) {
+                try {
+                    FeedbackStatus[] statuses = plugin.GetStatusesForSite(this, siteId);
+                    if (statuses != null) return statuses;
+                } catch (Exception ex) {
+                    LogHelper.Error<FeedbackModule>("Plugin of type " + plugin.GetType() + " failed for method GetStatusesForSite(" + siteId + ").", ex);
+                }
+            }
+            return new FeedbackStatus[0];
+        }
+        
         public IFeedbackUser GetUser(int userId) {
             foreach (IFeedbackPlugin plugin in _plugins) {
                 try {
@@ -65,10 +116,11 @@ namespace Skybrud.Umbraco.Feedback {
             }
             return users;
         }
-
+        
         public FeedbackEntry AddFeedbackComment(IPublishedContent site, IPublishedContent content, FeedbackProfile profile, FeedbackRating rating, FeedbackStatus status, string name, string email, string comment) {
 
             FeedbackEntry entry = new FeedbackEntry {
+                UniqueId = Guid.NewGuid() + "",
                 Site = site,
                 Page = content,
                 Name = FeedbackUtils.TrimToNull(name),
@@ -156,6 +208,64 @@ namespace Skybrud.Umbraco.Feedback {
 
         }
 
+        public FeedbackEntry AddRating(IPublishedContent site, IPublishedContent page, FeedbackProfile profile, FeedbackRating rating) {
+
+            FeedbackEntry entry = new FeedbackEntry {
+                UniqueId = Guid.NewGuid() + "",
+                Site = site,
+                Page = page,
+                Rating = rating,
+                Created = DateTime.UtcNow,
+                Updated = DateTime.UtcNow,
+                Status = FeedbackStatus.New
+            };
+
+            // Attempt to create the database table if it doesn't exist
+            try {
+                if (!Database.TableExist("SkybrudFeedback")) {
+                    Database.CreateTable<FeedbackDatabaseEntry>(false);
+                }
+            } catch (Exception ex) {
+                LogHelper.Error<FrontendController>("Error code: " + FeedbackConstants.ErrorCodes.CreateTableFailed, ex);
+                throw new FeedbackException(FeedbackConstants.ErrorCodes.CreateTableFailed, FeedbackConstants.ErrorMessages.DefaultSubmitError);
+            }
+
+
+            // Attempt to add the entry to the database
+            try {
+
+                // Trigger the "OnRatingSubmitting" before adding the entry
+                foreach (IFeedbackPlugin plugin in _plugins) {
+                    try {
+                        if (!plugin.OnRatingSubmitting(this, entry)) {
+                            return null;
+                        }
+                    } catch (Exception ex) {
+                        LogHelper.Error<FeedbackModule>("Plugin of type " + plugin.GetType() + " failed for method OnRatingSubmitting.", ex);
+                    }
+                }
+
+                // Insert the item into the database
+                entry.Insert();
+
+                // Trigger the "OnRatingSubmitted" after the entry has been added
+                foreach (IFeedbackPlugin plugin in _plugins) {
+                    try {
+                        plugin.OnRatingSubmitted(this, entry);
+                    } catch (Exception ex) {
+                        LogHelper.Error<FeedbackModule>("Plugin of type " + plugin.GetType() + " failed for method OnRatingSubmitted.", ex);
+                    }
+                }
+
+                return entry;
+
+            } catch (Exception ex) {
+                LogHelper.Error<FrontendController>("Error code: " + FeedbackConstants.ErrorCodes.CreateTableFailed, ex);
+                throw new FeedbackException(FeedbackConstants.ErrorCodes.InsertEntryFailed, FeedbackConstants.ErrorMessages.DefaultSubmitError);
+            }
+
+        }
+    
     }
 
 }
