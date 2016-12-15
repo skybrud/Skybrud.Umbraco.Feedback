@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B9F1D48D-973C-4A0C-8DBA-4B62A762E01C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -294,7 +294,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="App_Plugins\Skybrud.Feedback\Styles\Feedback.less" />
-    <None Include="App_Plugins\Skybrud.Feedback\package.manifest" />
+    <Content Include="App_Plugins\Skybrud.Feedback\package.manifest" />
     <Content Include="App_Plugins\Skybrud.Feedback\Controllers\FiltersPreValueEditor.js" />
     <Content Include="App_Plugins\Skybrud.Feedback\Controllers\ColumnsPreValueEditor.js" />
     <Content Include="App_Plugins\Skybrud.Feedback\Views\PreValues\Filters.html" />
@@ -302,6 +302,7 @@
     <None Include="App_Plugins\Skybrud.Feedback\Styles\_prevalues.less" />
     <None Include="packages.config" />
     <None Include="Properties\AssemblyInfo.json" />
+    <None Include="Skybrud.Umbraco.Feedback.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\Skybrud.Feedback\Controllers\ChangeStatus.js" />

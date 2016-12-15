@@ -18,7 +18,7 @@ module.exports = function(grunt) {
 		pkg: pkg,
 		clean: {
 			files: [
-				'files/**/*.*'
+				'releases/temp/'
 			]
 		},
 		copy: {
@@ -30,9 +30,10 @@ module.exports = function(grunt) {
 						src: [
 							pkg.name + '.dll',
 							pkg.name + '.xml',
-							'Skybrud.BorgerDk.dll'
+							'Skybrud.WebApi.Json.dll',
+							'Skybrud.WebApi.Json.xml'
 						],
-						dest: 'files/bin/'
+						dest: 'releases/temp/bin/'
 					}
 				]
 			},
@@ -40,25 +41,25 @@ module.exports = function(grunt) {
 				files: [
 					{
 						expand: true,
-						cwd: projectRoot + 'App_Plugins/Skybrud.BorgerDk/',
+						cwd: projectRoot + 'App_Plugins/Skybrud.Feedback/',
 						src: ['*.*', '**/*.*'],
-						dest: 'files/App_Plugins/Skybrud.BorgerDk/'
+						dest: 'releases/temp/App_Plugins/Skybrud.Feedback/'
 					}
 				]
 			}
 		},
 		zip: {
 			release: {
-				cwd: 'files/',
+				cwd: 'releases/temp/',
 				src: [
-					'files/**/*.*'
+					'releases/temp/**/*.*'
 				],
 				dest: 'releases/github/' + pkg.name + '.v' + version + '.zip'
 			}
 		},
 		umbracoPackage: {
 			dist: {
-				src: 'files/',
+				src: 'releases/temp/',
 				dest: 'releases/umbraco',
 				options: {
 					name: pkg.name,
@@ -87,7 +88,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-nuget');
 	grunt.loadNpmTasks('grunt-zip');
 
-	grunt.registerTask('dev', ['copy', 'zip', 'umbracoPackage', 'nugetpack']);
+	grunt.registerTask('dev', ['clean', 'copy', 'zip', 'umbracoPackage', 'nugetpack', 'clean']);
 
 	grunt.registerTask('default', ['dev']);
 
