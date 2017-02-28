@@ -128,6 +128,7 @@ namespace Skybrud.Umbraco.Feedback {
                 Rating = rating,
                 Comment = FeedbackUtils.TrimToNull(comment),
                 Created = DateTime.UtcNow,
+                Updated = DateTime.UtcNow,
                 Status = status
             };
 
