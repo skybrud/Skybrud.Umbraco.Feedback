@@ -137,7 +137,7 @@ namespace Skybrud.Umbraco.Feedback {
                     Database.CreateTable<FeedbackDatabaseEntry>(false);
                 }
             } catch (Exception) {
-                throw new FeedbackException("Din feedback kunne ikke tilføjes pga. en fejl på serveren (2QW843)");
+                throw new FeedbackException("2QW843", "Din feedback kunne ikke tilføjes pga. en fejl på serveren.");
             }
 
             // Attempt to add the entry to the database
@@ -168,8 +168,12 @@ namespace Skybrud.Umbraco.Feedback {
 
                 return entry;
 
-            } catch (Exception) {
-                throw new FeedbackException("Din feedback kunne ikke tilføjes pga. en fejl på serveren (NX84U7)");
+            } catch (Exception ex) {
+
+                LogHelper.Error<FeedbackModule>("Unable to add feedback entry", ex);
+
+                throw new FeedbackException("NX84U7", "Din feedback kunne ikke tilføjes pga. en fejl på serveren.");
+            
             }
 
         }
