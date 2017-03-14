@@ -4,7 +4,7 @@
 			"alias": "Skybrud.Feedback.SiteList",
 			"name": "Skybrud.Feedback - Feedback på sideniveau",
 			"editor": {
-				"view": "~/App_Plugins/Skybrud.Feedback/Views/List.html",
+				"view": "~/App_Plugins/Skybrud.Feedback/Views/List.html?v=3",
 				"hideLabel": true
 			},
 			"prevalues": {

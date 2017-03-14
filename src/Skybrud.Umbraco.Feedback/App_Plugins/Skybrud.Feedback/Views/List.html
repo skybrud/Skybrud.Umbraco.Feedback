@@ -194,7 +194,11 @@
             <tfoot>
                 <tr>
                     <th colspan="7">
-                        <div class="pull-left"></div>
+                        <div class="pull-left pagination pagination-left" style="margin: 0;">
+                            <div ng-show="pagination.page > 0 && pagination.total > 0">
+                                Viser {{pagination.offset + 1}}-{{pagination.offset + items.length}} af {{pagination.total}} &ndash; Side {{pagination.page}} af {{pagination.pages}}
+                            </div>
+                        </div>
                         <div class="pagination pagination-right" style="margin: 0;">
                             <ul>
                                 <li ng-class="{disabled:pagination.page <= 1}">
@@ -212,12 +216,9 @@
                                 </li>
                             </ul>
                         </div>
-
                     </th>
                 </tr>
             </tfoot>
-
-
         </table>
         <umb-load-indicator></umb-load-indicator>
     </div>

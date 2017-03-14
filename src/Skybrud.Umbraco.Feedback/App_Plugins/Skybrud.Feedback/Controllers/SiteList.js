@@ -100,6 +100,7 @@
             pages: 0,
             limit: $scope.model.config.limit ? $scope.model.config.limit : 10,
             offset: 0,
+            total: 0,
             pagination: []
         };
 
@@ -184,6 +185,7 @@
                 pagination.pages = r.pagination.pages;
                 pagination.limit = r.pagination.limit;
                 pagination.offset = r.pagination.offset;
+                pagination.total = r.pagination.total;
 
                 sorting = r.sorting;
 
