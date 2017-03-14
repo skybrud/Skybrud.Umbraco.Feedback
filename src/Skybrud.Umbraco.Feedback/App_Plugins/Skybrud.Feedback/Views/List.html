@@ -152,7 +152,7 @@
                             <tr>
                                 <th><localize key="feedback_labelEmail">E-mail</localize></th>
                                 <td>
-                                    <span ng-show="item.email">{{item.email}}</span>
+                                    <span ng-show="item.email"><a href="mailto:{{item.email}}">{{item.email}}</a></span>
                                     <span ng-show="!item.email"><em><localize key="feedback_labelNotSpecified">Not specified</localize></em></span>
                                 </td>
                             </tr>
