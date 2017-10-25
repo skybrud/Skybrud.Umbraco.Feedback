@@ -95,7 +95,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers {
             if (QueryString["type"] == "rating") {
                 entries = entries.Where(x => x.IsRatingOnly);
             } else if (QueryString["type"] == "comment") {
-                entries = entries.Where(x => x.HasCommentOrNameOrEmail);
+                entries = entries.Where(x => x.HasComment);
             }
 
 
