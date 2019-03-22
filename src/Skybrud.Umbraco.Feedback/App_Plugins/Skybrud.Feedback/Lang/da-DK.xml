@@ -24,6 +24,8 @@
     <key alias="labelNo">Nej</key>
     <key alias="labelRefresh">Genindlæs</key>
     <key alias="btnArchive">Arkivér</key>
+    <key alias="btnDelete">Slet</key>
+    <key alias="btnCleaning">Oprydning</key>
     <key alias="btnSelectStatus">Vælg status</key>
     <key alias="btnSelectResponsible">Vælg ansvarlig</key>
     <key alias="btnShowInUmbraco">Se i Umbraco</key>

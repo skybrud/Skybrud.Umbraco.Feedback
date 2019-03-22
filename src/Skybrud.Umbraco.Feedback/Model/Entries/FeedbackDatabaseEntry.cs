@@ -1,15 +1,13 @@
 ﻿using System;
-using Skybrud.Umbraco.Feedback.Interfaces;
 using Umbraco.Core.Persistence;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
-using Umbraco.Web;
 
 namespace Skybrud.Umbraco.Feedback.Model.Entries {
 
     [TableName("SkybrudFeedback")]
     [PrimaryKey("Id", autoIncrement = true)]
     [ExplicitColumns]
-    public class FeedbackDatabaseEntry {
+    class FeedbackDatabaseEntry {
 
         [Column("Id")]
         [PrimaryKeyColumn(AutoIncrement = true)]
@@ -54,24 +52,6 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
 
         [Column("Archived")]
         public bool IsArchived { get; set; }
-
-        public void ChangeStatus(FeedbackStatus status) {
-            Status = status.Alias;
-            UmbracoDatabase db = UmbracoContext.Current.Application.DatabaseContext.Database;
-            db.Update("SkybrudFeedback", "Id", this);
-        }
-
-        public void SetAssignedTo(IFeedbackUser user) {
-            AssignedTo = (user == null ? -1 : user.Id);
-            UmbracoDatabase db = UmbracoContext.Current.Application.DatabaseContext.Database;
-            db.Update("SkybrudFeedback", "Id", this);
-        }
-
-        public void Archive() {
-            IsArchived = true;
-            UmbracoDatabase db = UmbracoContext.Current.Application.DatabaseContext.Database;
-            db.Update("SkybrudFeedback", "Id", this);
-        }
     
     }
 

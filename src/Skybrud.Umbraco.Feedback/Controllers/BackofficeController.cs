@@ -4,22 +4,25 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Web;
 using System.Web.Http;
 using Skybrud.Umbraco.Feedback.Config;
-using Skybrud.Umbraco.Feedback.Exceptions;
 using Skybrud.Umbraco.Feedback.Extensions;
 using Skybrud.Umbraco.Feedback.Interfaces;
 using Skybrud.Umbraco.Feedback.Model;
 using Skybrud.Umbraco.Feedback.Model.Entries;
 using Skybrud.WebApi.Json;
 using Skybrud.WebApi.Json.Meta;
-using umbraco.cms.businesslogic.packager.standardPackageActions;
 using Umbraco.Core.Logging;
 using Umbraco.Web.Mvc;
 using Umbraco.Web.WebApi;
 ﻿using System.Net.Http;
+using System.Text.RegularExpressions;
+using Skybrud.Umbraco.Feedback.Exceptions;
+using Skybrud.Umbraco.Feedback.Models;
+using Umbraco.Web.Editors;
+
+#pragma warning disable 1591
 
 namespace Skybrud.Umbraco.Feedback.Controllers {
 
@@ -253,27 +256,34 @@ namespace Skybrud.Umbraco.Feedback.Controllers {
             // TODO: Detect culture from query string
             CultureInfo culture = new CultureInfo("en-US");
 
+            // Initialize a new service
+            FeedbackService service = new FeedbackService();
+
             try {
 
-                FeedbackEntry entry = FeedbackUtils.GetFromId(entryId);
-                if (entry == null) {
-                    return Request.CreateResponse(JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, "An entry with the specified ID could not be found."));
-                }
+                // Get a reference to the entry
+                FeedbackEntry entry = service.GetEntryById(entryId);
+                if (entry == null) throw new FeedbackHttpException("An entry with the specified ID could not be found.");
 
-                if (entry.IsArchived) {
-                    return Request.CreateResponse(JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, "The entry has been archived and can therefore not be changed."));
-                }
+                // Has the entry been archived?
+                if (entry.IsArchived) throw new FeedbackHttpException("The entry has been archived and can therefore not be changed.");
 
+                // Get a reference to the specified status
                 FeedbackStatus status = FeedbackConfig.Current.GetStatus(alias);
-                if (status == null) {
-                    return Request.CreateResponse(JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, "A status with the specified alias could not be found."));
-                }
+                if (status == null) throw new FeedbackHttpException("A status with the specified alias could not be found.");
 
-                entry.ChangeStatus(status);
+                // Update the status
+                service.SetStatus(entry, status);
 
                 return JsonMetaResponse.GetSuccess(FeedbackEntryResult.GetFromEntry(entry, Umbraco, culture));
 
-            } catch (Exception) {
+            } catch (FeedbackHttpException ex) {
+            
+                return Request.CreateResponse(JsonMetaResponse.GetError(ex.Code, ex.Message));
+            
+            } catch (Exception ex) {
+
+                LogHelper.Error<BackOfficeController>("Failed setting status for entry with ID " + entryId + ".", ex);
             
                 return Request.CreateResponse(JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, null));
             
@@ -282,17 +292,77 @@ namespace Skybrud.Umbraco.Feedback.Controllers {
         }
 
         [HttpGet]
-        public object Archive(int entryId) {
+        public object ArchiveEntry(int entryId) {
 
             // Set a danish culture
             CultureInfo culture = new CultureInfo("da");
 
-            FeedbackEntry entry = FeedbackUtils.GetAll().FirstOrDefault(x => x.Id == entryId);
+            // Initialize a new service
+            FeedbackService service = new FeedbackService();
+
+            // Get a reference to the entry
+            FeedbackEntry entry = service.GetEntryById(entryId);
             if (entry == null) return JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, "Den angivne besvarelse blev ikke fundet.");
 
-            entry.Archive();
+            // Set the entry as archived
+            service.Archive(entry);
 
             return JsonMetaResponse.GetSuccess(FeedbackEntryResult.GetFromEntry(entry, Umbraco, culture));
+
+        }
+
+        [HttpGet]
+        [HttpDelete]
+        public object DeleteEntry(int entryId) {
+
+            // Set a danish culture
+            CultureInfo culture = new CultureInfo("da");
+
+            // Initialize a new service
+            FeedbackService service = new FeedbackService();
+
+            // Get a reference to the entry
+            FeedbackEntry entry = service.GetEntryById(entryId);
+            if (entry == null) return JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, "Den angivne besvarelse blev ikke fundet.");
+
+            // Delete the entry
+            service.Delete(entry);
+
+            return JsonMetaResponse.GetSuccess(FeedbackEntryResult.GetFromEntry(entry, Umbraco, culture));
+
+        }
+
+        [HttpGet]
+        [HttpDelete]
+        public object DeleteAll(string date) {
+
+            // Initialize a new service
+            FeedbackService service = new FeedbackService();
+
+            try {
+
+                // Validate the date
+                if (Regex.IsMatch(date, "^([0-9]{4}-[0-9]{2}-[0-9]{2})$") == false) throw new FeedbackHttpException("Invalid date specified.");
+
+                // Parse the date
+                DateTime dt = DateTime.Parse(date, CultureInfo.InvariantCulture);
+
+                // Delete past entries in the database
+                int count = service.DeleteAll(dt);
+
+                return JsonMetaResponse.GetSuccess(new { date, count });
+
+            } catch (FeedbackHttpException ex) {
+            
+                return Request.CreateResponse(JsonMetaResponse.GetError(ex.Code, ex.Message));
+            
+            } catch (Exception ex) {
+
+                LogHelper.Error<BackOfficeController>("Failed deleting all entries before date " + date + ".", ex);
+            
+                return Request.CreateResponse(JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, "Failed deleting all entries before date " + date + "."));
+            
+            }
 
         }
 

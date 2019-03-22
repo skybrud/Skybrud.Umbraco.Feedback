@@ -274,6 +274,7 @@
     <Compile Include="Constants\FeedbackConstants.cs" />
     <Compile Include="Controllers\BackofficeController.cs" />
     <Compile Include="Controllers\FrontendController.cs" />
+    <Compile Include="Exceptions\FeedbackHttpException.cs" />
     <Compile Include="Extensions\EnumerableExtensionMethods.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensionMethods.cs" />
     <Compile Include="Exceptions\FeedbackException.cs" />
@@ -281,6 +282,7 @@
     <Compile Include="FeedbackUtils.cs" />
     <Compile Include="Interfaces\IFeedbackPlugin.cs" />
     <Compile Include="Interfaces\IFeedbackUser.cs" />
+    <Compile Include="Models\FeedbackService.cs" />
     <Compile Include="Model\Entries\FeedbackEntriesRepository.cs" />
     <Compile Include="Model\Entries\FeedbackDatabaseEntry.cs" />
     <Compile Include="Model\Entries\FeedbackEntry.cs" />
@@ -296,6 +298,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="App_Plugins\Skybrud.Feedback\Styles\Feedback.less" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Controllers\DeleteAllOverlay.js" />
     <Content Include="App_Plugins\Skybrud.Feedback\package.manifest" />
     <Content Include="App_Plugins\Skybrud.Feedback\Controllers\FiltersPreValueEditor.js" />
     <Content Include="App_Plugins\Skybrud.Feedback\Controllers\ColumnsPreValueEditor.js" />
@@ -327,6 +330,7 @@
     <Content Include="App_Plugins\Skybrud.Feedback\Views\List.html" />
     <Content Include="App_Plugins\Skybrud.Feedback\Views\SelectResponsible.html" />
     <Content Include="App_Plugins\Skybrud.Feedback\Views\UserPicker.html" />
+    <Content Include="App_Plugins\Skybrud.Feedback\Views\Overlays\DeleteAll.html" />
     <Content Include="App_Plugins\Skybrud.Feedback\Views\UserPickerDialog.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

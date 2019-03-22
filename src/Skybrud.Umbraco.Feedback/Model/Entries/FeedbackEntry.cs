@@ -12,7 +12,7 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
 
         #region Private fields
 
-        private FeedbackDatabaseEntry _entry;
+        internal FeedbackDatabaseEntry _entry;
 
         private int _siteId;
         private IPublishedContent _site;
@@ -177,20 +177,6 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
         internal void Insert() {
             object value = ApplicationContext.Current.DatabaseContext.Database.Insert(_entry);
             Id = Int32.Parse(value + "");
-        }
-
-        internal void ChangeStatus(FeedbackStatus status) {
-            Status = status;
-            _entry.ChangeStatus(status);
-        }
-
-        internal void SetAssignedTo(IFeedbackUser user) {
-            AssignedTo = user;
-            _entry.SetAssignedTo(user);
-        }
-
-        internal void Archive() {
-            _entry.Archive();
         }
     
     }

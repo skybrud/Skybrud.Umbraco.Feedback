@@ -14,6 +14,10 @@
             <select ng-if="model.config.filters.type" ng-options="item as item.name for item in filters.types track by item.value" ng-model="selected.type"></select>
         </div>
         <div class="feedbackListActions">
+            <a href="#" class="btn btn-default" ng-click="deleteAll()" prevent-default>
+                <i class="icon icon-trash"></i>
+                <localize key="feedback_btnCleaning">Cleaning</localize>
+            </a>
             <a href="#" class="btn btn-default" ng-click="refresh()" prevent-default>
                 <i class="icon icon-refresh"></i>
                 <localize key="feedback_labelRefresh">Refresh</localize>
@@ -181,7 +185,8 @@
                         </table>
 
                         <div class="options">
-                            <a href="#" class="btn" ng-click="archive(item.id)" prevent-default=""><localize key="feedback_btnArchive">Archive</localize></a>
+                            <a href="#" class="btn" ng-click="archive(item)" prevent-default=""><localize key="feedback_btnArchive">Archive</localize></a>
+                            <a href="#" class="btn" ng-click="delete(item)" prevent-default=""><localize key="feedback_btnDelete">Delete</localize></a>
                             <a href="#" class="btn" ng-click="openChangeStatus(item)" prevent-default=""><localize key="feedback_btnSelectStatus">Select status</localize></a>
                             <a href="#" class="btn" ng-click="openSelectResponsible(item)" prevent-default=""><localize key="feedback_btnSelectResponsible">Select responsible</localize></a>
                             <a ng-show="item.page" href="/umbraco/#/content/content/edit/{{item.pageId}}" class="btn"><localize key="feedback_btnShowInUmbraco">Show in Umbraco</localize></a>
@@ -222,5 +227,7 @@
         </table>
         <umb-load-indicator></umb-load-indicator>
     </div>
+    
+    <umb-overlay ng-if="overlay.show" model="overlay" position="right" view="overlay.view"></umb-overlay>
 
 </div>

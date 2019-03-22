@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Policy;
-using Skybrud.Umbraco.Feedback.Config;
 using Skybrud.Umbraco.Feedback.Constants;
 using Skybrud.Umbraco.Feedback.Controllers;
 using Skybrud.Umbraco.Feedback.Exceptions;
 using Skybrud.Umbraco.Feedback.Interfaces;
 using Skybrud.Umbraco.Feedback.Model;
 using Skybrud.Umbraco.Feedback.Model.Entries;
+using Skybrud.Umbraco.Feedback.Models;
 using Umbraco.Core;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Models;
 using Umbraco.Core.Persistence;
+
+#pragma warning disable 1591
 
 namespace Skybrud.Umbraco.Feedback {
     
@@ -27,22 +28,16 @@ namespace Skybrud.Umbraco.Feedback {
 
         #region Properties
 
-        public static FeedbackModule Instance {
-            get { return _instance ?? (_instance = new FeedbackModule()); }
-        }
-        
-        static UmbracoDatabase Database {
-            get { return ApplicationContext.Current.DatabaseContext.Database; }
-        }
+        public static FeedbackModule Instance => _instance ?? (_instance = new FeedbackModule());
 
-        public IFeedbackPlugin[] Plugins {
-            get { return _plugins.ToArray(); }
-        }
+        static UmbracoDatabase Database => ApplicationContext.Current.DatabaseContext.Database;
+
+        public IFeedbackPlugin[] Plugins => _plugins.ToArray();
 
         /// <summary>
         /// Gets a reference to the entries endpoint.
         /// </summary>
-        public FeedbackEntriesRepository Entries { get; private set; }
+        public FeedbackEntriesRepository Entries { get; }
 
         #endregion
 
@@ -198,7 +193,7 @@ namespace Skybrud.Umbraco.Feedback {
                 }
             }
 
-            entry.SetAssignedTo(user);
+            new FeedbackService().SetAssignedTo(entry, user);
 
             // Trigger the "OnUserAssigned" event when the user has been assigned
             foreach (IFeedbackPlugin plugin in _plugins) {

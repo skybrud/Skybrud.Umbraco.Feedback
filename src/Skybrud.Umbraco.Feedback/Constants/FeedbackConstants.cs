@@ -2,6 +2,8 @@
 
     public class FeedbackConstants {
 
+        public const string TableName = "SkybrudFeedback";
+
         public static class ErrorCodes {
 
             public const string CreateTableFailed = "228e6515-ea15-4816-865e-fcbb5c6e94de";

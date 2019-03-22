@@ -211,11 +211,11 @@
         };
 
 
-        $scope.archive = function (entryId) {
+        $scope.archive = function (entry) {
 
             if (!confirm('Are you sure you want to archive the selected feedback entry?')) return;
 
-            feedbackService.archiveEntry(entryId).success(function () {
+            feedbackService.archiveEntry(entry.id).success(function () {
 
                 notificationsService.success('The entry was successfully archived.');
 
@@ -224,6 +224,24 @@
             }).error(function (r) {
 
                 notificationsService.error('Unable to archive entry' + (r && r.meta && r.meta.error ? ': ' + r.meta.error : ''));
+
+            });
+
+        };
+
+        $scope.delete = function (entry) {
+
+            if (!confirm('Are you sure you want to delete the selected feedback entry?')) return;
+
+            feedbackService.deleteEntry(entry.id).success(function () {
+
+                notificationsService.success('The entry was successfully deleted.');
+
+                $scope.updateList();
+
+            }).error(function (r) {
+
+                notificationsService.error('Unable to delete entry' + (r && r.meta && r.meta.error ? ': ' + r.meta.error : ''));
 
             });
 
@@ -267,6 +285,26 @@
         // Refreshes the list
         $scope.refresh = function () {
             $scope.updateList();
+        };
+
+
+        $scope.deleteAll = function () {
+            $scope.overlay = {
+                title: "Oprydning",
+                view: "/App_Plugins/Skybrud.Feedback/Views/Overlays/DeleteAll.html",
+                show: true,
+                submitButtonLabel: "Fortsæt",
+                submit: function (model) {
+                    $http.get("/umbraco/backoffice/Feedback/Backend/DeleteAll?date=" + model.date).success(function(res) {
+                        $scope.overlay.show = false;
+                        $scope.overlay = null;
+                        notificationsService.success("Oprydning", "Der blev slettet " + res.data.count + " besvarelser.");
+                        if (res.data.count) $scope.refresh();
+                    }).error(function() {
+                        notificationsService.error("Oprydning", "Der skete en fejl på serveren. Prøv venligst igen.");
+                    });
+                }
+            };
         };
 
         // Add a watcher on the selection

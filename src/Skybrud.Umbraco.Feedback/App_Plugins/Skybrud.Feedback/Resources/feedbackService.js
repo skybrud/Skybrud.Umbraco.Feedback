@@ -1,7 +1,10 @@
 ﻿angular.module("umbraco.resources").factory("feedbackService", function ($http) {
     return {
         archiveEntry: function (entryId) {
-            return $http.get('/umbraco/backoffice/Feedback/Backend/Archive?entryId=' + entryId);
+            return $http.get('/umbraco/backoffice/Feedback/Backend/ArchiveEntry?entryId=' + entryId);
+        },
+        deleteEntry: function (entryId) {
+            return $http.get('/umbraco/backoffice/Feedback/Backend/DeleteEntry?entryId=' + entryId);
         },
         getEntry: function (entryId) {
             return $http.get('/umbraco/backoffice/Feedback/Backend/GetEntry?entryId=' + entryId);

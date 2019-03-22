@@ -24,6 +24,8 @@
     <key alias="labelNo">No</key>
     <key alias="labelRefresh">Refresh</key>
     <key alias="btnArchive">Archive</key>
+    <key alias="btnDelete">Delete</key>
+    <key alias="btnCleaning">Cleaning</key>
     <key alias="btnSelectStatus">Select status</key>
     <key alias="btnSelectResponsible">Select responsible</key>
     <key alias="btnShowInUmbraco">Show in Umbraco</key>
