@@ -6,3 +6,4 @@ src/Skybrud.Umbraco.Feedback/obj/
 src/Skybrud.Umbraco.Feedback.Web/bin/
 src/Skybrud.Umbraco.Feedback/App_Data/NuGetBackup/
 node_modules/
+src/.vs/
