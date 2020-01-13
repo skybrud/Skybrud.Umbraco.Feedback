@@ -9,6 +9,7 @@
     <key alias="labelPageTitle">Page Title</key>
     <key alias="labelPageUrl">URL</key>
     <key alias="labelAssignedTo">Assigned to</key>
+    <key alias="labelResponsible">Responsible</key>
     <key alias="labelRating">Rating</key>
     <key alias="labelName">Name</key>
     <key alias="labelEmail">E-mail</key>
@@ -16,6 +17,7 @@
     <key alias="labelStatus">Status</key>
     <key alias="labelComment">Comment</key>
     <key alias="labelNoEntriesSite">There are currently no active entries.</key>
+    <key alias="labelNoEntriesSiteWithFilter">There are currently no active entries matchign the selected criteria.</key>
     <key alias="labelNoResponsible">No responsible</key>
     <key alias="labelNotSpecified">Not specified</key>
     <key alias="labelYes">Yes</key>
