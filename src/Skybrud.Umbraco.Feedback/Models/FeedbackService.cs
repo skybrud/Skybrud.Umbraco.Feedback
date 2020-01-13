@@ -137,7 +137,7 @@ namespace Skybrud.Umbraco.Feedback.Models {
         public void SetStatus(FeedbackEntry entry, FeedbackStatus status) {
             if (entry == null) throw new ArgumentNullException(nameof(entry));
             if (status == null) throw new ArgumentNullException(nameof(status));
-            entry._entry.Status = status.Alias;
+            entry.Status = status;
             Save(entry._entry);
         }
 
@@ -148,7 +148,7 @@ namespace Skybrud.Umbraco.Feedback.Models {
         /// <param name="user">The user who should be assigned. Use <c>null</c> if the item should be unassigned.</param>
         public void SetAssignedTo(FeedbackEntry entry, IFeedbackUser user) {
             if (entry == null) throw new ArgumentNullException(nameof(entry));
-            entry._entry.AssignedTo = user?.Id ?? -1;
+            entry.AssignedTo = user;
             Save(entry._entry);
         }
 
