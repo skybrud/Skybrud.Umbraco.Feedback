@@ -8,10 +8,14 @@ using Umbraco.Web;
 
 namespace Skybrud.Umbraco.Feedback.Model.Entries {
 
+    /// <summary>
+    /// Class representing a feedback entry.
+    /// </summary>
     public class FeedbackEntry {
 
         #region Private fields
 
+        // ReSharper disable once InconsistentNaming
         internal FeedbackDatabaseEntry _entry;
 
         private int _siteId;
@@ -29,22 +33,29 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
 
         #region Properties
 
-        internal FeedbackDatabaseEntry Row {
-            get { return _entry; }
-        }
+        internal FeedbackDatabaseEntry Row => _entry;
 
+        /// <summary>
+        /// Gets or sets the numeric ID of the entry.
+        /// </summary>
         public int Id {
-            get { return _entry.Id; }
-            private set { _entry.Id = value; }
+            get => _entry.Id;
+            private set => _entry.Id = value;
         }
 
+        /// <summary>
+        /// Gets or sets the unique ID of the entry.
+        /// </summary>
         public string UniqueId {
-            get { return _entry.UniqueId; }
-            internal set { _entry.UniqueId = value; }
+            get => _entry.UniqueId;
+            internal set => _entry.UniqueId = value;
         }
 
+        /// <summary>
+        /// Gets or sets the ID of the site the issue was submitted for.
+        /// </summary>
         public int SiteId {
-            get { return _siteId; }
+            get => _siteId;
             set {
                 _siteId = value;
                 _site = UmbracoContext.Current.ContentCache.GetById(value);
@@ -52,17 +63,23 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
             }
         }
 
+        /// <summary>
+        /// Gets or sets the site the issue was submitted for.
+        /// </summary>
         public IPublishedContent Site {
-            get { return _site; }
+            get => _site;
             set {
                 _site = value;
-                _siteId = value == null ? 0 : value.Id;
+                _siteId = value?.Id ?? 0;
                 _entry.SiteId = _siteId;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the ID of the page the issue was submitted for.
+        /// </summary>
         public int PageId {
-            get { return _pageId; }
+            get => _pageId;
             set {
                 _pageId = value;
                 _page = UmbracoContext.Current.ContentCache.GetById(value);
@@ -70,88 +87,122 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
             }
         }
 
+        /// <summary>
+        /// Gets or sets the page the issue was submitted for.
+        /// </summary>
         public IPublishedContent Page {
-            get { return _page; }
+            get => _page;
             set {
                 _page = value;
-                _pageId = value == null ? 0 : value.Id;
+                _pageId = value?.Id ?? 0;
                 _entry.PageId = _pageId;
             }
         }
 
+        /// <summary>
+        /// Gets or sets the name the user who submitted the entry.
+        /// </summary>
         public string Name {
-            get { return _entry.Name; }
-            set { _entry.Name = value; }
+            get => _entry.Name;
+            set => _entry.Name = value;
         }
 
+        /// <summary>
+        /// Gets or sets the email address the user who submitted the entry.
+        /// </summary>
         public string Email {
-            get { return _entry.Email; }
-            set { _entry.Email = value; }
+            get => _entry.Email;
+            set => _entry.Email = value;
         }
 
+        /// <summary>
+        /// Gets or sets the rating of the entry.
+        /// </summary>
         public FeedbackRating Rating {
-            get { return _rating; }
+            get => _rating;
             set { _rating = value; _entry.Rating = (value == null ? null : _rating.Alias); }
         }
 
+        /// <summary>
+        /// Gets or sets the status of the entry.
+        /// </summary>
         public FeedbackStatus Status {
-            get { return _status; }
+            get => _status;
             set { _status = value; _entry.Status = (value == null ? null : _status.Alias); }
         }
 
+        /// <summary>
+        /// Gets or sets the comment of the entry.
+        /// </summary>
         public string Comment {
-            get { return _entry.Comment; }
-            set { _entry.Comment = value; }
+            get => _entry.Comment;
+            set => _entry.Comment = value;
         }
 
+        /// <summary>
+        /// Gets or sets a timestamp for when the entry was created.
+        /// </summary>
         public DateTime Created {
-            get { return _entry.Created; }
-            set { _entry.Created = value; }
+            get => _entry.Created;
+            internal set => _entry.Created = value;
         }
 
+        /// <summary>
+        /// Gets or sets a timestamp for when the entry was last updated.
+        /// </summary>
         public DateTime Updated {
-            get { return _entry.Updated; }
-            set { _entry.Updated = value; }
+            get => _entry.Updated;
+            set => _entry.Updated = value;
         }
 
+        /// <summary>
+        /// Gets or sets the user to which the entry should be assigned.
+        /// </summary>
         public IFeedbackUser AssignedTo {
-            get { return _assignedTo; }
+            get => _assignedTo;
             set {
                 _assignedTo = value;
-                _entry.AssignedTo = (value == null ? -1 : value.Id);
+                _entry.AssignedTo = value?.Id ?? -1;
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsArchived {
-            get { return _entry.IsArchived; }
-            set { _entry.IsArchived = value; }
+            get => _entry.IsArchived;
+            set => _entry.IsArchived = value;
         }
 
-        public bool HasComment {
-            get { return !String.IsNullOrWhiteSpace(Comment); }
-        }
+        /// <summary>
+        /// Gets whether the user submitted a comment.
+        /// </summary>
+        public bool HasComment => !string.IsNullOrWhiteSpace(Comment);
 
-        public bool HasName {
-            get { return !String.IsNullOrWhiteSpace(Name); }
-        }
+        /// <summary>
+        /// Gets whether the user submitted their name.
+        /// </summary>
+        public bool HasName => !string.IsNullOrWhiteSpace(Name);
 
-        public bool HasEmail {
-            get { return !String.IsNullOrWhiteSpace(Email); }
-        }
+        /// <summary>
+        /// Gets whether the user submitted their email address.
+        /// </summary>
+        public bool HasEmail => !string.IsNullOrWhiteSpace(Email);
 
-        public bool HasCommentOrNameOrEmail {
-            get { return !String.IsNullOrWhiteSpace(Comment + Name + Email); }
-        }
+        /// <summary>
+        /// Gets whether the user submitted either a comment, their name or their email address.
+        /// </summary>
+        public bool HasCommentOrNameOrEmail => !string.IsNullOrWhiteSpace(Comment + Name + Email);
 
-        public bool IsRatingOnly {
-            get { return !HasCommentOrNameOrEmail; }
-        }
+        /// <summary>
+        /// Gets whether the user only submitted their rating.
+        /// </summary>
+        public bool IsRatingOnly => !HasCommentOrNameOrEmail;
 
         #endregion
 
         internal FeedbackEntry() {
-            _entry = new FeedbackDatabaseEntry();
-            _entry.AssignedTo = -1;
+            _entry = new FeedbackDatabaseEntry {AssignedTo = -1};
         }
 
         internal FeedbackEntry(FeedbackDatabaseEntry entry, Dictionary<int, IFeedbackUser> users) {
@@ -176,7 +227,7 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
 
         internal void Insert() {
             object value = ApplicationContext.Current.DatabaseContext.Database.Insert(_entry);
-            Id = Int32.Parse(value + "");
+            Id = int.Parse(value + "");
         }
     
     }
