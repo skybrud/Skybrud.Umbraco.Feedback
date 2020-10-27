@@ -1,11 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
-namespace Skybrud.Umbraco.Feedback.Interfaces {
+namespace Skybrud.Umbraco.Feedback.Models.Users {
 
     public interface IFeedbackUser {
 
         [JsonProperty("id")]
         int Id { get; }
+
+        [JsonProperty("key")]
+        Guid Key { get; }
 
         [JsonProperty("name")]
         string Name { get; }

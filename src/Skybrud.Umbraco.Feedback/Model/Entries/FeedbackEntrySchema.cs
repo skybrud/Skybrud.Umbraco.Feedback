@@ -1,26 +1,26 @@
 ﻿using System;
-using Umbraco.Core.Persistence;
+using NPoco;
 using Umbraco.Core.Persistence.DatabaseAnnotations;
 
 namespace Skybrud.Umbraco.Feedback.Model.Entries {
 
     [TableName("SkybrudFeedback")]
-    [PrimaryKey("Id", autoIncrement = true)]
+    [PrimaryKey("Id", AutoIncrement = true)]
     [ExplicitColumns]
-    class FeedbackDatabaseEntry {
+    public class FeedbackEntrySchema {
 
         [Column("Id")]
         [PrimaryKeyColumn(AutoIncrement = true)]
         public int Id { get; set; }
 
-        [Column("UniqueId")]
-        public string UniqueId { get; set; }
+        [Column("Key")]
+        public Guid Key { get; set; }
 
-        [Column("SiteId")]
-        public int SiteId { get; set; }
+        [Column("SiteKey")]
+        public Guid SiteKey { get; set; }
 
-        [Column("PageId")]
-        public int PageId { get; set; }
+        [Column("PagKey")]
+        public Guid PageKey { get; set; }
 
         [Column("Name")]
         [NullSetting(NullSetting = NullSettings.Null)]
@@ -30,25 +30,25 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
         [NullSetting(NullSetting = NullSettings.Null)]
         public string Email { get; set; }
 
-        [Column("Rating")]
-        public string Rating { get; set; }
-
         [Column("Comment")]
         [NullSetting(NullSetting = NullSettings.Null)]
         [SpecialDbType(SpecialDbTypes.NTEXT)]
         public string Comment { get; set; }
 
+        [Column("Rating")]
+        public Guid Rating { get; set; }
+
         [Column("Status")]
-        public string Status { get; set; }
+        public Guid Status { get; set; }
 
-        [Column("Created")]
-        public DateTime Created { get; set; }
+        [Column("CreateDate")]
+        public DateTime CreateDate { get; set; }
 
-        [Column("Updated")]
-        public DateTime Updated { get; set; }
+        [Column("UpdateDate")]
+        public DateTime UpdateDate { get; set; }
 
         [Column("AssignedTo")]
-        public int AssignedTo { get; set; }
+        public Guid AssignedTo { get; set; }
 
         [Column("Archived")]
         public bool IsArchived { get; set; }

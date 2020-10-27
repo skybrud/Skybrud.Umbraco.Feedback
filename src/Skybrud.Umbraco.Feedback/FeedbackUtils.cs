@@ -1,5 +1,6 @@
 ﻿using Skybrud.Umbraco.Feedback.Model.Entries;
 using Skybrud.Umbraco.Feedback.Models;
+using Skybrud.Umbraco.Feedback.Services;
 
 #pragma warning disable 1591
 
@@ -13,17 +14,17 @@ namespace Skybrud.Umbraco.Feedback {
             return str == "" ? null : str;
         }
 
-        public static FeedbackEntry[] GetAll() {
-            return new FeedbackService().GetAll();
-        }
+        //public static FeedbackEntry[] GetAll() {
+        //    return new FeedbackService().GetAll();
+        //}
 
-        public static FeedbackEntry[] GetAllForSite(int siteId) {
-            return new FeedbackService().GetAllForSite(siteId);
-        }
+        //public static FeedbackEntry[] GetAllForSite(int siteId) {
+        //    return new FeedbackService().GetAllForSite(siteId);
+        //}
 
-        public static FeedbackEntry GetFromId(int entryId) {
-            return new FeedbackService().GetEntryById(entryId);
-        }
+        //public static FeedbackEntry GetFromId(int entryId) {
+        //    return new FeedbackService().GetEntryById(entryId);
+        //}
 
     }
 

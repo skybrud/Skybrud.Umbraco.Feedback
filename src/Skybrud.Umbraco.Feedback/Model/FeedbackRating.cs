@@ -7,42 +7,35 @@ namespace Skybrud.Umbraco.Feedback.Model {
 
     public class FeedbackRating {
 
-        #region Constants
-
-        public static readonly FeedbackRating Positive = new FeedbackRating("positive");
-        
-        public static readonly FeedbackRating Negative = new FeedbackRating("negative");
-
-        #endregion
-
         #region Properties
 
-        [JsonProperty("name")]
-        public string Name {
-            get {
-                if (String.IsNullOrWhiteSpace(Alias)) return "No name";
-                string fallback = Alias.ToFirstUpper();
-                string translated = ApplicationContext.Current.Services.TextService.Localize("feedback/rating" + fallback, CultureInfo.CurrentCulture);
-                return String.IsNullOrWhiteSpace(translated) ? fallback : translated;
-            }
-        }
-
         [JsonProperty("alias")]
-        public string Alias { get; set; }
+        public string Alias { get; }
+
+        [JsonProperty("key")]
+        public Guid Key { get; }
+
+        [JsonProperty("name")]
+        public string Name { get; }
 
         [JsonProperty("active")]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; }
 
         #endregion
 
         #region Constructors
 
-        public FeedbackRating() {
+        public FeedbackRating(Guid key, string alias) {
+            Key = key;
+            Alias = alias;
             IsActive = true;
         }
 
-        public FeedbackRating(string alias) : this() {
+        public FeedbackRating(Guid key, string alias, string name) {
+            Key = key;
             Alias = alias;
+            Name = name;
+            IsActive = true;
         }
 
         #endregion

@@ -1,12 +1,14 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using Newtonsoft.Json;
-using Skybrud.Umbraco.Feedback.Interfaces;
 
-namespace Skybrud.Umbraco.Feedback.Model {
+namespace Skybrud.Umbraco.Feedback.Models.Users {
     
     public class FeedbackUser : IFeedbackUser {
 
         public int Id { get; set; }
+        
+        public Guid Key { get; set; }
 
         public string Name { get; set; }
 
@@ -15,10 +17,8 @@ namespace Skybrud.Umbraco.Feedback.Model {
         public string Language { get; set; }
 
         [JsonIgnore]
-        public CultureInfo Culture {
-            get { return CultureInfo.GetCultureInfo(Language.Replace("_", "-")); }
-        }
-    
+        public CultureInfo Culture => CultureInfo.GetCultureInfo(Language.Replace("_", "-"));
+
     }
 
 }

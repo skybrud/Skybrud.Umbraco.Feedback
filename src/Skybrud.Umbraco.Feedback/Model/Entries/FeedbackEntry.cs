@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using Skybrud.Umbraco.Feedback.Config;
-using Skybrud.Umbraco.Feedback.Interfaces;
-using Umbraco.Core;
-using Umbraco.Core.Models;
-using Umbraco.Web;
 
 namespace Skybrud.Umbraco.Feedback.Model.Entries {
 
@@ -16,24 +10,16 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
         #region Private fields
 
         // ReSharper disable once InconsistentNaming
-        internal FeedbackDatabaseEntry _entry;
-
-        private int _siteId;
-        private IPublishedContent _site;
-
-        private int _pageId;
-        private IPublishedContent _page;
+        internal FeedbackEntryDto _entry;
 
         private FeedbackRating _rating;
         private FeedbackStatus _status;
-
-        private IFeedbackUser _assignedTo;
 
         #endregion
 
         #region Properties
 
-        internal FeedbackDatabaseEntry Row => _entry;
+        internal FeedbackEntryDto Dto => _entry;
 
         /// <summary>
         /// Gets or sets the numeric ID of the entry.
@@ -44,59 +30,27 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
         }
 
         /// <summary>
-        /// Gets or sets the unique ID of the entry.
+        /// Gets or sets the key of the entry.
         /// </summary>
-        public string UniqueId {
-            get => _entry.UniqueId;
-            internal set => _entry.UniqueId = value;
+        public Guid Key {
+            get => _entry.Key;
+            internal set => _entry.Key = value;
         }
 
         /// <summary>
-        /// Gets or sets the ID of the site the issue was submitted for.
+        /// Gets or sets the key of the site the issue was submitted for.
         /// </summary>
-        public int SiteId {
-            get => _siteId;
-            set {
-                _siteId = value;
-                _site = UmbracoContext.Current.ContentCache.GetById(value);
-                _entry.SiteId = value;
-            }
+        public Guid SiteKey {
+            get => _entry.SiteKey;
+            set => _entry.SiteKey = value;
         }
 
         /// <summary>
-        /// Gets or sets the site the issue was submitted for.
+        /// Gets or sets the key of the page the issue was submitted for.
         /// </summary>
-        public IPublishedContent Site {
-            get => _site;
-            set {
-                _site = value;
-                _siteId = value?.Id ?? 0;
-                _entry.SiteId = _siteId;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the ID of the page the issue was submitted for.
-        /// </summary>
-        public int PageId {
-            get => _pageId;
-            set {
-                _pageId = value;
-                _page = UmbracoContext.Current.ContentCache.GetById(value);
-                _entry.PageId = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the page the issue was submitted for.
-        /// </summary>
-        public IPublishedContent Page {
-            get => _page;
-            set {
-                _page = value;
-                _pageId = value?.Id ?? 0;
-                _entry.PageId = _pageId;
-            }
+        public Guid PageKey {
+            get => _entry.PageKey;
+            set => _entry.PageKey = value;
         }
 
         /// <summary>
@@ -120,7 +74,7 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
         /// </summary>
         public FeedbackRating Rating {
             get => _rating;
-            set { _rating = value; _entry.Rating = (value == null ? null : _rating.Alias); }
+            set { _rating = value; _entry.Rating = (value == null ? Guid.Empty : _rating.Key); }
         }
 
         /// <summary>
@@ -128,7 +82,7 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
         /// </summary>
         public FeedbackStatus Status {
             get => _status;
-            set { _status = value; _entry.Status = (value == null ? null : _status.Alias); }
+            set { _status = value; _entry.Status = (value == null ? Guid.Empty : _status.Key); }
         }
 
         /// <summary>
@@ -143,27 +97,24 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
         /// Gets or sets a timestamp for when the entry was created.
         /// </summary>
         public DateTime Created {
-            get => _entry.Created;
-            internal set => _entry.Created = value;
+            get => _entry.CreateDate;
+            internal set => _entry.CreateDate = value;
         }
 
         /// <summary>
         /// Gets or sets a timestamp for when the entry was last updated.
         /// </summary>
-        public DateTime Updated {
-            get => _entry.Updated;
-            set => _entry.Updated = value;
+        public DateTime UpdateDate {
+            get => _entry.UpdateDate;
+            set => _entry.UpdateDate = value;
         }
 
         /// <summary>
         /// Gets or sets the user to which the entry should be assigned.
         /// </summary>
-        public IFeedbackUser AssignedTo {
-            get => _assignedTo;
-            set {
-                _assignedTo = value;
-                _entry.AssignedTo = value?.Id ?? -1;
-            }
+        public Guid AssignedTo {
+            get => _entry.AssignedTo;
+            set => _entry.AssignedTo = value;
         }
 
         /// <summary>
@@ -202,32 +153,11 @@ namespace Skybrud.Umbraco.Feedback.Model.Entries {
         #endregion
 
         internal FeedbackEntry() {
-            _entry = new FeedbackDatabaseEntry {AssignedTo = -1};
+            _entry = new FeedbackEntryDto();
         }
 
-        internal FeedbackEntry(FeedbackDatabaseEntry entry, Dictionary<int, IFeedbackUser> users) {
-
+        internal FeedbackEntry(FeedbackEntryDto entry) {
             _entry = entry;
-            
-            SiteId = entry.SiteId;
-            PageId = entry.PageId;
-
-            var config = FeedbackConfig.Current;
-            var profile = FeedbackConfig.Current.GetProfile(entry.SiteId);
-
-            if (profile != null) {
-                _rating = profile.GetRating(entry.Rating);
-            }
-
-            _status = config.GetStatus(entry.Status);
-
-            _assignedTo = users.ContainsKey(entry.AssignedTo) ? users[entry.AssignedTo] : null;
-
-        }
-
-        internal void Insert() {
-            object value = ApplicationContext.Current.DatabaseContext.Database.Insert(_entry);
-            Id = int.Parse(value + "");
         }
     
     }

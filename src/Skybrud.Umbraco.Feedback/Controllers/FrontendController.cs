@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Specialized;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
-using System.Web;
 using System.Web.Http;
-using Skybrud.Umbraco.Feedback.Config;
-using Skybrud.Umbraco.Feedback.Constants;
-using Skybrud.Umbraco.Feedback.Exceptions;
-using Skybrud.Umbraco.Feedback.Extensions;
 using Skybrud.Umbraco.Feedback.Model;
 using Skybrud.Umbraco.Feedback.Model.Entries;
+using Skybrud.Umbraco.Feedback.Models;
+using Skybrud.Umbraco.Feedback.Models.Api;
+using Skybrud.Umbraco.Feedback.Models.Results;
+using Skybrud.Umbraco.Feedback.Models.Sites;
+using Skybrud.Umbraco.Feedback.Plugins;
+using Skybrud.Umbraco.Feedback.Services;
 using Skybrud.WebApi.Json;
-using Skybrud.WebApi.Json.Meta;
-using Umbraco.Core.Logging;
-using Umbraco.Core.Models;
+using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Web.Mvc;
 using Umbraco.Web.WebApi;
 
@@ -22,246 +19,136 @@ namespace Skybrud.Umbraco.Feedback.Controllers {
     [JsonOnlyConfiguration]
     [PluginController("Feedback")]
     public class FrontendController : UmbracoApiController {
+        
+        private readonly FeedbackService _feedbackService;
+        
+        private readonly FeedbackPluginCollection _feedbackPluginCollection;
 
-        public const string ErrorInvalidConfig = "UTFMMH";
-        public const string ErrorSiteNotFound = "DFG56G";
-        public const string ErrorPageNotFound = "YAH2RQ";
-        public const string ErrorRatingNotFound = "EDKGLD";
-        public const string ErrorProfileNotFound = "54C39E";
-        public const string ErrorCustom = "DFG5BF";
-        public const string ErrorUnknown = "6GF36E";
-        public const string ErrorRequired = "41AD86";
-        public const string ErrorCancelled = "B02C58";
+        #region Constructors
 
-        public FeedbackModule Feedback {
-            get { return FeedbackModule.Instance; }
+        public FrontendController(FeedbackService feedbackService, FeedbackPluginCollection feedbackPluginCollection) {
+            _feedbackService = feedbackService;
+            _feedbackPluginCollection = feedbackPluginCollection;
         }
 
-        public NameValueCollection FormData {
-            get { return HttpContext.Current.Request.Form; }
-        }
+        #endregion
 
-        private HttpResponseMessage GetError(object errorCode, string message) {
-            return Request.CreateResponse(HttpStatusCode.InternalServerError, new {
-                meta = new {
-                    code = 500,
-                    errorCode,
-                    error = message
-                },
-                data = default(object)
-            });
-        }
-
-        [HttpGet]
-        public object GetConfig() {
-
-            return JsonMetaResponse.GetSuccess(FeedbackConfig.Current);
-
-        }
+        #region Member methods
 
         [HttpPost]
-        public object AddRating() {
+        public object AddRating([FromBody] AddRatingModel model) {
 
-            // Load the config file
-            FeedbackConfig config;
-            try {
-                config = FeedbackConfig.Current;
-            } catch (Exception) {
-                return GetError(ErrorInvalidConfig, FeedbackConstants.ErrorMessages.DefaultSubmitError);
+            // Get site site
+            if (!_feedbackPluginCollection.TryGetSite(model.SiteKey, out FeedbackSiteSettings site)) {
+                return Request.CreateResponse(HttpStatusCode.NotFound, "A site with the specified key could not be found.");
             }
-
-            // Read from the form DATA
-            int siteId = FormData.GetInt32("siteId");
-            int pageId = FormData.ContainsKey("nodeId") ? FormData.GetInt32("nodeId") : FormData.GetInt32("pageId");
-            string rating = FormData["rating"];
-
+            
             // Get the page
-            IPublishedContent site = Umbraco.TypedContent(siteId);
-            IPublishedContent page = Umbraco.TypedContent(pageId);
+            IPublishedContent page = Umbraco.Content(model.PageKey);
+            if (page == null) return Request.CreateResponse(HttpStatusCode.NotFound, "A page with the specified key could not be found.");
 
-            // Check whether the root node was found
-            if (site == null) {
-                return GetError(ErrorSiteNotFound, "A site with the specified ID could not be found.");
+            // Get the rating
+            if (!site.TryGetRating(model.Rating, out FeedbackRating rating)) {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "A rating with the specified name does not exist.");
             }
+            
+            // Attempt to add the rating
+            AddRatingResult result = _feedbackService.AddRating(site, page, rating);
 
-            // Check whether the page was found
-            if (page == null) {
-                return GetError(ErrorPageNotFound, "A page with the specified ID could not be found.");
-            }
+            // Return a response matching the result
+            switch (result.Status) {
 
-            // Look for a profile either for the specified site or globally for "0"
-            FeedbackProfile profile;
-            if (!config.Profiles.TryGetValue(site.Id, out profile)) {
-                if (!config.Profiles.TryGetValue(0, out profile)) {
-                    return GetError(ErrorProfileNotFound, FeedbackConstants.ErrorMessages.DefaultSubmitError);
-                }
-            }
+                case AddRatingStatus.Success:
+                    return new { key = result.Entry.Key };
 
-            // Validate the rating
-            FeedbackRating rr = profile.GetRating(rating);
-            if (rr == null) {
-                return GetError(ErrorRatingNotFound, "A rating with the specified name does not exist.");
-            }
+                case AddRatingStatus.Cancelled:
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, result.Message);
 
-            try {
-                FeedbackEntry entry = FeedbackModule.Instance.AddRating(site, page, profile, rr);
-                if (entry == null) return GetError(ErrorCancelled, "Your rating submission was cancelled by the server.");
-                return new {
-                    id = entry.Id,
-                    uniqueId = entry.UniqueId,
-                    rating = entry.Rating
-                };
-            } catch (FeedbackException ex) {
-                return GetError(ex.Code, String.IsNullOrWhiteSpace(ex.Message) ? FeedbackConstants.ErrorMessages.DefaultSubmitError : ex.Message);
-            } catch (Exception ex) {
-                LogHelper.Error<FrontendController>("Error code: " + ErrorUnknown, ex);
-                return GetError(ErrorUnknown, FeedbackConstants.ErrorMessages.DefaultSubmitError);
+                default:
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError, result.Message);
+
             }
 
         }
 
         [HttpPost]
-        public object UpdateEntry() {
+        public object UpdateEntry([FromBody] UpdateEntryModel model) {
 
-            try {
-                
-                // Load the config file
-                FeedbackConfig config;
-                try {
-                    config = FeedbackConfig.Current;
-                } catch (Exception) {
-                    return GetError(ErrorInvalidConfig, "Your feedback could not be submitted due to an error on the server.");
-                }
-
-                // Read from the form DATA
-                string uniqueId = FormData["uniqueId"];
-                int siteId = FormData.GetInt32("siteId");
-                int pageId = FormData.ContainsKey("nodeId") ? FormData.GetInt32("nodeId") : FormData.GetInt32("pageId");
-                string name = FormData["name"];
-                string email = FormData["email"];
-                string comment = FormData["comment"];
-
-                //// Get the page
-                //IPublishedContent site = Umbraco.TypedContent(siteId);
-                //IPublishedContent page = Umbraco.TypedContent(pageId);
-            
-                //// Check whether the root node was found
-                //if (site == null) {
-                //    return GetError(ErrorSiteNotFound, "A site with the specified ID could not be found.");
-                //}
-
-                //// Check whether the page was found
-                //if (page == null) {
-                //    return GetError(ErrorPageNotFound, "A page with the specified ID could not be found.");
-                //}
-
-                // Look for a profile either for the specified site or globally for "0"
-                FeedbackProfile profile;
-                if (!config.Profiles.TryGetValue(siteId, out profile)) {
-                    if (!config.Profiles.TryGetValue(0, out profile)) {
-                        return GetError(ErrorProfileNotFound, "Your feedback could not be submitted due to an error on the server.");
-                    }
-                }
-
-                FeedbackEntry entry = Feedback.Entries.GetEntryById(uniqueId);
-                if (entry == null) throw new FeedbackException("b96aa020-f0e7-4d41-baaa-58cb75b3a87d", "Your feedback could not be submitted due to an error on the server.");
-
-                if (entry.SiteId != siteId) throw new FeedbackException("167fecbb-667f-42f1-af06-5d7d0eeee4e4", "Your feedback could not be submitted due to an error on the server.");
-                if (entry.PageId != pageId) throw new FeedbackException("4f7a734c-e664-4bb6-9031-1990276bf5e2", "Your feedback could not be submitted due to an error on the server.");
-            
-                // Update the properties of the feedback entry
-                entry.Name = name;
-                entry.Email = email;
-                entry.Comment = String.IsNullOrWhiteSpace(comment) ? null : comment.Trim();
-
-                // If an editor has archived the entry, we restore it since it has changes
-                entry.IsArchived = false;
-
-                // Set the "Updated" timestamp
-                entry.Updated = DateTime.UtcNow;
-
-                // Update the feedback entry in the database
-                Feedback.Entries.Save(entry);
-
-                return new {
-                    id = entry.Id,
-                    uniqueId = entry.UniqueId,
-                    rating = entry.Rating
-                };
-
-            } catch (FeedbackException ex) {
-                return GetError(ex.Code, String.IsNullOrWhiteSpace(ex.Message) ? "Your feedback could not be submitted due to an error on the server." : ex.Message);
-            } catch (Exception ex) {
-                LogHelper.Error<FrontendController>("Error code: " + ErrorUnknown, ex);
-                return GetError(ErrorUnknown, "Your feedback could not be submitted due to an error on the server.");
+            // Get site site
+            if (!_feedbackPluginCollection.TryGetSite(model.SiteKey, out _)) {
+                return Request.CreateResponse(HttpStatusCode.NotFound, "A site with the specified key could not be found.");
             }
-
-        }
-
-        public object PostFeedback() {
-
-            // Load the config file
-            FeedbackConfig config;
-            try {
-                config = FeedbackConfig.Current;
-            } catch (Exception) {
-                return GetError(ErrorInvalidConfig, "Your feedback could not be submitted due to an error on the server.");
-            }
-
-            // Read from the form DATA
-            int siteId = FormData.GetInt32("siteId");
-            int pageId = FormData.ContainsKey("nodeId") ? FormData.GetInt32("nodeId") : FormData.GetInt32("pageId");
-            string name = FormData["name"];
-            string email = FormData["email"];
-            string rating = FormData["rating"];
-            string comment = FormData["comment"];
-
+            
             // Get the page
-            IPublishedContent site = Umbraco.TypedContent(siteId);
-            IPublishedContent page = Umbraco.TypedContent(pageId);
+            IPublishedContent page = Umbraco.Content(model.PageKey);
+            if (page == null) return Request.CreateResponse(HttpStatusCode.NotFound, "A page with the specified key could not be found.");
 
-            // Check whether the root node was found
-            if (site == null) {
-                return GetError(ErrorSiteNotFound, "A site with the specified ID could not be found.");
-            }
+            // Get a reference to the entry
+            FeedbackEntry entry =_feedbackService.GetEntryByKey(model.Key);
+            if (entry == null) return Request.CreateResponse(HttpStatusCode.NotFound, "An entry with the specified key could not be found.");
 
-            // Check whether the page was found
-            if (page == null) {
-                return GetError(ErrorPageNotFound, "A page with the specified ID could not be found.");
-            }
+            // TODO: Should we validate the entry against the specified site and page?
 
-            // Look for a profile either for the specified site or globally for "0"
-            FeedbackProfile profile;
-            if (!config.Profiles.TryGetValue(site.Id, out profile)) {
-                if (!config.Profiles.TryGetValue(0, out profile)) {
-                    return GetError(ErrorProfileNotFound, "Your feedback could not be submitted due to an error on the server.");
-                }
-            }
+            // Update the properties
+            entry.Name = model.Name;
+            entry.Email = model.Email;
+            entry.Comment = model.Comment;
 
-            // Validate the rating
-            FeedbackRating rr = profile.GetRating(rating);
-            if (rr == null) {
-                return GetError(ErrorRatingNotFound, "A rating with the specified name does not exist.");
-            }
+            // Attempt to add the comment
+            UpdateEntryResult result = _feedbackService.UpdateEntry(entry);
 
-            // Validate the text fields
-            if (profile.Fields.Email == FeedbackFieldType.Required && String.IsNullOrWhiteSpace(email)) return GetError(ErrorRequired, "One or more required fields must be specified.");
-            if (profile.Fields.Name == FeedbackFieldType.Required && String.IsNullOrWhiteSpace(name)) return GetError(ErrorRequired, "One or more required fields must be specified.");
-            if (profile.Fields.Comment == FeedbackFieldType.Required && String.IsNullOrWhiteSpace(comment)) return GetError(ErrorRequired, "One or more required fields must be specified.");
+            // Return a response matching the result
+            switch (result.Status) {
 
-            FeedbackStatus status = config.GetStatus("new");
+                case AddRatingStatus.Success:
+                    return new { key = result.Entry.Key };
 
-            try {
-                FeedbackEntry entry = FeedbackModule.Instance.AddFeedbackComment(site, page, profile, rr, status, name, email, comment);
-                if (entry == null) return GetError(ErrorCancelled, "Your feedback submission was cancelled by the server.");
-                return JsonMetaResponse.GetSuccess(entry.Id);
-            } catch (FeedbackException ex) {
-                return GetError(ErrorCustom, ex.Message);
-            } catch (Exception) {
-                return GetError(ErrorUnknown, "Your feedback could not be submitted due to an error on the server.");
+                case AddRatingStatus.Cancelled:
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, result.Message);
+
+                default:
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError, result.Message);
+
             }
 
         }
+
+        public object AddComment([FromBody] AddCommentModel model) {
+
+            // Get site site
+            if (!_feedbackPluginCollection.TryGetSite(model.SiteKey, out FeedbackSiteSettings site)) {
+                return Request.CreateResponse(HttpStatusCode.NotFound, "A site with the specified key could not be found.");
+            }
+            
+            // Get the page
+            IPublishedContent page = Umbraco.Content(model.PageKey);
+            if (page == null) return Request.CreateResponse(HttpStatusCode.NotFound, "A page with the specified key could not be found.");
+
+            // Get the rating
+            if (!site.TryGetRating(model.Rating, out FeedbackRating rating)) {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "A rating with the specified name does not exist.");
+            }
+
+            // Attempt to add the comment
+            AddCommentResult result = _feedbackService.AddComment(site, page, rating, model.Name, model.Email, model.Comment);
+
+            // Return a response matching the result
+            switch (result.Status) {
+
+                case AddCommentStatus.Success:
+                    return new { key = result.Entry.Key };
+
+                case AddCommentStatus.Cancelled:
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, result.Message);
+
+                default:
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError, result.Message);
+
+            }
+
+        }
+
+        #endregion
 
     }
 
