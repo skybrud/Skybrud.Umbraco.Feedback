@@ -2,6 +2,14 @@
 
 <language alias="en" intName="English (US)" localName="English (US)" lcid="" culture="en-US">
   <area alias="feedback">
+    <key alias="statusNew">New</key>
+    <key alias="statusInprogress">In progress</key>
+    <key alias="statusInProgress">In progress</key>
+    <key alias="statusClosed">Closed</key>
+    <key alias="ratingPositive">Positive</key>
+    <key alias="ratingNegative">Negative</key>
+  </area>
+  <area alias="feedback">
     <key alias="labelId">ID</key>
     <key alias="labelSite">Site</key>
     <key alias="labelPage">Page</key>
@@ -16,13 +24,13 @@
     <key alias="labelAdded">Added</key>
     <key alias="labelStatus">Status</key>
     <key alias="labelComment">Comment</key>
-    <key alias="labelNoEntriesSite">There are currently no active entries.</key>
-    <key alias="labelNoEntriesSiteWithFilter">There are currently no active entries matchign the selected criteria.</key>
     <key alias="labelNoResponsible">No responsible</key>
     <key alias="labelNotSpecified">Not specified</key>
     <key alias="labelYes">Yes</key>
     <key alias="labelNo">No</key>
     <key alias="labelRefresh">Refresh</key>
+  </area>
+  <area alias="feedback">
     <key alias="btnArchive">Archive</key>
     <key alias="btnDelete">Delete</key>
     <key alias="btnCleaning">Cleaning</key>
@@ -30,21 +38,5 @@
     <key alias="btnSelectResponsible">Select responsible</key>
     <key alias="btnShowInUmbraco">Show in Umbraco</key>
     <key alias="btnShowAtWebsite">Show at website</key>
-    <key alias="statusNew">New</key>
-    <key alias="statusInprogress">In progress</key>
-    <key alias="statusInProgress">In progress</key>
-    <key alias="statusClosed">Closed</key>
-    <key alias="ratingPositive">Positive</key>
-    <key alias="ratingNegative">Negative</key>
-    <key alias="headerSelectStatus">Select status</key>
-    <key alias="headerSelectUser">Select user</key>
-    <key alias="headerSelectResponsible">Select responsible</key>
-    <key alias="labelAllRatings">All ratings</key>
-    <key alias="labelAllUsers">All users</key>
-    <key alias="labelMe">Me</key>
-    <key alias="labelAllStatuses">All statuses</key>
-    <key alias="labelAllTypes">All types</key>
-    <key alias="labelOnlyWithRating">Only with rating</key>
-    <key alias="labelRatingAndComment">Rating and comment</key>
   </area>
 </language>

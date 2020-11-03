@@ -1,4 +1,4 @@
-﻿using Skybrud.Umbraco.Feedback.Model.Entries;
+﻿using Skybrud.Umbraco.Feedback.Models.Entries;
 
 namespace Skybrud.Umbraco.Feedback.Models.Results {
     

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using Skybrud.Umbraco.Feedback.Models.Sites;
 using Umbraco.Core.Composing;
+using Umbraco.Core.Models;
+using Umbraco.Core.Models.ContentEditing;
+using Umbraco.Core.Models.Membership;
 
 namespace Skybrud.Umbraco.Feedback.Plugins {
     
@@ -28,6 +32,17 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
             }
 
             site = null;
+            return false;
+
+        }
+
+        public static bool TryGetContentApp(this FeedbackPluginCollection collection, IContent content, IEnumerable<IReadOnlyUserGroup> userGroups, out ContentApp result) {
+
+            foreach (IFeedbackPlugin plugin in collection) {
+                if (plugin.TryGetContentApp(content, userGroups, out result)) return true;
+            }
+
+            result = null;
             return false;
 
         }

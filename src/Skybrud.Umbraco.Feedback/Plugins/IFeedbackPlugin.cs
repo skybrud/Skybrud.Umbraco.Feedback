@@ -1,10 +1,13 @@
 ﻿using System;
-using Skybrud.Umbraco.Feedback.Model;
-using Skybrud.Umbraco.Feedback.Model.Entries;
-using Skybrud.Umbraco.Feedback.Models;
+using System.Collections.Generic;
+using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Sites;
+using Skybrud.Umbraco.Feedback.Models.Statuses;
 using Skybrud.Umbraco.Feedback.Models.Users;
 using Skybrud.Umbraco.Feedback.Services;
+using Umbraco.Core.Models;
+using Umbraco.Core.Models.ContentEditing;
+using Umbraco.Core.Models.Membership;
 
 namespace Skybrud.Umbraco.Feedback.Plugins {
 
@@ -36,7 +39,11 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
 
         IFeedbackUser GetUser(int userId);
 
+        bool TryGetUser(Guid key, out IFeedbackUser user);
+
         IFeedbackUser[] GetUsers();
+
+        bool TryGetContentApp(IContent content, IEnumerable<IReadOnlyUserGroup> userGroups, out ContentApp result);
 
     }
 

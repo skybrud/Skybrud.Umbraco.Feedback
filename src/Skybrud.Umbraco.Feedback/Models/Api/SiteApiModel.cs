@@ -1,0 +1,38 @@
+﻿using System;
+using System.Globalization;
+using System.Linq;
+using System.Web;
+using Newtonsoft.Json;
+using Skybrud.Umbraco.Feedback.Models.Sites;
+using Umbraco.Core.Services;
+
+namespace Skybrud.Umbraco.Feedback.Models.Api {
+
+    public class SiteApiModel {
+
+        [JsonProperty("id")]
+        public int Id { get; }
+
+        [JsonProperty("key")]
+        public Guid Key { get; }
+
+        [JsonProperty("name")]
+        public string Name { get; }
+
+        [JsonProperty("ratings")]
+        public RatingApiModel[] Ratings { get; }
+
+        [JsonProperty("statuses")]
+        public StatusApiModel[] Statuses { get; }
+
+        public SiteApiModel(FeedbackSiteSettings site, HttpRequestBase request, ILocalizedTextService localizedTextService, CultureInfo culture) {
+            Id = site.Id;
+            Key = site.Key;
+            Name = site.Name;
+            Ratings = site.Ratings.Select(x => new RatingApiModel(x, request, localizedTextService, culture)).ToArray();
+            Statuses = site.Statuses.Select(x => new StatusApiModel(x, request, localizedTextService, culture)).ToArray();
+        }
+
+    }
+
+}

@@ -1,0 +1,117 @@
+﻿.skybrud-feedback .rating,
+.skybrud-feedback .status {
+  display: flex;
+}
+.skybrud-feedback .rating span,
+.skybrud-feedback .status span {
+  position: relative;
+  padding-left: 24px;
+  line-height: 16px;
+}
+.skybrud-feedback .rating span:before,
+.skybrud-feedback .status span:before {
+  background: #ccc;
+  display: block;
+  content: ' ';
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  left: 0;
+  border-radius: 50%;
+}
+.skybrud-feedback .rating.rating-positive span:before,
+.skybrud-feedback .status.status-closed span:before {
+  background: #6BA114;
+}
+.skybrud-feedback .rating.rating-negative span:before,
+.skybrud-feedback .status.status-new span:before {
+  background: #A41F03;
+}
+.skybrud-feedback .status.status-inprogress span:before {
+  background: #D3A839;
+}
+.skybrud-feedback .col.col-rating,
+.skybrud-feedback .col.col-status,
+.skybrud-feedback .col.col-responsible,
+.skybrud-feedback .col.col-createDate {
+  white-space: nowrap;
+}
+.skybrud-feedback .col.col-name {
+  width: 100%;
+}
+.skybrud-feedback tbody.expanded > tr:first-child > td {
+  border-bottom: 1px solid white;
+}
+.skybrud-feedback table.table.details {
+  border-top: 1px solid #e9e9eb;
+  box-shadow: none;
+}
+.skybrud-feedback table.table.details th {
+  width: 150px;
+  vertical-align: top;
+}
+.skybrud-feedback table.table.details tr:first-child th,
+.skybrud-feedback table.table.details tr:first-child td {
+  padding-top: 20px;
+}
+.skybrud-feedback table.table.details th,
+.skybrud-feedback table.table.details td {
+  background: white;
+  padding: 5px 0;
+  border-top: none;
+}
+.skybrud-feedback table.table.list.loading {
+  opacity: 0.55;
+}
+.skybrud-feedback table.table.list > thead > tr > th {
+  padding: 10px 20px;
+  white-space: nowrap;
+}
+.skybrud-feedback table.table.list > tbody > tr:first-child > td {
+  cursor: pointer;
+}
+.skybrud-feedback table.table.list > tbody + tbody {
+  border-top: 1px solid #e9e9eb;
+}
+.skybrud-feedback-options {
+  display: flex;
+  margin-bottom: 20px;
+}
+.skybrud-feedback-filters {
+  flex-grow: 1;
+}
+.skybrud-feedback-filters select {
+  width: initial;
+}
+.skybrud-feedback .pagination.pagination-left {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 35px;
+}
+.skybrud-feedback .pagination ul {
+  background: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0);
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0);
+}
+.skybrud-feedback .pagination ul > li > a,
+.skybrud-feedback .pagination ul > li > span {
+  padding: 8px 4px 2px 4px;
+  font-size: 11px;
+  color: #b0b0b0;
+  background: 0;
+  border: 0;
+}
+.skybrud-feedback .pagination ul > li.active > a,
+.skybrud-feedback .pagination ul > li > a:hover {
+  color: #000;
+}
+.skybrud-feedback .pagination ul > li.disabled > a,
+.skybrud-feedback .pagination ul > li.disabled > a:hover {
+  color: #d9d9d9;
+}

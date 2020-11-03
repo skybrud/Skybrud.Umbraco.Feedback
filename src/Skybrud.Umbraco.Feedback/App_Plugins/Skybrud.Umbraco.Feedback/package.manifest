@@ -1,0 +1,8 @@
+﻿{
+  "css": [
+    "/App_Plugins/Skybrud.Umbraco.Feedback/Styles/Default.css"
+  ],
+  "javascript": [
+    "/App_Plugins/Skybrud.Umbraco.Feedback/Scripts/Controllers/ContentApp.js"
+  ]
+}

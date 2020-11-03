@@ -1,7 +1,8 @@
 ﻿using System;
 using NPoco;
 using Skybrud.Umbraco.Feedback.Constants;
-using Skybrud.Umbraco.Feedback.Model.Entries;
+using Skybrud.Umbraco.Feedback.Extensions;
+using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Plugins;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Persistence;
@@ -73,6 +74,64 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
         }
 
+        public FeedbackEntryDto[] GetEntries(FeedbackGetEntriesOptions options, out int total) {
+
+            using (var scope = _scopeProvider.CreateScope()) {
+
+                // Declare the SQL for the query
+                var sql = scope.SqlContext.Sql()
+                    .Select<FeedbackEntryDto>()
+                    .From<FeedbackEntryDto>();
+
+                sql.Where<FeedbackEntryDto>(x => !x.IsArchived);
+
+                if (options.SiteKey != Guid.Empty) sql = sql.Where<FeedbackEntryDto>(x => x.SiteKey == options.SiteKey);
+                
+                switch (options.SortField) {
+
+                    case EntriesSortField.Rating:
+                        sql = sql.OrderBy<FeedbackEntryDto>(x => x.Rating, options.SortOrder);
+                        break;
+
+                    case EntriesSortField.Status:
+                        sql = sql.OrderBy<FeedbackEntryDto>(x => x.Status, options.SortOrder);
+                        break;
+
+                    default:
+                        sql = sql.OrderBy<FeedbackEntryDto>(x => x.CreateDate, options.SortOrder);
+                        break;
+
+                }
+
+                // Make the call to the database
+                return scope.Database.Page<FeedbackEntryDto>(options.Page, options.PerPage, sql, out total);
+
+            }
+
+
+        }
+
+
+
+
+        public FeedbackEntryDto[] GetEntriesForSite(Guid siteKey, int limit, int page, out int total) {
+
+            using (var scope = _scopeProvider.CreateScope()) {
+
+                // Declare the SQL for the query
+                var sql = scope.SqlContext.Sql()
+                    .Select<FeedbackEntryDto>()
+                    .From<FeedbackEntryDto>()
+                    .Where<FeedbackEntryDto>(x => x.SiteKey == siteKey && x.IsArchived == false)
+                    .OrderByDescending<FeedbackEntryDto>(x => x.UpdateDate);
+
+                // Make the call to the database
+                return scope.Database.Page<FeedbackEntryDto>(page, limit, sql, out total);
+
+            }
+
+        }
+
         /// <summary>
         /// Gets the entry with the specified <paramref name="entryId"/>.
         /// </summary>
@@ -106,7 +165,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
                     .Where<FeedbackEntryDto>(x => x.Key == key && !x.IsArchived);
 
                 // Make the call to the database
-                return scope.Database.First<FeedbackEntryDto>(sql);
+                return scope.Database.FirstOrDefault<FeedbackEntryDto>(sql);
 
             }
 

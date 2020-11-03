@@ -1,5 +1,5 @@
 ﻿using Skybrud.Umbraco.Feedback.Constants;
-using Skybrud.Umbraco.Feedback.Model.Entries;
+using Skybrud.Umbraco.Feedback.Models.Entries;
 using Umbraco.Core.Migrations;
 
 namespace Skybrud.Umbraco.Feedback.Migrations {

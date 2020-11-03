@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+
+<language alias="da" intName="Danish" localName="dansk" lcid="6" culture="da-DK">
+  <area alias="feedback">
+    <key alias="statusNew">Ny</key>
+    <key alias="statusInprogress">Igangværende</key>
+    <key alias="statusInProgress">Igangværende</key>
+    <key alias="statusClosed">Lukket</key>
+    <key alias="ratingPositive">Positiv</key>
+    <key alias="ratingNegative">Negativ</key>
+  </area>
+</language>

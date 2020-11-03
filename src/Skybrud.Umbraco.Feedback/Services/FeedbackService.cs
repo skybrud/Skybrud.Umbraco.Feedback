@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using Skybrud.Umbraco.Feedback.Model;
-using Skybrud.Umbraco.Feedback.Model.Entries;
+using Skybrud.Umbraco.Feedback.Models.Entries;
+using Skybrud.Umbraco.Feedback.Models.Ratings;
 using Skybrud.Umbraco.Feedback.Models.Results;
 using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Models.Users;
@@ -37,6 +37,20 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
         #region Public methods
 
+        public bool TryGetSite(Guid key, out FeedbackSiteSettings site) {
+            return Plugins.TryGetSite(key, out site);
+        }
+
+        public bool TryGetUser(Guid key, out IFeedbackUser user) {
+            foreach (var plugin in Plugins) {
+                if (plugin.TryGetUser(key, out user)) {
+                    return true;
+                }
+            }
+            user = null;
+            return false;
+        }
+
         ///// <summary>
         ///// Gets an unpaginated array of all feedback entries.
         ///// </summary>
@@ -61,49 +75,51 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
         //}
 
-        ///// <summary>
-        ///// Gets an unpaginated array of all feedback entries for the site with the specified <paramref name="siteId"/>.
-        ///// </summary>
-        ///// <param name="siteId">The ID of the site.</param>
-        ///// <returns>An array of <see cref="FeedbackEntry"/>.</returns>
-        //public FeedbackEntry[] GetAllForSite(int siteId) {
 
-        //    // Call this to make sure the users have been loaded before quering the database
-        //    Dictionary<int, IFeedbackUser> users = _feedbackModule.GetUsers();
 
-        //    using (var scope = _scopeProvider.CreateScope()) {
 
-        //        // Declare the SQL for the query
-        //        var sql = new Sql("SELECT * FROM SkybrudFeedback WHERE SiteId = @0 AND Archived = 0 ORDER BY created DESC", siteId);
+        public FeedbackEntryList GetEntries(FeedbackGetEntriesOptions options) {
 
-        //        // Make the call to the database
-        //        return scope.Database
-        //            .Fetch<FeedbackEntryDto>(sql)
-        //            .Select(x => new FeedbackEntry(x, users))
-        //            .ToArray();
+            // Look up the entries in the database
+            var entries = _databaseService
+                .GetEntries(options, out int total)
+                .Select(x => new FeedbackEntry(x))
+                .ToArray();
 
-        //    }
+            return new FeedbackEntryList(options.Page, options.PerPage, total, entries);
 
-        //}
+        }
+        public FeedbackEntryList GetEntriesForSite(Guid guid, int limit = 0, int page = 0) {
+
+            // Look up the entries in the database
+            var entries = _databaseService
+                .GetEntriesForSite(guid, limit, Math.Max(1, page), out int total)
+                .Select(x => new FeedbackEntry(x))
+                .ToArray();
+
+            return new FeedbackEntryList(page, limit, total, entries);
+
+        }
 
         public FeedbackEntry GetEntryByKey(Guid key) {
             var dto = _databaseService.GetEntryByKey(key);
             return dto == null ? null : new FeedbackEntry(dto);
         }
 
-        ///// <summary>
-        ///// Archives the specified <paramref name="entry"/>.
-        ///// </summary>
-        ///// <param name="entry">The entry to be archived.</param>
-        //public void Archive(FeedbackEntry entry) {
+        /// <summary>
+        /// Archives the specified <paramref name="entry"/>.
+        /// </summary>
+        /// <param name="entry">The entry to be archived.</param>
+        public void Archive(FeedbackEntry entry) {
             
-        //    if (entry == null) throw new ArgumentNullException(nameof(entry));
+            if (entry == null) throw new ArgumentNullException(nameof(entry));
 
-        //    entry._entry.IsArchived = true;
+            entry.IsArchived = true;
 
-        //    Save(entry._entry);
+            _databaseService.Update(entry._entry);
 
-        //}
+        }
+
 
         ///// <summary>
         ///// Updates the status of the specified <paramref name="entry"/>.
@@ -128,14 +144,14 @@ namespace Skybrud.Umbraco.Feedback.Services {
         //    Save(entry._entry);
         //}
 
-        ///// <summary>
-        ///// Deletes the specified <paramref name="entry"/>.
-        ///// </summary>
-        ///// <param name="entry">The entry to be delete.</param>
-        //public void Delete(FeedbackEntry entry) {
-        //    if (entry == null) throw new ArgumentNullException(nameof(entry));
-        //    Delete(entry._entry);
-        //}
+        /// <summary>
+        /// Deletes the specified <paramref name="entry"/>.
+        /// </summary>
+        /// <param name="entry">The entry to be delete.</param>
+        public void Delete(FeedbackEntry entry) {
+            if (entry == null) throw new ArgumentNullException(nameof(entry));
+            _databaseService.Delete(entry._entry);
+        }
 
         ///// <summary>
         ///// Deletes all entries before the specified <paramref name="date"/>.
@@ -143,7 +159,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
         ///// <param name="date">The date.</param>
         ///// <returns>The amount of affected/deleted rows.</returns>
         //public int DeleteAll(DateTime date) {
-            
+
         //    using (var scope = _scopeProvider.CreateScope()) {
 
         //        // Delete everything before the start of the day after "date"
@@ -190,7 +206,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
         //    }
         //    return users;
         //}
-        
+
         ///// <summary>
         ///// Gets an array of all available ratings for the site with the specified <paramref name="siteId"/>.
         ///// </summary>
@@ -234,7 +250,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
                 PageKey = page.Key,
                 Rating = rating,
                 Status = site.Statuses.FirstOrDefault(),
-                Created = DateTime.UtcNow,
+                CreateDate = DateTime.UtcNow,
                 UpdateDate = DateTime.UtcNow
             };
 
@@ -327,7 +343,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
                 Name = FeedbackUtils.TrimToNull(name),
                 Email = FeedbackUtils.TrimToNull(email),
                 Comment = FeedbackUtils.TrimToNull(comment),
-                Created = DateTime.UtcNow,
+                CreateDate = DateTime.UtcNow,
                 UpdateDate = DateTime.UtcNow
             };
 

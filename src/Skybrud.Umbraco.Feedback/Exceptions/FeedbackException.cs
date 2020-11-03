@@ -19,7 +19,7 @@ namespace Skybrud.Umbraco.Feedback.Exceptions {
         #region Constructors
 
         /// <summary>
-        /// Initializes a new exception with the specified error <code>code</code>.
+        /// Initializes a new exception with the specified error <paramref name="code"/>.
         /// </summary>
         /// <param name="code">The error code of the exception.</param>
         public FeedbackException(string code) : base("") {
@@ -27,7 +27,7 @@ namespace Skybrud.Umbraco.Feedback.Exceptions {
         }
 
         /// <summary>
-        /// Initializes a new exception with the specified error <code>code</code> and <code>message</code>.
+        /// Initializes a new exception with the specified error <paramref name="code"/> and <paramref name="message"/>.
         /// </summary>
         /// <param name="code">The error code of the exception.</param>
         /// <param name="message">The error message of the exception.</param>
