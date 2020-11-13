@@ -1,4 +1,5 @@
 ﻿using Skybrud.Umbraco.Feedback.ContentApps;
+using Skybrud.Umbraco.Feedback.Plugins;
 using Skybrud.Umbraco.Feedback.Services;
 using Umbraco.Core;
 using Umbraco.Core.Composing;
@@ -12,6 +13,8 @@ namespace Skybrud.Umbraco.Feedback.Composers {
 
             composition.Register<FeedbackDatabaseService>();
             composition.Register<FeedbackService>();
+
+            composition.RegisterUnique<FeedbackPluginCollection>();
 
             composition.ContentApps().Append<FeedbackContentApp>();
 
