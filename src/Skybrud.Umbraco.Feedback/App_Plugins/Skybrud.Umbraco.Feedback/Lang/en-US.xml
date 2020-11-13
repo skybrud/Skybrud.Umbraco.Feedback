@@ -22,6 +22,7 @@
     <key alias="labelName">Name</key>
     <key alias="labelEmail">E-mail</key>
     <key alias="labelAdded">Added</key>
+    <key alias="labelUpdateDate">Updated</key>
     <key alias="labelStatus">Status</key>
     <key alias="labelComment">Comment</key>
     <key alias="labelNoResponsible">No responsible</key>

@@ -22,6 +22,7 @@
     <key alias="labelName">Navn</key>
     <key alias="labelEmail">E-mail</key>
     <key alias="labelAdded">Tilføjet</key>
+    <key alias="labelUpdateDate">Ændret</key>
     <key alias="labelStatus">Status</key>
     <key alias="labelComment">Kommentar</key>
     <key alias="labelNoResponsible">Ingen ansvarlig</key>

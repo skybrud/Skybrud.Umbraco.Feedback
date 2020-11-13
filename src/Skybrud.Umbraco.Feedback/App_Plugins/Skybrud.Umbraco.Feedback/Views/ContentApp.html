@@ -132,6 +132,10 @@
                             <td>{{entry.createDate | date: 'dd-MM-yyyy HH:mm'}}</td>
                         </tr>
                         <tr>
+                            <th><localize key="feedback_labelUpdateDate">Updated</localize></th>
+                            <td>{{entry.updateDate | date: 'dd-MM-yyyy HH:mm'}}</td>
+                        </tr>
+                        <tr>
                             <th><localize key="feedback_labelStatus">Status</localize></th>
                             <td>
                                 <div class="status status-{{entry.status.alias}}">
