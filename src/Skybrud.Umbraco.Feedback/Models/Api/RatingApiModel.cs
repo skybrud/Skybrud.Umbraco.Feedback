@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Web;
 using Newtonsoft.Json;
 using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Feedback.Models.Ratings;
@@ -28,7 +27,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Api {
 
         #region Constructors
 
-        public RatingApiModel(FeedbackRating rating, HttpRequestBase request, ILocalizedTextService localizedTextService, CultureInfo culture) {
+        public RatingApiModel(FeedbackRating rating, ILocalizedTextService localizedTextService, CultureInfo culture) {
 
             Alias = rating.Alias;
             Key = rating.Key;

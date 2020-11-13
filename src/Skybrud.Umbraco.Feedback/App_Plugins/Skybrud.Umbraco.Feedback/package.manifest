@@ -3,6 +3,8 @@
     "/App_Plugins/Skybrud.Umbraco.Feedback/Styles/Default.css"
   ],
   "javascript": [
-    "/App_Plugins/Skybrud.Umbraco.Feedback/Scripts/Controllers/ContentApp.js"
+    "/App_Plugins/Skybrud.Umbraco.Feedback/Scripts/Controllers/ContentApp.js",
+    "/App_Plugins/Skybrud.Umbraco.Feedback/Scripts/Controllers/SelectStatus.js",
+    "/App_Plugins/Skybrud.Umbraco.Feedback/Scripts/Controllers/SelectResponsible.js"
   ]
 }

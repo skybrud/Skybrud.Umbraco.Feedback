@@ -41,11 +41,11 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
 
         public virtual void OnStatusChanged(FeedbackService service, FeedbackEntry entry, FeedbackStatus oldStatus, FeedbackStatus newStatus) { }
 
-        public virtual bool OnUserAssigning(FeedbackService service, FeedbackEntry entry, Guid user) {
+        public virtual bool OnUserAssigning(FeedbackService service, FeedbackEntry entry, IFeedbackUser user) {
             return true;
         }
 
-        public virtual void OnUserAssigned(FeedbackService service, FeedbackEntry entry, Guid oldUser, Guid newUser) { }
+        public virtual void OnUserAssigned(FeedbackService service, FeedbackEntry entry, IFeedbackUser oldUser, IFeedbackUser newUser) { }
 
         //public virtual void OnEntryResultRender(FeedbackService service, FeedbackEntryResult result) { }
         

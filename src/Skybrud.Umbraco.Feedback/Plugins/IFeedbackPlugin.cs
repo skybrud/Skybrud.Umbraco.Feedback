@@ -29,9 +29,9 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
 
         void OnStatusChanged(FeedbackService service, FeedbackEntry entry, FeedbackStatus oldStatus, FeedbackStatus newStatus);
 
-        bool OnUserAssigning(FeedbackService service, FeedbackEntry entry, Guid newUser);
+        bool OnUserAssigning(FeedbackService service, FeedbackEntry entry, IFeedbackUser newUser);
 
-        void OnUserAssigned(FeedbackService service, FeedbackEntry entry, Guid oldUser, Guid newUser);
+        void OnUserAssigned(FeedbackService service, FeedbackEntry entry, IFeedbackUser oldUser, IFeedbackUser newUser);
 
         //void OnEntryResultRender(FeedbackService service, FeedbackEntryResult result);
 

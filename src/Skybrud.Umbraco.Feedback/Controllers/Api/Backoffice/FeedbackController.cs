@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using System.Net.Http;
-using System.Web;
 using System.Web.Http;
+using Newtonsoft.Json.Linq;
 using Skybrud.Essentials.Enums;
+using Skybrud.Essentials.Json.Extensions;
 using Skybrud.Umbraco.Feedback.Models.Api;
+using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Ratings;
 using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
@@ -16,6 +18,7 @@ using Skybrud.WebApi.Json;
 using Umbraco.Core.Composing;
 using Umbraco.Core.Configuration;
 using Umbraco.Core.Models;
+using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Core.Services;
 using Umbraco.Web;
 using Umbraco.Web.Mvc;
@@ -67,12 +70,9 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
             CultureInfo culture = Security.CurrentUser.GetUserCulture(_localizedTextService, _globalSettings);
 
-
             if (_feedbackService.TryGetSite(key, out FeedbackSiteSettings site) == false) {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
-
-            var request = new HttpRequestWrapper(HttpContext.Current.Request);
 
             FeedbackGetEntriesOptions options = new FeedbackGetEntriesOptions {
                 Page = page,
@@ -130,7 +130,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
             var result = _feedbackService.GetEntries(options);
 
-            var siteModel = new SiteApiModel(site, request, _localizedTextService, culture);
+            var siteModel = new SiteApiModel(site, _localizedTextService, culture);
 
             List<EntryApiModel> entries = new List<EntryApiModel>();
 
@@ -162,8 +162,8 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
                 IFeedbackUser user = null;
                 if (entry.Dto.AssignedTo != Guid.Empty) _feedbackService.TryGetUser(entry.Dto.AssignedTo, out user);
 
-                var r = new RatingApiModel(er, request, _localizedTextService, culture);
-                var s = new StatusApiModel(es, request, _localizedTextService, culture);
+                var r = new RatingApiModel(er, _localizedTextService, culture);
+                var s = new StatusApiModel(es, _localizedTextService, culture);
 
                 entries.Add(new EntryApiModel(entry, siteModel, pageModel, s, r, user));
 
@@ -189,6 +189,106 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
         [HttpGet]
         public object GetUsers() {
             return _feedbackService.GetUsers();
+        }
+
+        [HttpPost]
+        public object SetStatus([FromBody] JObject model) {
+
+            CultureInfo culture = Security.CurrentUser.GetUserCulture(_localizedTextService, _globalSettings);
+
+            Guid entryKey = model.GetGuid("entry");
+            Guid statusKey = model.GetGuid("status");
+
+            if (entryKey == Guid.Empty) return Request.CreateResponse(HttpStatusCode.BadRequest);
+            if (statusKey == Guid.Empty) return Request.CreateResponse(HttpStatusCode.BadRequest);
+
+            // Get the entry
+            FeedbackEntry entry = _feedbackService.GetEntryByKey(entryKey);
+            if (entry == null) return Request.CreateResponse(HttpStatusCode.NotFound);
+
+            // Get the site of the entry
+            if (_feedbackService.TryGetSite(entry.SiteKey, out FeedbackSiteSettings site) == false) {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+
+
+            site.TryGetRating(entry.Dto.Rating, out FeedbackRating rating);
+
+            // Get the status
+            if (site.TryGetStatus(statusKey, out FeedbackStatus status) == false) {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+
+            _feedbackService.SetStatus(entry, status);
+
+            var r = rating == null ? null : new RatingApiModel(rating, _localizedTextService, culture);
+            var s = new StatusApiModel(entry.Status, _localizedTextService, culture);
+
+            var siteModel = new SiteApiModel(site, _localizedTextService, culture);
+
+            IFeedbackUser user = null;
+            if (entry.Dto.AssignedTo != Guid.Empty) _feedbackService.TryGetUser(entry.Dto.AssignedTo, out user);
+
+            return new EntryApiModel(entry, siteModel, TryGetPage(entry.PageKey, out var page) ? page : null, s, r, user);
+
+        }
+
+        [HttpPost]
+        public object SetResponsible([FromBody] JObject model) {
+
+            CultureInfo culture = Security.CurrentUser.GetUserCulture(_localizedTextService, _globalSettings);
+
+            Guid entryKey = model.GetGuid("entry");
+            Guid responsibleKey = model.GetGuid("responsible");
+
+            if (entryKey == Guid.Empty) return Request.CreateResponse(HttpStatusCode.BadRequest);
+
+            // Get the entry
+            FeedbackEntry entry = _feedbackService.GetEntryByKey(entryKey);
+            if (entry == null) return Request.CreateResponse(HttpStatusCode.NotFound);
+
+            // Get the site of the entry
+            if (_feedbackService.TryGetSite(entry.SiteKey, out FeedbackSiteSettings site) == false) {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+
+            IFeedbackUser user = null;
+            if (responsibleKey == Guid.Empty) {
+                _feedbackService.SetAssignedTo(entry, null);
+            } else {
+                if (_feedbackService.TryGetUser(responsibleKey, out user) == false) {
+                    return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                }
+                _feedbackService.SetAssignedTo(entry, user);
+            }
+
+            var r = entry.Rating == null ? null : new RatingApiModel(entry.Rating, _localizedTextService, culture);
+            var s = entry.Status == null ? null : new StatusApiModel(entry.Status, _localizedTextService, culture);
+
+            var siteModel = new SiteApiModel(site, _localizedTextService, culture);
+
+            return new EntryApiModel(entry, siteModel, TryGetPage(entry.PageKey, out var page) ? page : null, s, r, user);
+
+        }
+
+        private bool TryGetPage(Guid key, out PageApiModel result) {
+
+
+            IPublishedContent publishedContent = _umbracoContextAccessor.UmbracoContext.Content.GetById(key);
+            if (publishedContent != null) {
+                result = new PageApiModel(publishedContent);
+                return true;
+            }
+            
+            IContent content = Services.ContentService.GetById(key);
+            if (content != null) {
+                result = new PageApiModel(content);
+                return true;
+            }
+
+            result = null;
+            return false;
+
         }
 
     }

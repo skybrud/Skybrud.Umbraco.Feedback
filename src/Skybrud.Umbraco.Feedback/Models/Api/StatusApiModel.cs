@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using Newtonsoft.Json;
 using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
@@ -31,7 +27,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Api {
 
         #region Constructors
 
-        public StatusApiModel(FeedbackStatus status, HttpRequestBase request, ILocalizedTextService localizedTextService, CultureInfo culture) {
+        public StatusApiModel(FeedbackStatus status, ILocalizedTextService localizedTextService, CultureInfo culture) {
 
             Alias = status.Alias;
             Key = status.Key;

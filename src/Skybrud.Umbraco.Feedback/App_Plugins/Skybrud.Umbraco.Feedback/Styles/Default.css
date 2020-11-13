@@ -30,6 +30,26 @@
 .skybrud-feedback .status.status-inprogress span:before {
   background: #D3A839;
 }
+.skybrud-feedback .status-item {
+  padding: 10px;
+  cursor: pointer;
+}
+.skybrud-feedback .status-item:hover {
+  background: #F9F9FA;
+}
+.skybrud-feedback .status-item.selected {
+  background: #FEE4E1;
+}
+.skybrud-feedback .user-item {
+  padding: 10px;
+  cursor: pointer;
+}
+.skybrud-feedback .user-item:hover {
+  background: #F9F9FA;
+}
+.skybrud-feedback .user-item.selected {
+  background: #FEE4E1;
+}
 .skybrud-feedback .col.col-rating,
 .skybrud-feedback .col.col-status,
 .skybrud-feedback .col.col-responsible,

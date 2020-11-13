@@ -4,6 +4,7 @@ using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Ratings;
 using Skybrud.Umbraco.Feedback.Models.Results;
 using Skybrud.Umbraco.Feedback.Models.Sites;
+using Skybrud.Umbraco.Feedback.Models.Statuses;
 using Skybrud.Umbraco.Feedback.Models.Users;
 using Skybrud.Umbraco.Feedback.Plugins;
 using Umbraco.Core.Logging;
@@ -106,8 +107,23 @@ namespace Skybrud.Umbraco.Feedback.Services {
         }
 
         public FeedbackEntry GetEntryByKey(Guid key) {
-            var dto = _databaseService.GetEntryByKey(key);
-            return dto == null ? null : new FeedbackEntry(dto);
+            
+            FeedbackEntryDto dto = _databaseService.GetEntryByKey(key);
+            if (dto == null) return null;
+
+            TryGetSite(dto.SiteKey, out var site);
+
+            FeedbackRating rating = null;
+            site?.TryGetRating(dto.Rating, out rating);
+
+            FeedbackStatus status = null;
+            site?.TryGetStatus(dto.Status, out status);
+
+            IFeedbackUser user = null;
+            TryGetUser(dto.AssignedTo, out user);
+
+            return new FeedbackEntry(dto, rating, status, user);
+
         }
 
         /// <summary>
@@ -395,8 +411,8 @@ namespace Skybrud.Umbraco.Feedback.Services {
             if (entry == null) throw new ArgumentNullException(nameof(entry));
 
             // Get the current (old) user
-            Guid oldUser = entry.AssignedTo;
-            Guid newUser = user?.Key ?? Guid.Empty;
+            IFeedbackUser oldUser = entry.AssignedTo;
+            IFeedbackUser newUser = user;
 
             // Trigger the "OnUserAssigning" before assigning the user
             foreach (IFeedbackPlugin plugin in Plugins) {
@@ -420,6 +436,44 @@ namespace Skybrud.Umbraco.Feedback.Services {
                     plugin.OnUserAssigned(this, entry, oldUser, newUser);
                 } catch (Exception ex) {
                     _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnUserAssigned.", plugin.GetType().FullName);
+                }
+            }
+
+            return true;
+
+        }
+
+        
+        public bool SetStatus(FeedbackEntry entry, FeedbackStatus status) {
+
+            // Some input validation
+            if (entry == null) throw new ArgumentNullException(nameof(entry));
+
+            // Get the current (old) status
+            FeedbackStatus oldStatus = entry.Status;
+
+            // Trigger the "OnStatusChanging" before chaging the status
+            foreach (IFeedbackPlugin plugin in Plugins) {
+                try {
+                    if (!plugin.OnStatusChanging(this, entry, status)) {
+                        return false;
+                    }
+                } catch (Exception ex) {
+                    _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnStatusChanging.", plugin.GetType().FullName);
+                }
+            }
+
+            entry.Status = status;
+            entry.UpdateDate = DateTime.UtcNow;
+
+            _databaseService.Update(entry.Dto);
+
+            // Trigger the "OnStatusChanged" event when the user has been assigned
+            foreach (IFeedbackPlugin plugin in Plugins) {
+                try {
+                    plugin.OnStatusChanged(this, entry, oldStatus, status);
+                } catch (Exception ex) {
+                    _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnStatusChanged.", plugin.GetType().FullName);
                 }
             }
 

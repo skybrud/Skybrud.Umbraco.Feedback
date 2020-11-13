@@ -1,4 +1,4 @@
-﻿angular.module("umbraco").controller("Skybrud.Feedback.ContentAppController", function ($scope, $http, editorState, localizationService, notificationsService, userService) {
+﻿angular.module("umbraco").controller("Skybrud.Feedback.ContentAppController", function ($scope, $http, editorService, editorState, localizationService, notificationsService, userService) {
 
     $scope.current = editorState.current;
 
@@ -60,6 +60,43 @@
 
     $scope.refresh = function() {
         $scope.update();
+    };
+
+    $scope.openSelectStatus = function(entry) {
+        editorService.open({
+            title: "Vælg status",
+            size: "medium",
+            view: "/App_Plugins/Skybrud.Umbraco.Feedback/Views/SelectStatus.html",
+            entry: entry,
+            submit: function (model) {
+                Object.keys(model.entry).forEach(function(key) {
+                    entry[key] = model.entry[key];
+                });
+                editorService.close();
+            },
+            close: function() {
+                editorService.close();
+            }
+        });
+    };
+
+    $scope.openSelectResponsible = function (entry) {
+        editorService.open({
+            title: "Vælg ansvarlig",
+            size: "medium",
+            view: "/App_Plugins/Skybrud.Umbraco.Feedback/Views/SelectResponsible.html",
+            entry: entry,
+            users: $scope.users,
+            submit: function (model) {
+                Object.keys(model.entry).forEach(function (key) {
+                    entry[key] = model.entry[key];
+                });
+                editorService.close();
+            },
+            close: function () {
+                editorService.close();
+            }
+        });
     };
 
     function updateBadge(list) {
@@ -183,8 +220,9 @@
         $scope.entries = null;
         $scope.pagination = null;
         $scope.sorting = {};
-
         $scope.filters = {};
+
+        $scope.users = [];
 
         // Initialize all labels with their default, English values
         $scope.labels = {
@@ -214,6 +252,8 @@
             $scope.update();
 
             $http.get("/umbraco/backoffice/Skybrud/FeedbackAdmin/GetUsers").then(function (r2) {
+
+                $scope.users = r2.data;
 
                 r2.data.forEach(function (user) {
                     $scope.filters.users.push({ name: $scope.user.id === user.id ? $scope.labels.labelMe : user.name, value: user.key });

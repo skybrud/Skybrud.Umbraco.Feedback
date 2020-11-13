@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Skybrud.Umbraco.Feedback.Models.Ratings;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
+using Skybrud.Umbraco.Feedback.Models.Users;
 
 namespace Skybrud.Umbraco.Feedback.Models.Entries {
 
@@ -15,6 +16,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Entries {
         // ReSharper disable once InconsistentNaming
         internal FeedbackEntryDto _entry;
 
+        private IFeedbackUser _responsible;
         private FeedbackRating _rating;
         private FeedbackStatus _status;
 
@@ -81,7 +83,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Entries {
         [JsonProperty("rating")]
         public FeedbackRating Rating {
             get => _rating;
-            set { _rating = value; _entry.Rating = (value == null ? Guid.Empty : _rating.Key); }
+            set { _rating = value; _entry.Rating = value?.Key ?? Guid.Empty; }
         }
 
         /// <summary>
@@ -90,7 +92,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Entries {
         [JsonProperty("status")]
         public FeedbackStatus Status {
             get => _status;
-            set { _status = value; _entry.Status = (value == null ? Guid.Empty : _status.Key); }
+            set { _status = value; _entry.Status = value?.Key ?? Guid.Empty; }
         }
 
         /// <summary>
@@ -124,9 +126,9 @@ namespace Skybrud.Umbraco.Feedback.Models.Entries {
         /// Gets or sets the user to which the entry should be assigned.
         /// </summary>
         [JsonProperty("assignedTo")]
-        public Guid AssignedTo {
-            get => _entry.AssignedTo;
-            set => _entry.AssignedTo = value;
+        public IFeedbackUser AssignedTo {
+            get => _responsible;
+            set { _responsible = value; _entry.AssignedTo = value?.Key ?? Guid.Empty; }
         }
 
         /// <summary>
@@ -176,6 +178,13 @@ namespace Skybrud.Umbraco.Feedback.Models.Entries {
 
         internal FeedbackEntry(FeedbackEntryDto entry) {
             _entry = entry;
+        }
+
+        internal FeedbackEntry(FeedbackEntryDto entry, FeedbackRating rating, FeedbackStatus status, IFeedbackUser responsible) {
+            _entry = entry;
+            _rating = rating;
+            _status = status;
+            _responsible = responsible;
         }
     
     }

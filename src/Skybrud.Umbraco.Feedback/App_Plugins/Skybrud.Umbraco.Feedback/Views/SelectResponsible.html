@@ -1,0 +1,42 @@
+﻿<div class="skybrud-feedback" ng-controller="Skybrud.Feedback.SelectResponsibleController">
+
+    <umb-editor-view>
+        <umb-editor-header name="model.title"
+                           hide-icon="true"
+                           hide-alias="true"
+                           name-locked="true"
+                           hide-description="true">
+        </umb-editor-header>
+        <umb-editor-container>
+            <umb-box>
+                <umb-box-content>
+                    <div class="user-list">
+                        <div class="user-item" ng-repeat="user in users" ng-class="{selected: user.selected}" ng-click="select(user)">
+                            <div class="staftus stfatus-{{status.alias}}">
+                                <span>{{user.name}}</span>
+                                <small>({{user.key}})</small>
+                            </div>
+                        </div>
+                    </div>
+                </umb-box-content>
+            </umb-box>
+        </umb-editor-container>
+        <umb-editor-footer>
+            <umb-editor-footer-content-right>
+                <umb-button type="button"
+                            button-style="link"
+                            label-key="general_close"
+                            action="model.close()">
+                </umb-button>
+                <umb-button type="button"
+                            state="submitButtonState"
+                            action="save()"
+                            button-style="success"
+                            label-key="general_submit">
+                </umb-button>
+            </umb-editor-footer-content-right>
+        </umb-editor-footer>
+    </umb-editor-view>
+    <umb-load-indicator ng-if="loading" />
+
+</div>

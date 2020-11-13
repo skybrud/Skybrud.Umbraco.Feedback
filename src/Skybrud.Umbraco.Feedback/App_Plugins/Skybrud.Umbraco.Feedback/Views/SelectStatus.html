@@ -1,0 +1,41 @@
+﻿<div class="skybrud-feedback" ng-controller="Skybrud.Feedback.SelectStatusController">
+
+    <umb-editor-view>
+        <umb-editor-header name="model.title"
+                           hide-icon="true"
+                           hide-alias="true"
+                           name-locked="true"
+                           hide-description="true">
+        </umb-editor-header>
+        <umb-editor-container>
+            <umb-box>
+                <umb-box-content>
+                    <div class="status-list">
+                        <div class="status-item" ng-repeat="status in model.entry.site.statuses" ng-class="{selected: status.selected}" ng-click="select(status)">
+                            <div class="status status-{{status.alias}}">
+                                <span>{{status.name}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </umb-box-content>
+            </umb-box>
+        </umb-editor-container>
+        <umb-editor-footer>
+            <umb-editor-footer-content-right>
+                <umb-button type="button"
+                            button-style="link"
+                            label-key="general_close"
+                            action="model.close()">
+                </umb-button>
+                <umb-button type="button"
+                            state="submitButtonState"
+                            action="save()"
+                            button-style="success"
+                            label-key="general_submit">
+                </umb-button>
+            </umb-editor-footer-content-right>
+        </umb-editor-footer>
+    </umb-editor-view>
+    <umb-load-indicator ng-if="loading" />
+
+</div>
