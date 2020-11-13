@@ -9,4 +9,43 @@
     <key alias="ratingPositive">Positiv</key>
     <key alias="ratingNegative">Negativ</key>
   </area>
+  <area alias="feedback">
+    <key alias="labelId">ID</key>
+    <key alias="labelSite">Site</key>
+    <key alias="labelPage">Side</key>
+    <key alias="labelPageId">Sidens ID</key>
+    <key alias="labelPageTitle">Sidens navn</key>
+    <key alias="labelPageUrl">URL</key>
+    <key alias="labelAssignedTo">Tildelt til</key>
+    <key alias="labelResponsible">Ansvarlig</key>
+    <key alias="labelRating">Bedømmelse</key>
+    <key alias="labelName">Navn</key>
+    <key alias="labelEmail">E-mail</key>
+    <key alias="labelAdded">Tilføjet</key>
+    <key alias="labelStatus">Status</key>
+    <key alias="labelComment">Kommentar</key>
+    <key alias="labelNoResponsible">Ingen ansvarlig</key>
+    <key alias="labelNotSpecified">ikke angivet</key>
+    <key alias="labelYes">Ja</key>
+    <key alias="labelNo">Nej</key>
+    <key alias="labelRefresh">Genindlæs</key>
+  </area>
+  <area alias="feedback">
+    <key alias="btnArchive">Arkivér</key>
+    <key alias="btnDelete">Slet</key>
+    <key alias="btnCleaning">Oprydning</key>
+    <key alias="btnSelectStatus">Vælg status</key>
+    <key alias="btnSelectResponsible">Vælg ansvarlig</key>
+    <key alias="btnShowInUmbraco">Vis i Umbraco</key>
+    <key alias="btnShowAtWebsite">Vis på hjemmesiden website</key>
+  </area>
+  <area alias="feedback">
+    <key alias="labelAllRatings">Alle bedømmelser</key>
+    <key alias="labelAllUsers">Alle brugere</key>
+    <key alias="labelMe">Mig</key>
+    <key alias="labelAllStatuses">Alle statuser</key>
+    <key alias="labelAllTypes">Alle typer</key>
+    <key alias="labelOnlyWithRating">Kun med bedømmelse</key>
+    <key alias="labelRatingAndComment">Bedømmelse og kommentar</key>
+  </area>
 </language>
