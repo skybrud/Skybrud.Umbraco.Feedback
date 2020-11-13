@@ -107,8 +107,8 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
             if (int.TryParse(responsible, out int responsibleId)) {
                 options.Responsible = Current.Services.UserService.GetUserById(responsibleId)?.Key;
-            } else if (Guid.TryParse(rating, out Guid responsibleKey)) {
-                options.Rating = responsibleKey;
+            } else if (Guid.TryParse(responsible, out Guid responsibleKey)) {
+                options.Responsible = responsibleKey;
             }
             
             if (Guid.TryParse(status, out Guid statusKey)) {
@@ -185,7 +185,12 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
             };
 
         }
-        
+
+        [HttpGet]
+        public object GetUsers() {
+            return _feedbackService.GetUsers();
+        }
+
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Newtonsoft.Json;
+using Umbraco.Core.Models.Membership;
 
 namespace Skybrud.Umbraco.Feedback.Models.Users {
     
@@ -18,6 +19,16 @@ namespace Skybrud.Umbraco.Feedback.Models.Users {
 
         [JsonIgnore]
         public CultureInfo Culture => CultureInfo.GetCultureInfo(Language.Replace("_", "-"));
+
+        public FeedbackUser() { }
+
+        public FeedbackUser(IUser user) {
+            Id = user.Id;
+            Key = user.Key;
+            Name = user.Name;
+            Email = user.Email;
+            Language = user.Language;
+        }
 
     }
 

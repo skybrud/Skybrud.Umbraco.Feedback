@@ -50,6 +50,10 @@ namespace Skybrud.Umbraco.Feedback.Services {
             user = null;
             return false;
         }
+        
+        public IFeedbackUser[] GetUsers() {
+            return Plugins.SelectMany(x => x.GetUsers()).Distinct().OrderBy(x => x.Name).ToArray();
+        }
 
         ///// <summary>
         ///// Gets an unpaginated array of all feedback entries.
