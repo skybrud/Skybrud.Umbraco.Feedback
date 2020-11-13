@@ -98,7 +98,10 @@
                         <tr>
                             <th><localize key="feedback_labelAssignedTo">Assigned to</localize></th>
                             <td>
-                                <span ng-show="entry.assignedTo">{{entry.assignedTo.name}}</span>
+                                <span ng-show="entry.assignedTo">
+                                    {{entry.assignedTo.name}}
+                                    <small ng-show="entry.assignedTo.description">({{entry.assignedTo.description}})</small>
+                                </span>
                                 <span ng-show="!entry.assignedTo"><em><localize key="feedback_labelNoResponsible">No responsible</localize></em></span>
                             </td>
                         </tr>

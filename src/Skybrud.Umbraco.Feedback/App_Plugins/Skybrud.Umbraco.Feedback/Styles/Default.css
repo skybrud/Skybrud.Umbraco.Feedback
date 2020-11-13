@@ -30,6 +30,18 @@
 .skybrud-feedback .status.status-inprogress span:before {
   background: #D3A839;
 }
+.skybrud-feedback .user.user-avatar {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-color: #f5c1bc;
+  color: #1b264f;
+  border-radius: 50%;
+  font-size: 11px;
+  text-align: center;
+  line-height: 24px;
+  margin-right: 20px;
+}
 .skybrud-feedback .status-item {
   padding: 10px;
   cursor: pointer;
@@ -40,6 +52,9 @@
 .skybrud-feedback .status-item.selected {
   background: #FEE4E1;
 }
+.skybrud-feedback .status-item.selected:hover {
+  background: #fedbd7;
+}
 .skybrud-feedback .user-item {
   padding: 10px;
   cursor: pointer;
@@ -49,6 +64,17 @@
 }
 .skybrud-feedback .user-item.selected {
   background: #FEE4E1;
+}
+.skybrud-feedback .user-item.selected:hover {
+  background: #fedbd7;
+}
+.skybrud-feedback .user-item > div {
+  display: flex;
+}
+.skybrud-feedback .user-item .user-avatar {
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 .skybrud-feedback .col.col-rating,
 .skybrud-feedback .col.col-status,

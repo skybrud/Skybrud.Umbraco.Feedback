@@ -9,7 +9,16 @@
     $scope.users.unshift({ name: "Ingen ansvarlig", key: "00000000-0000-0000-0000-000000000000" });
 
     $scope.users.forEach(function(user) {
+
         user.selected = $scope.entry.assignedTo ? $scope.entry.assignedTo.key === user.key : user.key === "00000000-0000-0000-0000-000000000000";
+
+        if (user.key === "00000000-0000-0000-0000-000000000000") return;
+        user.initials = user.name.split(" ").map(x => x.substr(0, 1)).splice(0, 2).join("");
+
+        user.avatarStyles = "";
+
+        if (user.avatar) user.avatarStyles = "background-image: url(" + user.avatar +");";
+
     });
 
     $scope.select = function (user) {

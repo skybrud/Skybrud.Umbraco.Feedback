@@ -12,9 +12,14 @@
                 <umb-box-content>
                     <div class="user-list">
                         <div class="user-item" ng-repeat="user in users" ng-class="{selected: user.selected}" ng-click="select(user)">
-                            <div class="staftus stfatus-{{status.alias}}">
-                                <span>{{user.name}}</span>
-                                <small>({{user.key}})</small>
+                            <div>
+                                <div class="user user-avatar" style="{{user.avatarStyles}}">
+                                    <span ng-if="!user.avatar && user.initials">{{user.initials}}</span>
+                                </div>
+                                <div>
+                                    <span>{{user.name}}</span>
+                                    <small ng-show="user.description">({{user.description}})</small>
+                                </div>
                             </div>
                         </div>
                     </div>
