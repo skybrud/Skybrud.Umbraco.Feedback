@@ -147,33 +147,25 @@
 
     }
 
-    function init() {
-
-        $scope.loading = true;
-        $scope.entries = null;
-        $scope.pagination = null;
-        $scope.sorting = {};
-
-        $scope.filters = {};
+    function initFilters() {
 
         $scope.filters.ratings = [
-            { name: "All ratings", alias: "labelAllRatings", value: "" }
+            { name: $scope.labels.labelAllRatings, value: "" }
         ];
 
         $scope.filters.users = [
-            { name: "All users", alias: "labelAllUsers", value: "" },
-            { name: "No responsible", alias: "labelNoResponsible", value: "00000000-0000-0000-0000-000000000000" },
-            { name: "Me", alias: "labelMe", value: $scope.user.id + "" }
+            { name: $scope.labels.labelAllUsers, value: "" },
+            { name: $scope.labels.labelNoResponsible, value: "00000000-0000-0000-0000-000000000000" }
         ];
 
         $scope.filters.statuses = [
-            { name: "All statuses", alias: "labelAllStatuses", value: "" }
+            { name: $scope.labels.labelAllStatuses, value: "" }
         ];
 
         $scope.filters.types = [
-            { name: "All types", alias: "labelAllTypes", value: "" },
-            { name: "Only with rating", alias: "labelOnlyWithRating", value: "rating" },
-            { name: "Rating and comment", alias: "labelRatingAndComment", value: "comment" }
+            { name: $scope.labels.labelAllTypes, value: "" },
+            { name: $scope.labels.labelOnlyWithRating, value: "rating" },
+            { name: $scope.labels.labelRatingAndComment, value: "comment" }
         ];
 
         $scope.selected = {
@@ -183,32 +175,53 @@
             type: $scope.filters.types[0]
         };
 
+    }
 
-        $scope.filters.ratings.forEach(function (e) {
-            localizationService.localize("feedback_" + e.alias).then(function(r) {
-                e.name = r;
+    function init() {
+
+        $scope.loading = true;
+        $scope.entries = null;
+        $scope.pagination = null;
+        $scope.sorting = {};
+
+        $scope.filters = {};
+
+        // Initialize all labels with their default, English values
+        $scope.labels = {
+            labelAllRatings: "All ratings",
+            labelAllUsers: "All users",
+            labelNoResponsible: "No responsible",
+            labelAllStatuses: "All statuses",
+            labelAllTypes: "All types",
+            labelOnlyWithRating: "Only with rating",
+            labelRatingAndComment: "Rating and comment",
+            labelMe: "Me"
+        };
+
+        // Get all keys of the "$scope.labels" object
+        var labelKeys = Object.keys($scope.labels).map(x => "feedback_" + x);
+
+        // Get translations for all the labels (matching the user's selected language)
+        localizationService.localizeMany(labelKeys).then(function (data) {
+
+            // Update the labels object
+            labelKeys.forEach(function(key, index) {
+                $scope.labels[key.substr(9)] = data[index];
             });
-        });
 
-        $scope.filters.users.forEach(function (e) {
-            localizationService.localize("feedback_" + e.alias).then(function (r) {
-                e.name = r;
+            initFilters();
+
+            $scope.update();
+
+            $http.get("/umbraco/backoffice/Skybrud/FeedbackAdmin/GetUsers").then(function (r2) {
+
+                r2.data.forEach(function (user) {
+                    $scope.filters.users.push({ name: $scope.user.id === user.id ? $scope.labels.labelMe : user.name, value: user.key });
+                });
+
             });
-        });
 
-        $scope.filters.statuses.forEach(function (e) {
-            localizationService.localize("feedback_" + e.alias).then(function (r) {
-                e.name = r;
-            });
         });
-
-        $scope.filters.types.forEach(function (e) {
-            localizationService.localize("feedback_" + e.alias).then(function (r) {
-                e.name = r;
-            });
-        });
-
-        $scope.update();
 
     }
 
