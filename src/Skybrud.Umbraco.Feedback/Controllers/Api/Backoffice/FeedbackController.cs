@@ -63,7 +63,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
         }
 
-        public object GetEntriesForSite(Guid key, int page = 1, string sort = null, string order = null) {
+        public object GetEntriesForSite(Guid key, int page = 1, string sort = null, string order = null, string rating = null, string responsible = null, string status = null, string type = null) {
 
             CultureInfo culture = Security.CurrentUser.GetUserCulture(_localizedTextService, _globalSettings);
 
@@ -100,6 +100,34 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
             }
 
+
+            if (Guid.TryParse(rating, out Guid ratingKey)) {
+                options.Rating = ratingKey;
+            }
+
+            if (int.TryParse(responsible, out int responsibleId)) {
+                options.Responsible = Current.Services.UserService.GetUserById(responsibleId)?.Key;
+            } else if (Guid.TryParse(rating, out Guid responsibleKey)) {
+                options.Rating = responsibleKey;
+            }
+            
+            if (Guid.TryParse(status, out Guid statusKey)) {
+                options.Status = statusKey;
+            }
+
+            options.Type = EnumUtils.ParseEnum(type, FeedbackEntryType.All);
+
+
+
+
+
+
+
+
+
+
+
+
             var result = _feedbackService.GetEntries(options);
 
             var siteModel = new SiteApiModel(site, request, _localizedTextService, culture);
@@ -110,12 +138,12 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
             foreach (var entry in result.Entries) {
 
-                if (!site.TryGetRating(entry.Dto.Rating, out var rating)) {
-                    rating = new FeedbackRating(entry.Dto.Rating, "not-found");
+                if (!site.TryGetRating(entry.Dto.Rating, out var er)) {
+                    er = new FeedbackRating(entry.Dto.Rating, "not-found");
                 }
 
-                if (!site.TryGetStatus(entry.Dto.Status, out var status)) {
-                    status = new FeedbackStatus(entry.Dto.Status, "not-found");
+                if (!site.TryGetStatus(entry.Dto.Status, out var es)) {
+                    es = new FeedbackStatus(entry.Dto.Status, "not-found");
                 }
 
                 if (!pages.TryGetValue(entry.PageKey, out PageApiModel pageModel)) {
@@ -134,8 +162,8 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
                 IFeedbackUser user = null;
                 if (entry.Dto.AssignedTo != Guid.Empty) _feedbackService.TryGetUser(entry.Dto.AssignedTo, out user);
 
-                var r = new RatingApiModel(rating, request, _localizedTextService, culture);
-                var s = new StatusApiModel(status, request, _localizedTextService, culture);
+                var r = new RatingApiModel(er, request, _localizedTextService, culture);
+                var s = new StatusApiModel(es, request, _localizedTextService, culture);
 
                 entries.Add(new EntryApiModel(entry, siteModel, pageModel, s, r, user));
 

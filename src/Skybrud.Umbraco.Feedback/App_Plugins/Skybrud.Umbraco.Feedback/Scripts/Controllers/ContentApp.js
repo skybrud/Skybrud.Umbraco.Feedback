@@ -1,11 +1,12 @@
-﻿angular.module("umbraco").controller("Skybrud.Feedback.ContentAppController", function ($scope, $http, editorState, notificationsService) {
+﻿angular.module("umbraco").controller("Skybrud.Feedback.ContentAppController", function ($scope, $http, editorState, localizationService, notificationsService, userService) {
 
     $scope.current = editorState.current;
 
-    $scope.loading = true;
-    $scope.entries = null;
-    $scope.pagination = null;
-    $scope.sorting = {};
+    // Get information about the current user
+    userService.getCurrentUser().then(function (user) {
+        $scope.user = user;
+        init();
+    });
 
     $scope.archive = function (entry, success, error) {
         if (!confirm("Are you sure you want to archive the selected feedback entry?")) return;
@@ -130,6 +131,87 @@
 
     } 
 
+    function setSite(site) {
+
+        if ($scope.site) return;
+
+        $scope.site = site;
+
+        site.ratings.forEach(function (r) {
+            $scope.filters.ratings.push({ name: r.name, alias: r.alias, value: r.key });
+        });
+
+        site.statuses.forEach(function (s) {
+            $scope.filters.statuses.push({ name: s.name, alias: s.alias, value: s.key });
+        });
+
+    }
+
+    function init() {
+
+        $scope.loading = true;
+        $scope.entries = null;
+        $scope.pagination = null;
+        $scope.sorting = {};
+
+        $scope.filters = {};
+
+        $scope.filters.ratings = [
+            { name: "All ratings", alias: "labelAllRatings", value: "" }
+        ];
+
+        $scope.filters.users = [
+            { name: "All users", alias: "labelAllUsers", value: "" },
+            { name: "No responsible", alias: "labelNoResponsible", value: "00000000-0000-0000-0000-000000000000" },
+            { name: "Me", alias: "labelMe", value: $scope.user.id + "" }
+        ];
+
+        $scope.filters.statuses = [
+            { name: "All statuses", alias: "labelAllStatuses", value: "" }
+        ];
+
+        $scope.filters.types = [
+            { name: "All types", alias: "labelAllTypes", value: "" },
+            { name: "Only with rating", alias: "labelOnlyWithRating", value: "rating" },
+            { name: "Rating and comment", alias: "labelRatingAndComment", value: "comment" }
+        ];
+
+        $scope.selected = {
+            rating: $scope.filters.ratings[0],
+            responsible: $scope.filters.users[0],
+            status: $scope.filters.statuses[0],
+            type: $scope.filters.types[0]
+        };
+
+
+        $scope.filters.ratings.forEach(function (e) {
+            localizationService.localize("feedback_" + e.alias).then(function(r) {
+                e.name = r;
+            });
+        });
+
+        $scope.filters.users.forEach(function (e) {
+            localizationService.localize("feedback_" + e.alias).then(function (r) {
+                e.name = r;
+            });
+        });
+
+        $scope.filters.statuses.forEach(function (e) {
+            localizationService.localize("feedback_" + e.alias).then(function (r) {
+                e.name = r;
+            });
+        });
+
+        $scope.filters.types.forEach(function (e) {
+            localizationService.localize("feedback_" + e.alias).then(function (r) {
+                e.name = r;
+            });
+        });
+
+        $scope.update();
+
+    }
+
     $scope.update = function (p) {
 
         $scope.loading = true;
@@ -147,7 +229,14 @@
         if ($scope.sorting.field) params.sort = $scope.sorting.field;
         if ($scope.sorting.order) params.order = $scope.sorting.order;
 
+        if ($scope.selected.rating.value) params.rating = $scope.selected.rating.value;
+        if ($scope.selected.responsible.value) params.responsible = $scope.selected.responsible.value;
+        if ($scope.selected.status.value) params.status = $scope.selected.status.value;
+        if ($scope.selected.type.value) params.type = $scope.selected.type.value;
+
         $http.get("/umbraco/backoffice/Skybrud/FeedbackAdmin/GetEntriesForSite", { params: params }).then(function (res) {
+
+            setSite(res.data.site);
 
             $scope.entries = res.data.entries.data;
 
@@ -165,6 +254,12 @@
 
     };
 
-    $scope.update();
+    // Add a watcher on the selection
+    $scope.$watch("selected", function () {
+        $scope.hasFilter = (
+            $scope.selected.rating || $scope.selected.responsible || $scope.selected.status || $scope.selected.type
+        );
+        $scope.update();
+    }, true);
 
 });

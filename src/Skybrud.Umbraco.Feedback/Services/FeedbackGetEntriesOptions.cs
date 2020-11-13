@@ -1,23 +1,6 @@
 ﻿using System;
-using Newtonsoft.Json;
-using Skybrud.Essentials.Json.Converters.Enums;
 
 namespace Skybrud.Umbraco.Feedback.Services {
-
-
-    [JsonConverter(typeof(EnumCamelCaseConverter))]
-    public enum EntriesSortField {
-        CreateDate,
-        Rating,
-        Status
-    }
-
-
-    [JsonConverter(typeof(EnumCamelCaseConverter))]
-    public enum EntriesSortOrder {
-        Asc,
-        Desc
-    }
 
     public class FeedbackGetEntriesOptions {
 
@@ -30,6 +13,14 @@ namespace Skybrud.Umbraco.Feedback.Services {
         public EntriesSortField SortField { get; set; }
 
         public EntriesSortOrder SortOrder { get; set; }
+
+        public Guid? Rating { get; set; }
+
+        public Guid? Responsible { get; set; }
+
+        public Guid? Status { get; set; }
+
+        public FeedbackEntryType Type { get; set; }
 
     }
 
