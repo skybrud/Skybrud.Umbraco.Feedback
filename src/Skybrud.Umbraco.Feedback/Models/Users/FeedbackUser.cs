@@ -13,10 +13,11 @@ namespace Skybrud.Umbraco.Feedback.Models.Users {
 
         public string Name { get; set; }
 
+        public string Email { get; set; }
+
         public string Description { get; set; }
 
         public string Avatar { get; set; }
-
 
         public string Language { get; set; }
 
@@ -26,9 +27,11 @@ namespace Skybrud.Umbraco.Feedback.Models.Users {
         public FeedbackUser() { }
 
         public FeedbackUser(IUser user) {
+            
             Id = user.Id;
             Key = user.Key;
             Name = user.Name;
+            Email = user.Email;
             Description = user.Email;
             Language = user.Language;
 

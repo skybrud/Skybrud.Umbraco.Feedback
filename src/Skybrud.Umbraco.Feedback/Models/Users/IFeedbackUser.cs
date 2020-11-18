@@ -14,6 +14,9 @@ namespace Skybrud.Umbraco.Feedback.Models.Users {
         [JsonProperty("name")]
         string Name { get; }
 
+        [JsonProperty("email")]
+        string Email { get; }
+
         [JsonProperty("description")]
         string Description { get; }
 
