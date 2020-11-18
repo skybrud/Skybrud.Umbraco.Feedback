@@ -26,7 +26,7 @@
     <key alias="labelStatus">Status</key>
     <key alias="labelComment">Kommentar</key>
     <key alias="labelNoResponsible">Ingen ansvarlig</key>
-    <key alias="labelNotSpecified">ikke angivet</key>
+    <key alias="labelNotSpecified">Ikke angivet</key>
     <key alias="labelYes">Ja</key>
     <key alias="labelNo">Nej</key>
     <key alias="labelRefresh">Genindlæs</key>
