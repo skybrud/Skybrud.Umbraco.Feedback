@@ -39,8 +39,6 @@
     <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\**\*.html" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\**\*.js" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\Lang\*.xml" />
-    <None Remove="Web.config.install.xdt" />
-    <None Remove="Web.config.uninstall.xdt" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\package.manifest" />
   </ItemGroup>
   
