@@ -27,7 +27,8 @@ namespace Skybrud.Umbraco.Feedback.Components {
             var plan = new MigrationPlan("Skybrud.Umbraco.Feedback");
             
             plan.From(string.Empty)
-                .To<CreateTableMigration>("3.0.0-alpha001");
+                .To<CreateTableMigration>("3.0.0-alpha001")
+                .To<FixEmptyStringValuesMigration>("3.0.0-alpha004");
 
             var upgrader = new Upgrader(plan);
             

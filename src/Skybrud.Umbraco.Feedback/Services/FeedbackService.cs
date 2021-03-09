@@ -133,7 +133,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
         public void Archive(FeedbackEntry entry) {
             
             if (entry == null) throw new ArgumentNullException(nameof(entry));
-
+            
             entry.IsArchived = true;
 
             _databaseService.Update(entry._entry);
@@ -313,6 +313,11 @@ namespace Skybrud.Umbraco.Feedback.Services {
         }
 
         public UpdateEntryResult UpdateEntry(FeedbackEntry entry) {
+            
+            // Ensure the string values are NULL (opposed to empty or white space)
+            entry.Name = FeedbackUtils.TrimToNull(entry.Name);
+            entry.Email = FeedbackUtils.TrimToNull(entry.Email);
+            entry.Comment = FeedbackUtils.TrimToNull(entry.Comment);
 
             // Attempt to add the entry to the database
             try {
