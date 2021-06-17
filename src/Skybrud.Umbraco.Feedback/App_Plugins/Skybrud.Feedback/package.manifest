@@ -4,14 +4,14 @@
 			"alias": "Skybrud.Feedback.SiteList",
 			"name": "Skybrud.Feedback - Feedback på sideniveau",
 			"editor": {
-				"view": "~/App_Plugins/Skybrud.Feedback/Views/List.html?v=3",
+				"view": "~/App_Plugins/Skybrud.Feedback/Views/List.html?v=4",
 				"hideLabel": true
 			},
 			"prevalues": {
 				"fields": [
 					{
 						"label": "Limit",
-						description: "The amount of items to show on each page.",
+						"description": "The amount of items to show on each page.",
 						"key": "limit",
 						"view": "number"
 					},
