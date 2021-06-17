@@ -3,13 +3,106 @@
     // Get the ID of the current site
     var siteId = $routeParams.id;
 
+    $scope.hasFilter = false;
+    $scope.selectionCount = 0;
+
+    $scope.statuses = [];
+
+
+
+
     // Get information about the current user
     userService.getCurrentUser().then(function (user) {
         $scope.user = user;
         init();
     });
 
-    $scope.hasFilter = false;
+    $scope.toggleExpanded = function (item, event) {
+        if (event.target.localName === "input") return;
+        if (event.target.localName === "td" && event.target.classList.contains("col-checkbox")) return;
+        item.expanded = (item.expanded ? false : true);
+    };
+
+    $scope.onSelectionUpdate = function() {
+        $scope.selectionCount = $scope.items.filter(x => x.selected).length;
+    };
+
+
+    $scope.setStatusForSelection = function(status) {
+
+        const ids = $scope.items.filter(x => x.selected).map(x => x.id);
+        if (ids.length == 0) return;
+
+        feedbackService.setStatus(ids, status.alias).success(function (r) {
+            notificationsService.success('The status was successfully updated.');
+            $scope.updateList();
+        }).error(function (r) {
+            notificationsService.error('Unable to set status' + (r && r.meta && r.meta.error ? ': ' + r.meta.error : ''));
+        });
+
+    };
+
+    $scope.archiveSelection = function () {
+
+        const ids = $scope.items.filter(x => x.selected).map(x => x.id);
+        if (ids.length == 0) return;
+
+        if (!confirm("Are you sure you want to archive the selected feedback entries?")) return;
+
+        feedbackService.archiveEntries(ids).success(function () {
+
+            notificationsService.success("The entry was successfully archived.");
+
+            $scope.updateList();
+
+        }).error(function (r) {
+
+            notificationsService.error("Unable to archive one or more entries" + (r && r.meta && r.meta.error ? ": " + r.meta.error : ""));
+
+        });
+
+    };
+
+    $scope.deleteSelection = function (entry) {
+
+        const ids = $scope.items.filter(x => x.selected).map(x => x.id);
+        if (ids.length == 0) return;
+
+        if (!confirm("Are you sure you want to delete the selected feedback entries?")) return;
+
+        feedbackService.deleteEntries(ids).success(function () {
+
+            notificationsService.success("The entries was successfully deleted.");
+
+            $scope.updateList();
+
+        }).error(function (r) {
+
+            notificationsService.error("Unable to delete one or more entries" + (r && r.meta && r.meta.error ? ": " + r.meta.error : ""));
+
+        });
+
+    };
+
+    $scope.setStatus = function (item, status) {
+        if (!status) return;
+        feedbackService.setStatus(item.id, status.alias).success(function (r) {
+            item.status = r.data.status;
+            notificationsService.success('The status was successfully updated.');
+        }).error(function (r) {
+            notificationsService.error('Unable to set status' + (r && r.meta && r.meta.error ? ': ' + r.meta.error : ''));
+        });
+    };
+
+
+
+
+
+
+
+
+
+
 
     function initFilters() {
 
@@ -75,6 +168,7 @@
 
         $http.get('/umbraco/backoffice/Feedback/Backend/GetStatusesForSite?siteId=' + siteId).success(function (r) {
             angular.forEach(r, function (status) {
+                $scope.statuses = r;
                 $scope.filters.statuses.push({ name: status.name, value: status.alias });
             });
         });
@@ -180,6 +274,7 @@
                 });
 
                 $scope.items = r.data;
+                $scope.selectionCount = 0;
 
                 pagination.page = r.pagination.page;
                 pagination.pages = r.pagination.pages;

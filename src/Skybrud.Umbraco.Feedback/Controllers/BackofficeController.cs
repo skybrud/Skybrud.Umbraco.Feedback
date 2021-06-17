@@ -18,6 +18,7 @@ using Umbraco.Web.Mvc;
 using Umbraco.Web.WebApi;
 ﻿using System.Net.Http;
 using System.Text.RegularExpressions;
+using Skybrud.Essentials.Strings;
 using Skybrud.Umbraco.Feedback.Exceptions;
 using Skybrud.Umbraco.Feedback.Models;
 using Umbraco.Web.Editors;
@@ -292,6 +293,58 @@ namespace Skybrud.Umbraco.Feedback.Controllers {
         }
 
         [HttpGet]
+        public object BatchSetStatus(string ids, string alias) {
+
+            // TODO: Detect culture from query string
+            CultureInfo culture = new CultureInfo("en-US");
+
+            // Initialize a new service
+            FeedbackService service = new FeedbackService();
+
+            try {
+
+                // Get a reference to the specified status
+                FeedbackStatus status = FeedbackConfig.Current.GetStatus(alias);
+                if (status == null) throw new FeedbackHttpException("A status with the specified alias could not be found.");
+
+                List<FeedbackEntry> entries = new List<FeedbackEntry>();
+
+                // Iterate over the IDs, look up the entries and validate that we can set a new status
+                foreach (int id in StringUtils.ParseInt32Array(ids)) {
+                    
+                    // Get a reference to the entry
+                    FeedbackEntry entry = service.GetEntryById(id);
+                    if (entry == null) throw new FeedbackHttpException("An entry with the specified ID could not be found.");
+                    
+                    // Has the entry been archived?
+                    if (entry.IsArchived) throw new FeedbackHttpException("The entry has been archived and can therefore not be changed.");
+
+                    entries.Add(entry);
+
+                }
+
+                // Iterate over the entries again to set the status
+                foreach (var entry in entries) {
+                    service.SetStatus(entry, status);
+                }
+
+                return JsonMetaResponse.GetSuccess(entries.Select(x => FeedbackEntryResult.GetFromEntry(x, Umbraco, culture)));
+
+            } catch (FeedbackHttpException ex) {
+            
+                return Request.CreateResponse(JsonMetaResponse.GetError(ex.Code, ex.Message));
+            
+            } catch (Exception ex) {
+
+                LogHelper.Error<BackOfficeController>("Failed setting status for entries with IDs " + ids + ".", ex);
+            
+                return Request.CreateResponse(JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, null));
+            
+            }
+
+        }
+
+        [HttpGet]
         public object ArchiveEntry(int entryId) {
 
             // Set a danish culture
@@ -308,6 +361,37 @@ namespace Skybrud.Umbraco.Feedback.Controllers {
             service.Archive(entry);
 
             return JsonMetaResponse.GetSuccess(FeedbackEntryResult.GetFromEntry(entry, Umbraco, culture));
+
+        }
+
+        [HttpGet]
+        public object ArchiveEntries(string ids) {
+
+            // Set a danish culture
+            CultureInfo culture = new CultureInfo("da");
+
+            // Initialize a new service
+            FeedbackService service = new FeedbackService();
+
+            List<FeedbackEntry> entries = new List<FeedbackEntry>();
+
+            // Iterate over the IDs, look up the entries and validate that we can archive them
+            foreach (int id in StringUtils.ParseInt32Array(ids)) {
+                    
+                // Get a reference to the entry
+                FeedbackEntry entry = service.GetEntryById(id);
+                if (entry == null) throw new FeedbackHttpException("An entry with the specified ID could not be found.");
+
+                entries.Add(entry);
+
+            }
+
+            // Iterate over the entries again to archive them
+            foreach (var entry in entries) {
+                service.Archive(entry);
+            }
+
+            return JsonMetaResponse.GetSuccess(entries.Select(x => FeedbackEntryResult.GetFromEntry(x, Umbraco, culture)));
 
         }
 
@@ -329,6 +413,37 @@ namespace Skybrud.Umbraco.Feedback.Controllers {
             service.Delete(entry);
 
             return JsonMetaResponse.GetSuccess(FeedbackEntryResult.GetFromEntry(entry, Umbraco, culture));
+
+        }
+
+        [HttpGet]
+        public object DeleteEntries(string ids) {
+
+            // Set a danish culture
+            CultureInfo culture = new CultureInfo("da");
+
+            // Initialize a new service
+            FeedbackService service = new FeedbackService();
+
+            List<FeedbackEntry> entries = new List<FeedbackEntry>();
+
+            // Iterate over the IDs, look up the entries and validate that we can delete them
+            foreach (int id in StringUtils.ParseInt32Array(ids)) {
+                    
+                // Get a reference to the entry
+                FeedbackEntry entry = service.GetEntryById(id);
+                if (entry == null) throw new FeedbackHttpException("An entry with the specified ID could not be found.");
+
+                entries.Add(entry);
+
+            }
+
+            // Iterate over the entries again to delete them
+            foreach (var entry in entries) {
+                service.Delete(entry);
+            }
+
+            return JsonMetaResponse.GetSuccess(entries.Select(x => FeedbackEntryResult.GetFromEntry(x, Umbraco, culture)));
 
         }
 

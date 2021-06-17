@@ -3,8 +3,14 @@
         archiveEntry: function (entryId) {
             return $http.get('/umbraco/backoffice/Feedback/Backend/ArchiveEntry?entryId=' + entryId);
         },
+        archiveEntries: function (ids) {
+            return $http.get("/umbraco/backoffice/Feedback/Backend/ArchiveEntries?ids=" + ids.join(","));
+        },
         deleteEntry: function (entryId) {
             return $http.get('/umbraco/backoffice/Feedback/Backend/DeleteEntry?entryId=' + entryId);
+        },
+        deleteEntries: function (ids) {
+            return $http.get("/umbraco/backoffice/Feedback/Backend/DeleteEntries?ids=" + ids.join(","));
         },
         getEntry: function (entryId) {
             return $http.get('/umbraco/backoffice/Feedback/Backend/GetEntry?entryId=' + entryId);
@@ -43,7 +49,11 @@
             return $http.get('/umbraco/backoffice/Feedback/Backend/SetResponsible?entryId=' + entryId + '&userId=' + userId);
         },
         setStatus: function (entryId, alias) {
-            return $http.get('/umbraco/backoffice/Feedback/Backend/SetStatus?entryId=' + entryId + '&alias=' + alias);
+            if (Array.isArray(entryId)) {
+                return $http.get('/umbraco/backoffice/Feedback/Backend/BatchSetStatus?ids=' + entryId.join(",") + '&alias=' + alias);
+            } else {
+                return $http.get('/umbraco/backoffice/Feedback/Backend/SetStatus?entryId=' + entryId + '&alias=' + alias);
+            }
         },
         getColumns: function () {
             return [

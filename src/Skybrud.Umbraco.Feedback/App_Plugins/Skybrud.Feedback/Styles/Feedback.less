@@ -12,9 +12,41 @@
 .feedbackListOptions {
     display: flex;
     margin-bottom: 20px;
+    height: 32px;
+    > div {
+        height: 32px;
+        max-height: 32px;
+        overflow: visible;
+    }
     select {
         width: initial;
     }
+
+    .left {
+        flex: 1;
+    }
+
+    .right {
+        white-space: nowrap;
+        display: flex;
+        .btn + .btn {
+            margin-left: 5px;
+        }
+    }
+
+    .btn {
+        height: 32px;
+    }
+    
+    .btn.has-circle {
+        position: relative;
+        padding-left: 32px;
+        .circle {
+            top: 7px;
+            left: 10px;
+        }
+    }
+
 }
 
 .feedbackListFilters {
@@ -156,8 +188,42 @@
     }
 
     .options {
+        display: flex;
         padding: 8px 0 8px 8px;
+        
+        .vspacer {
+            margin: 0 7px;
+            width: 1px;
+            background: #d8d7d9;
+        }
+
+        .btn {
+            display: block;
+            height: 26px;
+            box-sizing: border-box;
+            font-size: 13px;
+            padding: 4px 8px;
+        }
+
+        .btn + .btn {
+            margin-left: 5px;
+        }
+        
+        .btn.has-circle {
+            position: relative;
+            padding-left: 24px;
+            .circle {
+                top: 7px;
+                left: 7px;
+                width: 12px;
+                height: 12px;
+            }
+        }
+    
     }
+
+
+
 
     .spacer {
         height: 1px;
