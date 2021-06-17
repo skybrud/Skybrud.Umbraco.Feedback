@@ -30,6 +30,8 @@ module.exports = function(grunt) {
 						src: [
 							pkg.name + '.dll',
 							pkg.name + '.xml',
+							'Skybrud.Essentials.dll',
+							'Skybrud.Essentials.xml',
 							'Skybrud.WebApi.Json.dll',
 							'Skybrud.WebApi.Json.xml'
 						],
