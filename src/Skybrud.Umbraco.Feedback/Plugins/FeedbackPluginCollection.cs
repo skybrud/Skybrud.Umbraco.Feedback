@@ -1,21 +1,16 @@
-﻿using System.Collections.Generic;
-using Umbraco.Core;
-using Umbraco.Core.Composing;
+﻿using System;
+using System.Collections.Generic;
+using Umbraco.Cms.Core.Composing;
 
 namespace Skybrud.Umbraco.Feedback.Plugins {
-    
-    public class FeedbackPluginCollection : BuilderCollectionBase<IFeedbackPlugin> {
 
-        /// <summary>
-        /// Gets the current plugin collection.
-        /// </summary>
-        public static FeedbackPluginCollection Current => global::Umbraco.Core.Composing.Current.Factory.GetInstance<FeedbackPluginCollection>();
+    public class FeedbackPluginCollection : BuilderCollectionBase<IFeedbackPlugin> {
 
         /// <summary>
         /// Initializes a new provider collection based on the specified <paramref name="items"/>.
         /// </summary>
         /// <param name="items">The items to make up the collection.</param>
-        public FeedbackPluginCollection(IEnumerable<IFeedbackPlugin> items) : base(items) { }
+        public FeedbackPluginCollection(Func<IEnumerable<IFeedbackPlugin>> items) : base(items) { }
 
     }
 

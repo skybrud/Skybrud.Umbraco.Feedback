@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using Skybrud.Umbraco.Feedback.Models.Entries;
+﻿using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
 using Skybrud.Umbraco.Feedback.Models.Users;
 using Skybrud.Umbraco.Feedback.Services;
-using Umbraco.Core.Models;
-using Umbraco.Core.Models.ContentEditing;
-using Umbraco.Core.Models.Membership;
+using System;
+using System.Collections.Generic;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.ContentEditing;
+using Umbraco.Cms.Core.Models.Membership;
 
 namespace Skybrud.Umbraco.Feedback.Plugins {
 

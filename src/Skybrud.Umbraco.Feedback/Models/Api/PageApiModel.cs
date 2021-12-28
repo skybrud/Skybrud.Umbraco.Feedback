@@ -1,8 +1,8 @@
-﻿using System;
-using Newtonsoft.Json;
-using Umbraco.Core.Models;
-using Umbraco.Core.Models.PublishedContent;
-using Umbraco.Web;
+﻿using Newtonsoft.Json;
+using System;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Extensions;
 
 namespace Skybrud.Umbraco.Feedback.Models.Api {
 

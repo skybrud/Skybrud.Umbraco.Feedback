@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using Microsoft.Extensions.Logging;
 using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Ratings;
 using Skybrud.Umbraco.Feedback.Models.Results;
@@ -7,8 +6,9 @@ using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
 using Skybrud.Umbraco.Feedback.Models.Users;
 using Skybrud.Umbraco.Feedback.Plugins;
-using Umbraco.Core.Logging;
-using Umbraco.Core.Models.PublishedContent;
+using System;
+using System.Linq;
+using Umbraco.Cms.Core.Models.PublishedContent;
 
 namespace Skybrud.Umbraco.Feedback.Services {
 
@@ -16,22 +16,23 @@ namespace Skybrud.Umbraco.Feedback.Services {
     /// Service class for working with feedback entries.
     /// </summary>
     public class FeedbackService {
-        
+
         private readonly ILogger _logger;
-        
+
         private readonly FeedbackDatabaseService _databaseService;
-        
+
         #region Properties
 
-        protected FeedbackPluginCollection Plugins => FeedbackPluginCollection.Current;
+        protected FeedbackPluginCollection Plugins { get; }
 
         #endregion
 
         #region Constructors
 
-        public FeedbackService(ILogger logger, FeedbackDatabaseService databaseService) {
+        public FeedbackService(ILogger logger, FeedbackDatabaseService databaseService, FeedbackPluginCollection feedbackPlugins) {
             _logger = logger;
             _databaseService = databaseService;
+            Plugins = feedbackPlugins;
         }
 
         #endregion
@@ -51,7 +52,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
             user = null;
             return false;
         }
-        
+
         public IFeedbackUser[] GetUsers() {
             return Plugins.SelectMany(x => x.GetUsers()).Distinct().OrderBy(x => x.Name).ToArray();
         }
@@ -107,7 +108,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
         }
 
         public FeedbackEntry GetEntryByKey(Guid key) {
-            
+
             FeedbackEntryDto dto = _databaseService.GetEntryByKey(key);
             if (dto == null) return null;
 
@@ -131,9 +132,9 @@ namespace Skybrud.Umbraco.Feedback.Services {
         /// </summary>
         /// <param name="entry">The entry to be archived.</param>
         public void Archive(FeedbackEntry entry) {
-            
+
             if (entry == null) throw new ArgumentNullException(nameof(entry));
-            
+
             entry.IsArchived = true;
 
             _databaseService.Update(entry._entry);
@@ -262,7 +263,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
 
         public AddRatingResult AddRating(FeedbackSiteSettings site, IPublishedContent page, FeedbackRating rating) {
-            
+
             // Initialize a new entry
             FeedbackEntry entry = new FeedbackEntry {
                 Key = Guid.NewGuid(),
@@ -284,7 +285,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
                             return AddRatingResult.Cancelled("The feedback submission was cancelled by the server.");
                         }
                     } catch (Exception ex) {
-                        _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnRatingSubmitting.", plugin.GetType().FullName);
+                        _logger.LogError(ex, "Plugin of type {PluginType} failed for method OnRatingSubmitting.", plugin.GetType().FullName);
                     }
                 }
 
@@ -296,7 +297,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
                     try {
                         plugin.OnRatingSubmitted(this, entry);
                     } catch (Exception ex) {
-                        _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnRatingSubmitted.", plugin.GetType().FullName);
+                        _logger.LogError(ex, "Plugin of type {PluginType} failed for method OnRatingSubmitted.", plugin.GetType().FullName);
                     }
                 }
 
@@ -304,16 +305,16 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
             } catch (Exception ex) {
 
-                _logger.Error<FeedbackService>(ex, "Unable to add feedback entry.");
-                
+                _logger.LogError(ex, "Unable to add feedback entry.");
+
                 return AddRatingResult.Cancelled("The feedback submission could not be saved due to an error on the server.");
-            
+
             }
 
         }
 
         public UpdateEntryResult UpdateEntry(FeedbackEntry entry) {
-            
+
             // Ensure the string values are NULL (opposed to empty or white space)
             entry.Name = FeedbackUtils.TrimToNull(entry.Name);
             entry.Email = FeedbackUtils.TrimToNull(entry.Email);
@@ -325,11 +326,11 @@ namespace Skybrud.Umbraco.Feedback.Services {
                 // Trigger the "OnEntryUpdating" before adding the entry
                 foreach (IFeedbackPlugin plugin in Plugins) {
                     try {
-                        if (!plugin.OnEntryUpdating(this, entry))  {
+                        if (!plugin.OnEntryUpdating(this, entry)) {
                             return UpdateEntryResult.Cancelled("The feedback submission was cancelled by the server.");
                         }
                     } catch (Exception ex) {
-                        _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnEntryUpdating.", plugin.GetType().FullName);
+                        _logger.LogError(ex, "Plugin of type {PluginType} failed for method OnEntryUpdating.", plugin.GetType().FullName);
                     }
                 }
 
@@ -341,7 +342,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
                     try {
                         plugin.OnEntryUpdated(this, entry);
                     } catch (Exception ex) {
-                        _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnEntryUpdated.", plugin.GetType().FullName);
+                        _logger.LogError(ex, "Plugin of type {PluginType} failed for method OnEntryUpdated.", plugin.GetType().FullName);
                     }
                 }
 
@@ -349,7 +350,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
             } catch (Exception ex) {
 
-                _logger.Error<FeedbackService>(ex, "Unable to add feedback entry.");
+                _logger.LogError(ex, "Unable to add feedback entry.");
 
                 return UpdateEntryResult.Cancelled("The feedback submission could not be updated due to an error on the server.");
 
@@ -358,7 +359,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
         }
 
         public AddCommentResult AddComment(FeedbackSiteSettings site, IPublishedContent page, FeedbackRating rating, string name, string email, string comment) {
-            
+
             FeedbackEntry entry = new FeedbackEntry {
                 Key = Guid.NewGuid(),
                 SiteKey = site.Key,
@@ -378,11 +379,11 @@ namespace Skybrud.Umbraco.Feedback.Services {
                 // Trigger the "OnEntrySubmitting" before adding the entry
                 foreach (IFeedbackPlugin plugin in Plugins) {
                     try {
-                        if (!plugin.OnEntrySubmitting(this, entry))  {
+                        if (!plugin.OnEntrySubmitting(this, entry)) {
                             return AddCommentResult.Cancelled("The feedback submission was cancelled by the server.");
                         }
                     } catch (Exception ex) {
-                        _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnEntrySubmitting.", plugin.GetType().FullName);
+                        _logger.LogError(ex, "Plugin of type {PluginType} failed for method OnEntrySubmitting.", plugin.GetType().FullName);
                     }
                 }
 
@@ -394,7 +395,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
                     try {
                         plugin.OnEntrySubmitted(this, entry);
                     } catch (Exception ex) {
-                        _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnEntrySubmitted.", plugin.GetType().FullName);
+                        _logger.LogError(ex, "Plugin of type {PluginType} failed for method OnEntrySubmitted.", plugin.GetType().FullName);
                     }
                 }
 
@@ -402,7 +403,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
             } catch (Exception ex) {
 
-                _logger.Error<FeedbackService>(ex, "Unable to add feedback entry.");
+                _logger.LogError(ex, "Unable to add feedback entry.");
 
                 return AddCommentResult.Cancelled("The feedback submission could not be saved due to an error on the server.");
 
@@ -426,7 +427,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
                         return false;
                     }
                 } catch (Exception ex) {
-                    _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnUserAssigning.", plugin.GetType().FullName);
+                    _logger.LogError(ex, "Plugin of type {PluginType} failed for method OnUserAssigning.", plugin.GetType().FullName);
                 }
             }
 
@@ -440,7 +441,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
                 try {
                     plugin.OnUserAssigned(this, entry, oldUser, newUser);
                 } catch (Exception ex) {
-                    _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnUserAssigned.", plugin.GetType().FullName);
+                    _logger.LogError(ex, "Plugin of type {PluginType} failed for method OnUserAssigned.", plugin.GetType().FullName);
                 }
             }
 
@@ -448,7 +449,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
         }
 
-        
+
         public bool SetStatus(FeedbackEntry entry, FeedbackStatus status) {
 
             // Some input validation
@@ -464,7 +465,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
                         return false;
                     }
                 } catch (Exception ex) {
-                    _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnStatusChanging.", plugin.GetType().FullName);
+                    _logger.LogError(ex, "Plugin of type {PluginType} failed for method OnStatusChanging.", plugin.GetType().FullName);
                 }
             }
 
@@ -478,7 +479,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
                 try {
                     plugin.OnStatusChanged(this, entry, oldStatus, status);
                 } catch (Exception ex) {
-                    _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method OnStatusChanged.", plugin.GetType().FullName);
+                    _logger.LogError(ex, "Plugin of type {PluginType} failed for method OnStatusChanged.", plugin.GetType().FullName);
                 }
             }
 
@@ -490,7 +491,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
         #region Private methods
 
-        
+
         #endregion
 
     }

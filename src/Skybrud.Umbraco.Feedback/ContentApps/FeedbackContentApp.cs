@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Skybrud.Umbraco.Feedback.Plugins;
-using Umbraco.Core.Models;
-using Umbraco.Core.Models.ContentEditing;
-using Umbraco.Core.Models.Membership;
+﻿using Skybrud.Umbraco.Feedback.Plugins;
+using System.Collections.Generic;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.ContentEditing;
+using Umbraco.Cms.Core.Models.Membership;
 
 namespace Skybrud.Umbraco.Feedback.ContentApps {
 

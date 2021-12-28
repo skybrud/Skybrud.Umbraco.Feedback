@@ -1,0 +1,27 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <SkybrudUmbracoFeedbackContentFilesPath>$(MSBuildThisFileDirectory)..\App_Plugins\Skybrud.Umbraco.Feedback\**\*.*</SkybrudUmbracoFeedbackContentFilesPath>
+    </PropertyGroup>
+
+    <Target Name="CopySkybrudUmbracoFeedbackAssets" BeforeTargets="Build">
+        <ItemGroup>
+            <SkybrudUmbracoFeedbackContentFiles Include="$(SkybrudUmbracoFeedbackContentFilesPath)" />
+        </ItemGroup>
+        <Message Text="Copying Skybrud.Umbraco.Feedback files: $(SkybrudUmbracoFeedbackContentFilesPath) - #@(SkybrudUmbracoFeedbackContentFiles->Count()) files"  Importance="high" />
+        <Copy
+            SourceFiles="@(SkybrudUmbracoFeedbackContentFiles)"
+            DestinationFiles="@(SkybrudUmbracoFeedbackContentFiles->'$(MSBuildProjectDirectory)\App_Plugins\Skybrud.Umbraco.Feedback\%(RecursiveDir)%(Filename)%(Extension)')"
+            SkipUnchangedFiles="true" />
+
+    </Target>
+
+    <Target Name="ClearSkybrudUmbracoFeedbackAssets" BeforeTargets="Clean">
+        <ItemGroup>
+            <SkybrudUmbracoFeedbackDir Include="$(MSBuildProjectDirectory)\App_Plugins\Skybrud.Umbraco.Feedback\" />
+        </ItemGroup>
+        <Message Text="Clear old Skybrud.Umbraco.Feedback data"  Importance="high" />
+        <RemoveDir Directories="@(SkybrudUmbracoFeedbackDir)"  />
+    </Target>
+
+</Project>

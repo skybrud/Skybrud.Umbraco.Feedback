@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Skybrud.Umbraco.Feedback.Models.Sites;
+using System;
 using System.Collections.Generic;
-using Skybrud.Umbraco.Feedback.Models.Sites;
-using Umbraco.Core.Composing;
-using Umbraco.Core.Models;
-using Umbraco.Core.Models.ContentEditing;
-using Umbraco.Core.Models.Membership;
+using Umbraco.Cms.Core.DependencyInjection;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.ContentEditing;
+using Umbraco.Cms.Core.Models.Membership;
 
 namespace Skybrud.Umbraco.Feedback.Plugins {
-    
+
     /// <summary>
     /// Provides extension methods to the <see cref="Composition"/> class.
     /// </summary>
@@ -17,8 +17,8 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         /// Gets the feedback plugin provider collection builder.
         /// </summary>
         /// <param name="composition">The composition.</param>
-        public static FeedbackPluginCollectionBuilder FeedbackPlugins(this Composition composition) {
-            return composition.WithCollectionBuilder<FeedbackPluginCollectionBuilder>();
+        public static FeedbackPluginCollectionBuilder FeedbackPlugins(this IUmbracoBuilder builder) {
+            return builder.WithCollectionBuilder<FeedbackPluginCollectionBuilder>();
         }
 
     }

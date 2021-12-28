@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Skybrud.Umbraco.Feedback.Models.Entries;
+﻿using Skybrud.Umbraco.Feedback.Models.Entries;
 
 namespace Skybrud.Umbraco.Feedback.Models.Results {
-   
+
     public class UpdateEntryResult {
 
         public AddRatingStatus Status { get; }

@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using Skybrud.Umbraco.Feedback.Constants;
+﻿using Skybrud.Umbraco.Feedback.Constants;
 using Skybrud.Umbraco.Feedback.Models.Fields;
 using Skybrud.Umbraco.Feedback.Models.Ratings;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
-using Umbraco.Core.Models.PublishedContent;
+using System;
+using System.Linq;
+using Umbraco.Cms.Core.Models.PublishedContent;
 
 namespace Skybrud.Umbraco.Feedback.Models.Sites {
-    
+
     public class FeedbackSiteSettings {
 
         #region Properties
@@ -47,12 +47,12 @@ namespace Skybrud.Umbraco.Feedback.Models.Sites {
         #region Constructors
 
         public FeedbackSiteSettings(IPublishedContent site) {
-            
+
             Id = site.Id;
             Key = site.Key;
             Name = site.Name;
 
-            Ratings = new [] { FeedbackConstants.Ratings.Positive, FeedbackConstants.Ratings.Negative };
+            Ratings = new[] { FeedbackConstants.Ratings.Positive, FeedbackConstants.Ratings.Negative };
 
             Statuses = new[] { FeedbackConstants.Statuses.New, FeedbackConstants.Statuses.InProgress, FeedbackConstants.Statuses.Closed };
 

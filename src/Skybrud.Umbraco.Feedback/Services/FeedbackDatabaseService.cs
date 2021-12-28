@@ -1,32 +1,33 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
 using NPoco;
 using Skybrud.Umbraco.Feedback.Constants;
 using Skybrud.Umbraco.Feedback.Extensions;
 using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Plugins;
-using Umbraco.Core.Logging;
-using Umbraco.Core.Persistence;
-using Umbraco.Core.Scoping;
+using System;
+using Umbraco.Cms.Core.Scoping;
+using Umbraco.Extensions;
 
 namespace Skybrud.Umbraco.Feedback.Services {
-    
+
     public class FeedbackDatabaseService {
 
         private readonly IScopeProvider _scopeProvider;
-        
+
         private readonly ILogger _logger;
-        
+
         #region Properties
 
-        protected FeedbackPluginCollection Plugins => FeedbackPluginCollection.Current;
+        protected FeedbackPluginCollection Plugins { get; }
 
         #endregion
 
         #region Constructors
 
-        public FeedbackDatabaseService(IScopeProvider scopeProvider, ILogger logger) {
+        public FeedbackDatabaseService(IScopeProvider scopeProvider, ILogger logger, FeedbackPluginCollection feedbackPlugins) {
             _scopeProvider = scopeProvider;
             _logger = logger;
+            Plugins = feedbackPlugins;
         }
 
         #endregion
@@ -52,7 +53,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
             }
 
         }
-        
+
         /// <summary>
         /// Gets an unpaginated array of all feedback entries for the site with the specified <paramref name="siteId"/>.
         /// </summary>
@@ -93,7 +94,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
                 if (options.Type == FeedbackEntryType.Rating) sql.Where<FeedbackEntryDto>(x => x.Comment == null);
 
                 if (options.SiteKey != Guid.Empty) sql = sql.Where<FeedbackEntryDto>(x => x.SiteKey == options.SiteKey);
-                
+
                 switch (options.SortField) {
 
                     case EntriesSortField.Rating:
@@ -160,7 +161,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
             }
 
         }
-        
+
         public FeedbackEntryDto GetEntryByKey(Guid key) {
 
             using (var scope = _scopeProvider.CreateScope()) {
@@ -180,7 +181,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
         public void Insert(FeedbackEntryDto entry) {
             using (var scope = _scopeProvider.CreateScope()) {
-                entry.Id = (int) (decimal) scope.Database.Insert(entry);
+                entry.Id = (int)(decimal)scope.Database.Insert(entry);
                 scope.Complete();
             }
         }
@@ -198,14 +199,14 @@ namespace Skybrud.Umbraco.Feedback.Services {
                 scope.Complete();
             }
         }
-        
+
         /// <summary>
         /// Deletes all entries before the specified <paramref name="date"/>.
         /// </summary>
         /// <param name="date">The date.</param>
         /// <returns>The amount of affected/deleted rows.</returns>
         public int DeleteAll(DateTime date) {
-            
+
             int affected;
 
             using (var scope = _scopeProvider.CreateScope()) {

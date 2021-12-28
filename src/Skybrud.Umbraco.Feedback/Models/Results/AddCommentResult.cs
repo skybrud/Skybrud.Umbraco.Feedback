@@ -1,7 +1,7 @@
 ﻿using Skybrud.Umbraco.Feedback.Models.Entries;
 
 namespace Skybrud.Umbraco.Feedback.Models.Results {
-    
+
     public class AddCommentResult {
 
         public AddCommentStatus Status { get; }

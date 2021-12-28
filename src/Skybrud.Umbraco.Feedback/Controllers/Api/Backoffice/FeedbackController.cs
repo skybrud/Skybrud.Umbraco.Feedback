@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Skybrud.Essentials.Enums;
 using Skybrud.Essentials.Json.Extensions;
@@ -14,39 +9,44 @@ using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
 using Skybrud.Umbraco.Feedback.Models.Users;
 using Skybrud.Umbraco.Feedback.Services;
-using Skybrud.WebApi.Json;
-using Umbraco.Core.Composing;
-using Umbraco.Core.Configuration;
-using Umbraco.Core.Models;
-using Umbraco.Core.Models.PublishedContent;
-using Umbraco.Core.Services;
-using Umbraco.Web;
-using Umbraco.Web.Mvc;
-using Umbraco.Web.WebApi;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Cms.Core.Security;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Core.Web;
+using Umbraco.Cms.Web.BackOffice.Controllers;
+using Umbraco.Cms.Web.Common.Attributes;
 
 namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
-    [JsonOnlyConfiguration]
     [PluginController("Skybrud")]
     public class FeedbackAdminController : UmbracoAuthorizedApiController {
 
         private readonly IUmbracoContextAccessor _umbracoContextAccessor;
         private readonly FeedbackService _feedbackService;
         private readonly ILocalizedTextService _localizedTextService;
-        private readonly IGlobalSettings _globalSettings;
+        private readonly IContentService contentService;
+        private readonly IUserService userService;
+        private readonly IBackOfficeSecurityAccessor backOfficeSecurityAccessor;
 
-        public FeedbackAdminController(IUmbracoContextAccessor umbracoContextAccessor, FeedbackService feedbackService, ILocalizedTextService localizedTextService, IGlobalSettings globalSettings) {
+        public FeedbackAdminController(IUmbracoContextAccessor umbracoContextAccessor, FeedbackService feedbackService, ILocalizedTextService localizedTextService, IContentService contentService, IUserService userService, IBackOfficeSecurityAccessor backOfficeSecurityAccessor) {
             _umbracoContextAccessor = umbracoContextAccessor;
             _feedbackService = feedbackService;
             _localizedTextService = localizedTextService;
-            _globalSettings = globalSettings;
+            this.contentService = contentService;
+            this.userService = userService;
+            this.backOfficeSecurityAccessor = backOfficeSecurityAccessor;
         }
 
         [HttpGet]
         public object Archive(Guid key) {
 
             var entry = _feedbackService.GetEntryByKey(key);
-            if (entry == null) return Request.CreateResponse(HttpStatusCode.NotFound);
+            if (entry == null) return NotFound();
 
             _feedbackService.Archive(entry);
 
@@ -58,7 +58,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
         public object Delete(Guid key) {
 
             var entry = _feedbackService.GetEntryByKey(key);
-            if (entry == null) return Request.CreateResponse(HttpStatusCode.NotFound);
+            if (entry == null) return NotFound();
 
             _feedbackService.Delete(entry);
 
@@ -68,10 +68,10 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
         public object GetEntriesForSite(Guid key, int page = 1, string sort = null, string order = null, string rating = null, string responsible = null, string status = null, string type = null) {
 
-            CultureInfo culture = Security.CurrentUser.GetUserCulture(_localizedTextService, _globalSettings);
+            CultureInfo culture = new CultureInfo(backOfficeSecurityAccessor.BackOfficeSecurity.CurrentUser.Language);
 
             if (_feedbackService.TryGetSite(key, out FeedbackSiteSettings site) == false) {
-                return Request.CreateResponse(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
             FeedbackGetEntriesOptions options = new FeedbackGetEntriesOptions {
@@ -81,7 +81,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
             };
 
             switch (sort) {
-                
+
                 case "rating":
                     options.SortField = EntriesSortField.Rating;
                     options.SortOrder = EnumUtils.ParseEnum(order, EntriesSortOrder.Asc);
@@ -106,11 +106,11 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
             }
 
             if (int.TryParse(responsible, out int responsibleId)) {
-                options.Responsible = Current.Services.UserService.GetUserById(responsibleId)?.Key;
+                options.Responsible = userService.GetUserById(responsibleId)?.Key;
             } else if (Guid.TryParse(responsible, out Guid responsibleKey)) {
                 options.Responsible = responsibleKey;
             }
-            
+
             if (Guid.TryParse(status, out Guid statusKey)) {
                 options.Status = statusKey;
             }
@@ -146,15 +146,15 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
                     es = new FeedbackStatus(entry.Dto.Status, "not-found");
                 }
 
-                if (!pages.TryGetValue(entry.PageKey, out PageApiModel pageModel)) {
-                    var c1 = _umbracoContextAccessor.UmbracoContext.Content.GetById(entry.PageKey);
+                if (!pages.TryGetValue(entry.PageKey, out PageApiModel pageModel) && _umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext)) {
+                    var c1 = umbracoContext.Content.GetById(entry.PageKey);
                     if (c1 != null) {
                         pages.Add(entry.PageKey, pageModel = new PageApiModel(c1));
                     } else {
-                        var c2 = Current.Services.ContentService.GetById(entry.PageKey);
+                        var c2 = contentService.GetById(entry.PageKey);
                         if (c2 != null) {
                             pages.Add(entry.PageKey, pageModel = new PageApiModel(c2));
-                            
+
                         }
                     }
                 }
@@ -174,7 +174,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
                 entries = new {
                     pagination = new {
                         page,
-                        pages = (int) Math.Ceiling(result.Total / (double)result.PerPage),
+                        pages = (int)Math.Ceiling(result.Total / (double)result.PerPage),
                         limit = result.PerPage,
                         total = result.Total,
                         offset = (result.Page - 1) * result.PerPage,
@@ -194,21 +194,21 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
         [HttpPost]
         public object SetStatus([FromBody] JObject model) {
 
-            CultureInfo culture = Security.CurrentUser.GetUserCulture(_localizedTextService, _globalSettings);
+            CultureInfo culture = new CultureInfo(backOfficeSecurityAccessor.BackOfficeSecurity.CurrentUser.Language);
 
             Guid entryKey = model.GetGuid("entry");
             Guid statusKey = model.GetGuid("status");
 
-            if (entryKey == Guid.Empty) return Request.CreateResponse(HttpStatusCode.BadRequest);
-            if (statusKey == Guid.Empty) return Request.CreateResponse(HttpStatusCode.BadRequest);
+            if (entryKey == Guid.Empty) return BadRequest();
+            if (statusKey == Guid.Empty) return BadRequest();
 
             // Get the entry
             FeedbackEntry entry = _feedbackService.GetEntryByKey(entryKey);
-            if (entry == null) return Request.CreateResponse(HttpStatusCode.NotFound);
+            if (entry == null) return NotFound();
 
             // Get the site of the entry
             if (_feedbackService.TryGetSite(entry.SiteKey, out FeedbackSiteSettings site) == false) {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                throw new Exception();
             }
 
 
@@ -216,7 +216,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
             // Get the status
             if (site.TryGetStatus(statusKey, out FeedbackStatus status) == false) {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                throw new Exception();
             }
 
             _feedbackService.SetStatus(entry, status);
@@ -236,20 +236,20 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
         [HttpPost]
         public object SetResponsible([FromBody] JObject model) {
 
-            CultureInfo culture = Security.CurrentUser.GetUserCulture(_localizedTextService, _globalSettings);
+            CultureInfo culture = new CultureInfo(backOfficeSecurityAccessor.BackOfficeSecurity.CurrentUser.Language);
 
             Guid entryKey = model.GetGuid("entry");
             Guid responsibleKey = model.GetGuid("responsible");
 
-            if (entryKey == Guid.Empty) return Request.CreateResponse(HttpStatusCode.BadRequest);
+            if (entryKey == Guid.Empty) return BadRequest();
 
             // Get the entry
             FeedbackEntry entry = _feedbackService.GetEntryByKey(entryKey);
-            if (entry == null) return Request.CreateResponse(HttpStatusCode.NotFound);
+            if (entry == null) return NotFound();
 
             // Get the site of the entry
             if (_feedbackService.TryGetSite(entry.SiteKey, out FeedbackSiteSettings site) == false) {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                throw new Exception();
             }
 
             IFeedbackUser user = null;
@@ -257,7 +257,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
                 _feedbackService.SetAssignedTo(entry, null);
             } else {
                 if (_feedbackService.TryGetUser(responsibleKey, out user) == false) {
-                    return Request.CreateResponse(HttpStatusCode.InternalServerError);
+                    throw new Exception();
                 }
                 _feedbackService.SetAssignedTo(entry, user);
             }
@@ -273,14 +273,14 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
         private bool TryGetPage(Guid key, out PageApiModel result) {
 
-
-            IPublishedContent publishedContent = _umbracoContextAccessor.UmbracoContext.Content.GetById(key);
+            _umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
+            IPublishedContent publishedContent = umbracoContext.Content.GetById(key);
             if (publishedContent != null) {
                 result = new PageApiModel(publishedContent);
                 return true;
             }
-            
-            IContent content = Services.ContentService.GetById(key);
+
+            IContent content = contentService.GetById(key);
             if (content != null) {
                 result = new PageApiModel(content);
                 return true;

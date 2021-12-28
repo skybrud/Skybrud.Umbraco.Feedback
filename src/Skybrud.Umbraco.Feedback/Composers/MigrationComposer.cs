@@ -1,16 +1,15 @@
 ﻿using Skybrud.Umbraco.Feedback.Components;
-using Umbraco.Core;
-using Umbraco.Core.Composing;
+using Umbraco.Cms.Core;
+using Umbraco.Cms.Core.Composing;
+using Umbraco.Cms.Core.DependencyInjection;
 
 namespace Skybrud.Umbraco.Feedback.Composers {
-    
-    [RuntimeLevel(MinLevel = RuntimeLevel.Run)]
-    public class MigrationComposer : IUserComposer {
-        
-        public void Compose(Composition composition) {
-            composition.Components().Append<MigrationComponent>();
-        }
 
+    public class MigrationComposer : IComposer {
+
+        public void Compose(IUmbracoBuilder builder) {
+            builder.Components().Append<MigrationComponent>();
+        }
     }
 
 }

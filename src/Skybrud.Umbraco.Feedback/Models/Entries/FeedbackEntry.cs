@@ -1,8 +1,8 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Skybrud.Umbraco.Feedback.Models.Ratings;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
 using Skybrud.Umbraco.Feedback.Models.Users;
+using System;
 
 namespace Skybrud.Umbraco.Feedback.Models.Entries {
 
@@ -186,7 +186,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Entries {
             _status = status;
             _responsible = responsible;
         }
-    
+
     }
 
 }

@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Globalization;
-using Newtonsoft.Json;
-using Umbraco.Core.Models.Membership;
+using Umbraco.Cms.Core.Models.Membership;
 
 namespace Skybrud.Umbraco.Feedback.Models.Users {
-    
+
     public class FeedbackUser : IFeedbackUser {
 
         public int Id { get; set; }
-        
+
         public Guid Key { get; set; }
 
         public string Name { get; set; }
@@ -27,7 +27,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Users {
         public FeedbackUser() { }
 
         public FeedbackUser(IUser user) {
-            
+
             Id = user.Id;
             Key = user.Key;
             Name = user.Name;

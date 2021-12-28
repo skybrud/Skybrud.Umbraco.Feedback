@@ -1,6 +1,6 @@
-﻿using System;
-using NPoco;
-using Umbraco.Core.Persistence.DatabaseAnnotations;
+﻿using NPoco;
+using System;
+using Umbraco.Cms.Infrastructure.Persistence.DatabaseAnnotations;
 
 namespace Skybrud.Umbraco.Feedback.Models.Entries {
 
@@ -52,7 +52,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Entries {
 
         [Column("Archived")]
         public bool IsArchived { get; set; }
-    
+
     }
 
 }

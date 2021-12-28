@@ -1,7 +1,7 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Users;
+using System;
 
 namespace Skybrud.Umbraco.Feedback.Models.Api {
 

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+﻿using Microsoft.AspNetCore.Mvc;
+using NPoco.Expressions;
 using Skybrud.Umbraco.Feedback.Models.Api.Post;
 using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Ratings;
@@ -9,24 +7,28 @@ using Skybrud.Umbraco.Feedback.Models.Results;
 using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Plugins;
 using Skybrud.Umbraco.Feedback.Services;
-using Skybrud.WebApi.Json;
-using Umbraco.Core.Models.PublishedContent;
-using Umbraco.Web.WebApi;
+using System;
+using System.Drawing;
+using System.Net;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Cms.Core.Web;
+using Umbraco.Cms.Web.Common.Controllers;
 
 namespace Skybrud.Umbraco.Feedback.Controllers.Api {
 
-    [JsonOnlyConfiguration]
     public class FeedbackController : UmbracoApiController {
-        
+
         private readonly FeedbackService _feedbackService;
-        
+
         private readonly FeedbackPluginCollection _feedbackPluginCollection;
+        private readonly IUmbracoContextAccessor umbracoContextAccessor;
 
         #region Constructors
 
-        public FeedbackController(FeedbackService feedbackService, FeedbackPluginCollection feedbackPluginCollection) {
+        public FeedbackController(FeedbackService feedbackService, FeedbackPluginCollection feedbackPluginCollection, IUmbracoContextAccessor umbracoContextAccessor) {
             _feedbackService = feedbackService;
             _feedbackPluginCollection = feedbackPluginCollection;
+            this.umbracoContextAccessor = umbracoContextAccessor;
         }
 
         #endregion
@@ -39,18 +41,19 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
 
             // Get site site
             if (!_feedbackPluginCollection.TryGetSite(model.SiteKey, out FeedbackSiteSettings site)) {
-                return Request.CreateResponse(HttpStatusCode.NotFound, "A site with the specified key could not be found.");
+                return NotFound("A site with the specified key could not be found.");
             }
-            
+
             // Get the page
-            IPublishedContent page = Umbraco.Content(model.PageKey);
-            if (page == null) return Request.CreateResponse(HttpStatusCode.NotFound, "A page with the specified key could not be found.");
+            umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
+            IPublishedContent page = umbracoContext.Content.GetById(model.PageKey);
+            if (page == null) return NotFound("A page with the specified key could not be found.");
 
             // Get the rating
             if (!site.TryGetRating(model.Rating, out FeedbackRating rating)) {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "A rating with the specified name does not exist.");
+                return BadRequest("A rating with the specified name does not exist.");
             }
-            
+
             // Attempt to add the rating
             AddRatingResult result = _feedbackService.AddRating(site, page, rating);
 
@@ -61,10 +64,10 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
                     return new { key = result.Entry.Key };
 
                 case AddRatingStatus.Cancelled:
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, result.Message);
+                    return BadRequest(result.Message);
 
                 default:
-                    return Request.CreateResponse(HttpStatusCode.InternalServerError, result.Message);
+                    throw new Exception(result.Message);
 
             }
 
@@ -76,16 +79,17 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
 
             // Get site site
             if (!_feedbackPluginCollection.TryGetSite(model.SiteKey, out FeedbackSiteSettings site)) {
-                return Request.CreateResponse(HttpStatusCode.NotFound, "A site with the specified key could not be found.");
+                return NotFound("A site with the specified key could not be found.");
             }
-            
+
             // Get the page
-            IPublishedContent page = Umbraco.Content(model.PageKey);
-            if (page == null) return Request.CreateResponse(HttpStatusCode.NotFound, "A page with the specified key could not be found.");
+            umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
+            IPublishedContent page = umbracoContext.Content.GetById(model.PageKey);
+            if (page == null) return NotFound("A page with the specified key could not be found.");
 
             // Get the rating
             if (!site.TryGetRating(model.Rating, out FeedbackRating rating)) {
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "A rating with the specified name does not exist.");
+                return BadRequest("A rating with the specified name does not exist.");
             }
 
             // Attempt to add the comment
@@ -98,10 +102,10 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
                     return new { key = result.Entry.Key };
 
                 case AddCommentStatus.Cancelled:
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, result.Message);
+                    return BadRequest(result.Message);
 
                 default:
-                    return Request.CreateResponse(HttpStatusCode.InternalServerError, result.Message);
+                    throw new Exception(result.Message);
 
             }
 
@@ -113,16 +117,17 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
 
             // Get site site
             if (!_feedbackPluginCollection.TryGetSite(model.SiteKey, out _)) {
-                return Request.CreateResponse(HttpStatusCode.NotFound, "A site with the specified key could not be found.");
+                return NotFound("A site with the specified key could not be found.");
             }
-            
+
             // Get the page
-            IPublishedContent page = Umbraco.Content(model.PageKey);
-            if (page == null) return Request.CreateResponse(HttpStatusCode.NotFound, "A page with the specified key could not be found.");
+            umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
+            IPublishedContent page = umbracoContext.Content.GetById(model.PageKey);
+            if (page == null) return NotFound("A page with the specified key could not be found.");
 
             // Get a reference to the entry
-            FeedbackEntry entry =_feedbackService.GetEntryByKey(key);
-            if (entry == null) return Request.CreateResponse(HttpStatusCode.NotFound, "An entry with the specified key could not be found.");
+            FeedbackEntry entry = _feedbackService.GetEntryByKey(key);
+            if (entry == null) return NotFound("An entry with the specified key could not be found.");
 
             // TODO: Should we validate the entry against the specified site and page?
 
@@ -141,10 +146,10 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
                     return new { key = result.Entry.Key };
 
                 case AddRatingStatus.Cancelled:
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, result.Message);
+                    return BadRequest(result.Message);
 
                 default:
-                    return Request.CreateResponse(HttpStatusCode.InternalServerError, result.Message);
+                    throw new Exception(result.Message);
 
             }
 

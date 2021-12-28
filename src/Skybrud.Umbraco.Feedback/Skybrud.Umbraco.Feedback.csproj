@@ -1,49 +1,46 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <ContentTargetFolders>.</ContentTargetFolders>
+        <Product>Skybrud.Umbraco.Feedback</Product>
+        <PackageId>Skybrud.Umbraco.Feedback</PackageId>
+        <Title>Skybrud.Umbraco.Feedback</Title>
+        <Description>...</Description>
+        <Product>...</Product>
+        <PackageTags>umbraco plugin package</PackageTags>
+        <RootNamespace>Skybrud.Umbraco.Feedback</RootNamespace>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Version>3.0.0-alpha004</Version>
+        <Authors>Anders Bjerner</Authors>
+        <Company>Skybrud.dk</Company>
+        <Description>Small package introducing a feedback module for Umbraco 8.</Description>
+        <Copyright>Copyright © 2021</Copyright>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <Version>3.0.0-alpha004</Version>
-    <Authors>Anders Bjerner</Authors>
-    <Company>Skybrud.dk</Company>
-    <Description>Small package introducing a feedback module for Umbraco 8.</Description>
-    <Copyright>Copyright © 2021</Copyright>
-  </PropertyGroup>
+    <PropertyGroup>
+        <PackageId>Skybrud.Umbraco.Feedback</PackageId>
+        <PackageTags>Skybrud, Umbraco, Feedback</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://packages.skybrud.dk/skybrud.umbraco.feedback/</PackageProjectUrl>
+        <PackageIconUrl>http://www.skybrud.dk/img/5431sk/icon/favicon.ico</PackageIconUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/skybrud/Skybrud.Umbraco.Feedback</RepositoryUrl>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <PackageId>Skybrud.Umbraco.Feedback</PackageId>
-    <PackageTags>Skybrud, Umbraco, Feedback</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://packages.skybrud.dk/skybrud.umbraco.feedback/</PackageProjectUrl>
-    <PackageIconUrl>http://www.skybrud.dk/img/5431sk/icon/favicon.ico</PackageIconUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/skybrud/Skybrud.Umbraco.Feedback</RepositoryUrl>
-  </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Skybrud.Essentials" Version="1.1.34" />
+        <PackageReference Include="Umbraco.Cms.Web.Website" Version="9.0.0" />
+        <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="9.0.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Web" />
-    <PackageReference Include="Skybrud.Essentials" Version="1.1.24" />
-    <PackageReference Include="UmbracoCms.Core" Version="8.1.0">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="UmbracoCms.Web" Version="8.1.0">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Skybrud.WebApi.Json" Version="1.0.4" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\**\*.css" />
-    <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\**\*.html" />
-    <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\**\*.js" />
-    <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\Lang\*.xml" />
-    <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\package.manifest" />
-  </ItemGroup>
-  
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(ConfigurationName)'=='Release' AND '$(BuildTools)'=='1'">
-    <Exec Command="&quot;$(ProjectDir)..\build\Skybrud.BuildTools.Tasks.exe&quot; &quot;postBuild&quot; &quot;$(ConfigurationName)&quot; &quot;$(ProjectPath)&quot; &quot;$(TargetPath)&quot;" />
-  </Target>
-
+    <ItemGroup>
+        <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\**\*.*">
+        </Content>
+        <None Include="build\**\*.*">
+            <Pack>True</Pack>
+            <PackagePath>buildTransitive</PackagePath>
+        </None>
+    </ItemGroup>
 </Project>

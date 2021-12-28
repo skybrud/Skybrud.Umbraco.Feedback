@@ -1,9 +1,10 @@
-﻿using System;
-using System.Globalization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
-using Umbraco.Core.Services;
+using System;
+using System.Globalization;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Extensions;
 
 namespace Skybrud.Umbraco.Feedback.Models.Api {
 
@@ -35,7 +36,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Api {
             IsActive = status.IsActive;
 
             if (string.IsNullOrWhiteSpace(status.Name)) {
-                Name += localizedTextService.Localize($"feedback/status{Alias.ToPascalCase()}", culture);
+                Name += localizedTextService.Localize("feedback", $"status{Alias.ToPascalCase()}", culture);
             }
 
         }

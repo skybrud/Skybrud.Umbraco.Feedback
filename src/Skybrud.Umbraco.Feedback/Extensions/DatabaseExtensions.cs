@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq.Expressions;
-using NPoco;
+﻿using NPoco;
 using Skybrud.Essentials.Collections;
 using Skybrud.Umbraco.Feedback.Services;
-using Umbraco.Core.Persistence;
+using System;
+using System.Linq.Expressions;
+using Umbraco.Cms.Infrastructure.Persistence;
+using Umbraco.Extensions;
 
 namespace Skybrud.Umbraco.Feedback.Extensions {
 
@@ -13,7 +14,7 @@ namespace Skybrud.Umbraco.Feedback.Extensions {
 
             var result = database.Page<T>(page, itemsPerPage, sql);
 
-            total = (int) result.TotalItems;
+            total = (int)result.TotalItems;
 
             return result.Items.ToArray();
 
