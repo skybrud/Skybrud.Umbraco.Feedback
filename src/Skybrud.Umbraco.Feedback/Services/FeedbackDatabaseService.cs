@@ -14,7 +14,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
         private readonly IScopeProvider _scopeProvider;
 
-        private readonly ILogger _logger;
+        private readonly ILogger<FeedbackDatabaseService> _logger;
 
         #region Properties
 
@@ -24,7 +24,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
         #region Constructors
 
-        public FeedbackDatabaseService(IScopeProvider scopeProvider, ILogger logger, FeedbackPluginCollection feedbackPlugins) {
+        public FeedbackDatabaseService(IScopeProvider scopeProvider, ILogger<FeedbackDatabaseService> logger, FeedbackPluginCollection feedbackPlugins) {
             _scopeProvider = scopeProvider;
             _logger = logger;
             Plugins = feedbackPlugins;

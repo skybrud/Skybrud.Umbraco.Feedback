@@ -14,7 +14,7 @@ namespace Skybrud.Umbraco.Feedback.Composers {
             builder.Services.AddScoped<FeedbackDatabaseService>();
             builder.Services.AddScoped<FeedbackService>();
 
-            builder.Services.AddUnique<FeedbackPluginCollection>();
+            builder.FeedbackPlugins();
 
             builder.ContentApps().Append<FeedbackContentApp>();
         }
