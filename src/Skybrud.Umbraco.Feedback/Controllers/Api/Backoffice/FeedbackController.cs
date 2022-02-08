@@ -28,17 +28,17 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
         private readonly IUmbracoContextAccessor _umbracoContextAccessor;
         private readonly FeedbackService _feedbackService;
         private readonly ILocalizedTextService _localizedTextService;
-        private readonly IContentService contentService;
-        private readonly IUserService userService;
-        private readonly IBackOfficeSecurityAccessor backOfficeSecurityAccessor;
+        private readonly IContentService _contentService;
+        private readonly IUserService _userService;
+        private readonly IBackOfficeSecurityAccessor _backOfficeSecurityAccessor;
 
         public FeedbackAdminController(IUmbracoContextAccessor umbracoContextAccessor, FeedbackService feedbackService, ILocalizedTextService localizedTextService, IContentService contentService, IUserService userService, IBackOfficeSecurityAccessor backOfficeSecurityAccessor) {
             _umbracoContextAccessor = umbracoContextAccessor;
             _feedbackService = feedbackService;
             _localizedTextService = localizedTextService;
-            this.contentService = contentService;
-            this.userService = userService;
-            this.backOfficeSecurityAccessor = backOfficeSecurityAccessor;
+            _contentService = contentService;
+            _userService = userService;
+            _backOfficeSecurityAccessor = backOfficeSecurityAccessor;
         }
 
         [HttpGet]
@@ -71,7 +71,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
         public object GetEntriesForSite(Guid key, int page = 1, string sort = null, string order = null, string rating = null, string responsible = null, string status = null, string type = null) {
 
-            CultureInfo culture = new CultureInfo(backOfficeSecurityAccessor.BackOfficeSecurity.CurrentUser.Language);
+            CultureInfo culture = new CultureInfo(_backOfficeSecurityAccessor.BackOfficeSecurity.CurrentUser.Language);
 
             if (_feedbackService.TryGetSite(key, out FeedbackSiteSettings site) == false) {
                 return NotFound();
@@ -109,7 +109,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
             }
 
             if (int.TryParse(responsible, out int responsibleId)) {
-                options.Responsible = userService.GetUserById(responsibleId)?.Key;
+                options.Responsible = _userService.GetUserById(responsibleId)?.Key;
             } else if (Guid.TryParse(responsible, out Guid responsibleKey)) {
                 options.Responsible = responsibleKey;
             }
@@ -154,7 +154,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
                     if (c1 != null) {
                         pages.Add(entry.PageKey, pageModel = new PageApiModel(c1));
                     } else {
-                        var c2 = contentService.GetById(entry.PageKey);
+                        var c2 = _contentService.GetById(entry.PageKey);
                         if (c2 != null) {
                             pages.Add(entry.PageKey, pageModel = new PageApiModel(c2));
 
@@ -199,7 +199,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
         [HttpPost]
         public object SetStatus([FromBody] JObject model) {
 
-            CultureInfo culture = new CultureInfo(backOfficeSecurityAccessor.BackOfficeSecurity.CurrentUser.Language);
+            CultureInfo culture = new CultureInfo(_backOfficeSecurityAccessor.BackOfficeSecurity.CurrentUser.Language);
 
             Guid entryKey = model.GetGuid("entry");
             Guid statusKey = model.GetGuid("status");
@@ -250,7 +250,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
         [HttpPost]
         public object SetResponsible([FromBody] JObject model) {
 
-            CultureInfo culture = new CultureInfo(backOfficeSecurityAccessor.BackOfficeSecurity.CurrentUser.Language);
+            CultureInfo culture = new CultureInfo(_backOfficeSecurityAccessor.BackOfficeSecurity.CurrentUser.Language);
 
             Guid entryKey = model.GetGuid("entry");
             Guid responsibleKey = model.GetGuid("responsible");
@@ -298,7 +298,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
                 return true;
             }
 
-            IContent content = contentService.GetById(key);
+            IContent content = _contentService.GetById(key);
             if (content != null) {
                 result = new PageApiModel(content);
                 return true;

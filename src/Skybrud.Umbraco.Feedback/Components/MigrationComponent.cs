@@ -9,12 +9,13 @@ using Umbraco.Cms.Infrastructure.Migrations.Upgrade;
 namespace Skybrud.Umbraco.Feedback.Components {
 
     public class MigrationComponent : IComponent {
-        private readonly IMigrationPlanExecutor migrationPlanExecutor;
+        
+        private readonly IMigrationPlanExecutor _migrationPlanExecutor;
         private readonly IScopeProvider _scopeProvider;
         private readonly IKeyValueService _keyValueService;
 
         public MigrationComponent(IMigrationPlanExecutor migrationPlanExecutor, IScopeProvider scopeProvider, IKeyValueService keyValueService) {
-            this.migrationPlanExecutor = migrationPlanExecutor;
+            _migrationPlanExecutor = migrationPlanExecutor;
             _scopeProvider = scopeProvider;
             _keyValueService = keyValueService;
         }
@@ -29,7 +30,7 @@ namespace Skybrud.Umbraco.Feedback.Components {
 
             var upgrader = new Upgrader(plan);
 
-            upgrader.Execute(migrationPlanExecutor, _scopeProvider, _keyValueService);
+            upgrader.Execute(_migrationPlanExecutor, _scopeProvider, _keyValueService);
 
         }
 

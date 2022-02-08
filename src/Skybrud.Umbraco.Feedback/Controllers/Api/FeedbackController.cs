@@ -18,14 +18,14 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
         private readonly FeedbackService _feedbackService;
 
         private readonly FeedbackPluginCollection _feedbackPluginCollection;
-        private readonly IUmbracoContextAccessor umbracoContextAccessor;
+        private readonly IUmbracoContextAccessor _umbracoContextAccessor;
 
         #region Constructors
 
         public FeedbackController(FeedbackService feedbackService, FeedbackPluginCollection feedbackPluginCollection, IUmbracoContextAccessor umbracoContextAccessor) {
             _feedbackService = feedbackService;
             _feedbackPluginCollection = feedbackPluginCollection;
-            this.umbracoContextAccessor = umbracoContextAccessor;
+            this._umbracoContextAccessor = umbracoContextAccessor;
         }
 
         #endregion
@@ -42,7 +42,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
             }
 
             // Get the page
-            umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
+            _umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
             IPublishedContent page = umbracoContext.Content.GetById(model.PageKey);
             if (page == null) {
                 return NotFound("A page with the specified key could not be found.");
@@ -82,7 +82,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
             }
 
             // Get the page
-            umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
+            _umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
             IPublishedContent page = umbracoContext.Content.GetById(model.PageKey);
             if (page == null) {
                 return NotFound("A page with the specified key could not be found.");
@@ -122,7 +122,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
             }
 
             // Get the page
-            umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
+            _umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
             IPublishedContent page = umbracoContext.Content.GetById(model.PageKey);
             if (page == null) {
                 return NotFound("A page with the specified key could not be found.");
