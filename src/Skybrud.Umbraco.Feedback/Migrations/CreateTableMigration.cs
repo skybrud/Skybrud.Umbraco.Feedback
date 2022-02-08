@@ -2,6 +2,8 @@
 using Skybrud.Umbraco.Feedback.Models.Entries;
 using Umbraco.Cms.Infrastructure.Migrations;
 
+#pragma warning disable 1591
+
 namespace Skybrud.Umbraco.Feedback.Migrations {
 
     public class CreateTableMigration : MigrationBase {
@@ -9,10 +11,7 @@ namespace Skybrud.Umbraco.Feedback.Migrations {
         public CreateTableMigration(IMigrationContext context) : base(context) { }
 
         protected override void Migrate() {
-            if (TableExists(FeedbackConstants.TableName)) {
-                return;
-            }
-
+            if (TableExists(FeedbackConstants.TableName)) return;
             Create.Table<FeedbackEntrySchema>().Do();
         }
 

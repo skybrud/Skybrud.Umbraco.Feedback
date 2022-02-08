@@ -4,6 +4,8 @@ using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Extensions;
 
+#pragma warning disable 1591
+
 namespace Skybrud.Umbraco.Feedback.Models.Api {
 
     public class PageApiModel {

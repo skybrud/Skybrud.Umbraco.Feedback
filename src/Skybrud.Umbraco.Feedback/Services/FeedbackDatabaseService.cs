@@ -8,6 +8,8 @@ using System;
 using Umbraco.Cms.Core.Scoping;
 using Umbraco.Extensions;
 
+#pragma warning disable 1591
+
 namespace Skybrud.Umbraco.Feedback.Services {
 
     public class FeedbackDatabaseService {

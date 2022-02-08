@@ -6,6 +6,8 @@ using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Infrastructure.Migrations;
 using Umbraco.Cms.Infrastructure.Migrations.Upgrade;
 
+#pragma warning disable 1591
+
 namespace Skybrud.Umbraco.Feedback.Components {
 
     public class MigrationComponent : IComponent {

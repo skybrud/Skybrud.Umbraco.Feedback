@@ -20,6 +20,8 @@ using Umbraco.Cms.Core.Web;
 using Umbraco.Cms.Web.BackOffice.Controllers;
 using Umbraco.Cms.Web.Common.Attributes;
 
+#pragma warning disable 1591
+
 namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
     [PluginController("Skybrud")]
@@ -32,6 +34,8 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
         private readonly IUserService _userService;
         private readonly IBackOfficeSecurityAccessor _backOfficeSecurityAccessor;
 
+        #region Constructors
+
         public FeedbackAdminController(IUmbracoContextAccessor umbracoContextAccessor, FeedbackService feedbackService, ILocalizedTextService localizedTextService, IContentService contentService, IUserService userService, IBackOfficeSecurityAccessor backOfficeSecurityAccessor) {
             _umbracoContextAccessor = umbracoContextAccessor;
             _feedbackService = feedbackService;
@@ -40,6 +44,10 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
             _userService = userService;
             _backOfficeSecurityAccessor = backOfficeSecurityAccessor;
         }
+
+        #endregion
+
+        #region Public API methods
 
         [HttpGet]
         public object Archive(Guid key) {
@@ -289,6 +297,10 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
         }
 
+        #endregion
+
+        #region Private helper methods
+
         private bool TryGetPage(Guid key, out PageApiModel result) {
 
             _umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
@@ -308,6 +320,8 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
             return false;
 
         }
+
+        #endregion
 
     }
 

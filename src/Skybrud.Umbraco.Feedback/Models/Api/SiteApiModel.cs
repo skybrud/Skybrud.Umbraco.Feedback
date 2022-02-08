@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Linq;
 using Umbraco.Cms.Core.Services;
 
+#pragma warning disable 1591
+
 namespace Skybrud.Umbraco.Feedback.Models.Api {
 
     public class SiteApiModel {

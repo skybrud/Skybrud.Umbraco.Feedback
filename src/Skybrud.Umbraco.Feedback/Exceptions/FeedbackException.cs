@@ -12,7 +12,7 @@ namespace Skybrud.Umbraco.Feedback.Exceptions {
         /// <summary>
         /// Gets the error code (typically a GUID) identifying the specific error.
         /// </summary>
-        public string Code { get; private set; }
+        public string Code { get; }
 
         #endregion
 

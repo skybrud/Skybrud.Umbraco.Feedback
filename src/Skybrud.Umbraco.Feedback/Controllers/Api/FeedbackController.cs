@@ -7,9 +7,12 @@ using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Plugins;
 using Skybrud.Umbraco.Feedback.Services;
 using System;
+using Skybrud.Umbraco.Feedback.Extensions;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Web;
 using Umbraco.Cms.Web.Common.Controllers;
+
+#pragma warning disable 1591
 
 namespace Skybrud.Umbraco.Feedback.Controllers.Api {
 
@@ -25,12 +28,12 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
         public FeedbackController(FeedbackService feedbackService, FeedbackPluginCollection feedbackPluginCollection, IUmbracoContextAccessor umbracoContextAccessor) {
             _feedbackService = feedbackService;
             _feedbackPluginCollection = feedbackPluginCollection;
-            this._umbracoContextAccessor = umbracoContextAccessor;
+            _umbracoContextAccessor = umbracoContextAccessor;
         }
 
         #endregion
 
-        #region Member methods
+        #region Public API methods
 
         [HttpPost]
         [Route("api/feedback/rating")]

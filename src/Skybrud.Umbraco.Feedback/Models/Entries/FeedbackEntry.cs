@@ -24,6 +24,9 @@ namespace Skybrud.Umbraco.Feedback.Models.Entries {
 
         #region Properties
 
+        /// <summary>
+        /// Gets a reference to the underlying DTO.
+        /// </summary>
         public FeedbackEntryDto Dto => _entry;
 
         /// <summary>

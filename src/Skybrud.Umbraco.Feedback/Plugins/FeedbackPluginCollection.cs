@@ -4,6 +4,9 @@ using Umbraco.Cms.Core.Composing;
 
 namespace Skybrud.Umbraco.Feedback.Plugins {
 
+    /// <summary>
+    /// Class representing a collection of feedback plugins.
+    /// </summary>
     public class FeedbackPluginCollection : BuilderCollectionBase<IFeedbackPlugin> {
 
         /// <summary>

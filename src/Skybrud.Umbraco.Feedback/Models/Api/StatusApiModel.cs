@@ -5,6 +5,8 @@ using System;
 using System.Globalization;
 using Umbraco.Cms.Core.Services;
 
+#pragma warning disable 1591
+
 namespace Skybrud.Umbraco.Feedback.Models.Api {
 
     public class StatusApiModel {
@@ -43,4 +45,5 @@ namespace Skybrud.Umbraco.Feedback.Models.Api {
         #endregion
 
     }
+
 }
