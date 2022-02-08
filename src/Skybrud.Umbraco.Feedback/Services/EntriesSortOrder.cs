@@ -13,7 +13,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
         /// Indicates that entries should be sorted in ascending order.
         /// </summary>
         Asc,
-        
+
         /// <summary>
         /// Indicates that entries should be sorted in descending order.
         /// </summary>

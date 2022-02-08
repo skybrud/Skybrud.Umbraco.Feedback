@@ -1,51 +1,51 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Globalization;
+using Newtonsoft.Json;
 using Umbraco.Cms.Core.Models.Membership;
 
 namespace Skybrud.Umbraco.Feedback.Models.Users {
-    
+
     /// <summary>
     /// Class describing a feedback user.
     /// </summary>
     public class FeedbackUser : IFeedbackUser {
 
         #region Properties
-        
+
         /// <summary>
         /// Gets or sets the ID of the user.
         /// </summary>
         public int Id { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the key (GUID) of the user.
         /// </summary>
         public Guid Key { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the name of the user.
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the email address of the user.
         /// </summary>
         [JsonProperty("email")]
         public string Email { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the description of the user.
         /// </summary>
         [JsonProperty("description")]
         public string Description { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the avatar of the user.
         /// </summary>
         [JsonProperty("avatar")]
         public string Avatar { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the language of the user.
         /// </summary>

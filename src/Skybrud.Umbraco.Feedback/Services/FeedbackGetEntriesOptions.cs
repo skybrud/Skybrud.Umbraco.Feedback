@@ -26,7 +26,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
         /// Gets or sets the field by which the entries should be sorted. Default is <see cref="EntriesSortField.CreateDate"/>.
         /// </summary>
         public EntriesSortField SortField { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the order by which the entries should be sorted. Default is <see cref="EntriesSortOrder.Asc"/>.
         /// </summary>
@@ -36,12 +36,12 @@ namespace Skybrud.Umbraco.Feedback.Services {
         /// Gets or sets the key (GUID) of rating the returned results should match. Default is <c>null</c>.
         /// </summary>
         public Guid? Rating { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the key (GUID) of the responsible user the returned results should match. Default is <c>null</c>.
         /// </summary>
         public Guid? Responsible { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the key (GUID) of the status the returned results should match. Default is <c>null</c>.
         /// </summary>

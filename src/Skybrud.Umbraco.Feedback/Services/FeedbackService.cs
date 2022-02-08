@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using System.Linq;
+using Microsoft.Extensions.Logging;
+using Skybrud.Umbraco.Feedback.Extensions;
 using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Ratings;
 using Skybrud.Umbraco.Feedback.Models.Results;
@@ -6,9 +9,6 @@ using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
 using Skybrud.Umbraco.Feedback.Models.Users;
 using Skybrud.Umbraco.Feedback.Plugins;
-using System;
-using System.Linq;
-using Skybrud.Umbraco.Feedback.Extensions;
 using Umbraco.Cms.Core.Models.PublishedContent;
 
 namespace Skybrud.Umbraco.Feedback.Services {

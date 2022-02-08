@@ -1,10 +1,10 @@
-﻿using Skybrud.Umbraco.Feedback.Models.Entries;
+﻿using System;
+using System.Collections.Generic;
+using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
 using Skybrud.Umbraco.Feedback.Models.Users;
 using Skybrud.Umbraco.Feedback.Services;
-using System;
-using System.Collections.Generic;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.ContentEditing;
 using Umbraco.Cms.Core.Models.Membership;
@@ -23,14 +23,14 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         /// <param name="entry">The feedback entry that is being submitted.</param>
         /// <returns><c>true</c> if the feedback plugin handled the entry; otherwise, <c>false</c>.</returns>
         bool OnEntrySubmitting(FeedbackService service, FeedbackEntry entry);
-        
+
         /// <summary>
         /// Method invoked when a new feedback entry has been submitted.
         /// </summary>
         /// <param name="service">A reference to the current feedback service.</param>
         /// <param name="entry">The feedback entry that was submitted.</param>
         void OnEntrySubmitted(FeedbackService service, FeedbackEntry entry);
-        
+
         /// <summary>
         /// Method invoked when a new rating for a feedback entry is being submitted.
         /// </summary>
@@ -38,14 +38,14 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         /// <param name="entry">The feedback entry.</param>
         /// <returns><c>true</c> if the feedback plugin handled the entry; otherwise, <c>false</c>.</returns>
         bool OnRatingSubmitting(FeedbackService service, FeedbackEntry entry);
-        
+
         /// <summary>
         /// Method invoked when a new rating for a feedback entry has been submitted.
         /// </summary>
         /// <param name="service">A reference to the current feedback service.</param>
         /// <param name="entry">The feedback entry.</param>
         void OnRatingSubmitted(FeedbackService service, FeedbackEntry entry);
-        
+
         /// <summary>
         /// Method invoked when a feedback entry is being updated.
         /// </summary>
@@ -53,7 +53,7 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         /// <param name="entry">The feedback entry that is being updated.</param>
         /// <returns><c>true</c> if the feedback plugin handled the entry; otherwise, <c>false</c>.</returns>
         bool OnEntryUpdating(FeedbackService service, FeedbackEntry entry);
-        
+
         /// <summary>
         /// Method invoked when a feedback entry has been updated.
         /// </summary>

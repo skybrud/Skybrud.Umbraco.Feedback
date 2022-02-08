@@ -1,9 +1,9 @@
-﻿using Skybrud.Umbraco.Feedback.Constants;
+﻿using System;
+using System.Linq;
+using Skybrud.Umbraco.Feedback.Constants;
 using Skybrud.Umbraco.Feedback.Models.Fields;
 using Skybrud.Umbraco.Feedback.Models.Ratings;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
-using System;
-using System.Linq;
 using Umbraco.Cms.Core.Models.PublishedContent;
 
 namespace Skybrud.Umbraco.Feedback.Models.Sites {
@@ -81,7 +81,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Sites {
             rating = Ratings.FirstOrDefault(x => x.Key == key);
             return rating != null;
         }
-        
+
         /// <summary>
         /// Gets the status with the specified <paramref name="key"/>, or <c>null</c> if not found.
         /// </summary>

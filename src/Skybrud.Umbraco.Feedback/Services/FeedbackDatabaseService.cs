@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using Microsoft.Extensions.Logging;
 using NPoco;
 using Skybrud.Umbraco.Feedback.Constants;
 using Skybrud.Umbraco.Feedback.Extensions;
 using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Plugins;
-using System;
 using Umbraco.Cms.Core.Scoping;
 using Umbraco.Extensions;
 

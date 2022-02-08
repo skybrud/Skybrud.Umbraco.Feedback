@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Globalization;
+using Newtonsoft.Json;
 using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
-using System;
-using System.Globalization;
 using Umbraco.Cms.Core.Services;
 
 #pragma warning disable 1591

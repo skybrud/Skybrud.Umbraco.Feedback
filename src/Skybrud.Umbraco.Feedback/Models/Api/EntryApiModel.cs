@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Users;
-using System;
 
 #pragma warning disable 1591
 

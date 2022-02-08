@@ -1,8 +1,8 @@
-﻿using NPoco;
+﻿using System;
+using System.Linq.Expressions;
+using NPoco;
 using Skybrud.Essentials.Collections;
 using Skybrud.Umbraco.Feedback.Services;
-using System;
-using System.Linq.Expressions;
 using Umbraco.Cms.Infrastructure.Persistence;
 using Umbraco.Extensions;
 
@@ -44,7 +44,7 @@ namespace Skybrud.Umbraco.Feedback.Extensions {
         public static Sql<ISqlContext> OrderBy<TDto>(this Sql<ISqlContext> sql, Expression<Func<TDto, object>> field, SortOrder sortOrder) {
             return sortOrder == SortOrder.Descending ? sql.OrderByDescending(field) : sql.OrderBy(field);
         }
-        
+
         /// <summary>
         /// Appends an ORDER clause to the specified <paramref name="sql"/> command.
         /// </summary>

@@ -52,7 +52,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Results {
         public static AddCommentResult Failed(string message) {
             return new AddCommentResult(AddCommentStatus.Failed, null, message);
         }
-        
+
         /// <summary>
         /// Initializes a new <see cref="AddCommentStatus.Cancelled"/> result.
         /// </summary>

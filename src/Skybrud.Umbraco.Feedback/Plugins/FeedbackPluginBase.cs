@@ -1,11 +1,11 @@
-﻿using Skybrud.Umbraco.Feedback.Models.Entries;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
 using Skybrud.Umbraco.Feedback.Models.Users;
 using Skybrud.Umbraco.Feedback.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.ContentEditing;
 using Umbraco.Cms.Core.Models.Membership;
@@ -16,7 +16,7 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
     /// Abstract implementation of the <see cref="IFeedbackPlugin"/> interface.
     /// </summary>
     public abstract class FeedbackPluginBase : IFeedbackPlugin {
-        
+
         /// <summary>
         /// Method invoked when a new feedback entry is being submitted.
         /// </summary>
@@ -26,14 +26,14 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         public virtual bool OnEntrySubmitting(FeedbackService service, FeedbackEntry entry) {
             return true;
         }
-        
+
         /// <summary>
         /// Method invoked when a new feedback entry has been submitted.
         /// </summary>
         /// <param name="service">A reference to the current feedback service.</param>
         /// <param name="entry">The feedback entry that was submitted.</param>
         public virtual void OnEntrySubmitted(FeedbackService service, FeedbackEntry entry) { }
-        
+
         /// <summary>
         /// Method invoked when a new rating for a feedback entry is being submitted.
         /// </summary>
@@ -43,14 +43,14 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         public virtual bool OnRatingSubmitting(FeedbackService service, FeedbackEntry entry) {
             return true;
         }
-        
+
         /// <summary>
         /// Method invoked when a new rating for a feedback entry has been submitted.
         /// </summary>
         /// <param name="service">A reference to the current feedback service.</param>
         /// <param name="entry">The feedback entry.</param>
         public virtual void OnRatingSubmitted(FeedbackService service, FeedbackEntry entry) { }
-        
+
         /// <summary>
         /// Method invoked when a feedback entry is being updated.
         /// </summary>
@@ -60,14 +60,14 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         public virtual bool OnEntryUpdating(FeedbackService service, FeedbackEntry entry) {
             return true;
         }
-        
+
         /// <summary>
         /// Method invoked when a feedback entry has been updated.
         /// </summary>
         /// <param name="service">A reference to the current feedback service.</param>
         /// <param name="entry">The feedback entry that was updated.</param>
         public virtual void OnEntryUpdated(FeedbackService service, FeedbackEntry entry) { }
-        
+
         /// <summary>
         /// Method invoked when the status of a feedback entry is being updated.
         /// </summary>
@@ -78,7 +78,7 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         public virtual bool OnStatusChanging(FeedbackService service, FeedbackEntry entry, FeedbackStatus newStatus) {
             return true;
         }
-        
+
         /// <summary>
         /// Method invoked when the status of a feedback entry has been updated.
         /// </summary>
@@ -87,7 +87,7 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         /// <param name="oldStatus">The status of the entry prior to the update.</param>
         /// <param name="newStatus">The status of the entry after the update.</param>
         public virtual void OnStatusChanged(FeedbackService service, FeedbackEntry entry, FeedbackStatus oldStatus, FeedbackStatus newStatus) { }
-        
+
         /// <summary>
         /// Method invoked when the assigned user of a feedback entry is changed.
         /// </summary>
@@ -98,7 +98,7 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         public virtual bool OnUserAssigning(FeedbackService service, FeedbackEntry entry, IFeedbackUser newUser) {
             return true;
         }
-        
+
         /// <summary>
         /// Method invoked when the assigned user of a feedback entry has been updated.
         /// </summary>
@@ -107,7 +107,7 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         /// <param name="oldUser">The assigned user prior the update.</param>
         /// <param name="newUser">The assigned user after the update.</param>
         public virtual void OnUserAssigned(FeedbackService service, FeedbackEntry entry, IFeedbackUser oldUser, IFeedbackUser newUser) { }
-        
+
         /// <summary>
         /// Gets the site with the specified <paramref name="key"/>, or <c>null</c> if not found.
         /// </summary>
@@ -118,7 +118,7 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
             site = null;
             return false;
         }
-        
+
         /// <summary>
         /// Returns the user with the specified <paramref name="userId"/>, or <c>null</c> if not found.
         /// </summary>
@@ -127,7 +127,7 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         public virtual IFeedbackUser GetUser(int userId) {
             return GetUsers().FirstOrDefault(x => x.Id == userId);
         }
-        
+
         /// <summary>
         /// Gets the user with the specified <paramref name="key"/>.
         /// </summary>
@@ -138,7 +138,7 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
             user = GetUsers().FirstOrDefault(x => x.Key == key);
             return user != null;
         }
-        
+
         /// <summary>
         /// Returns an array of all feedback users.
         /// </summary>

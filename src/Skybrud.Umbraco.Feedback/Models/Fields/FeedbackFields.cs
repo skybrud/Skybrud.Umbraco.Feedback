@@ -9,12 +9,12 @@
         /// Gets or sets the required type of the email field.
         /// </summary>
         public FeedbackFieldType Email { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the required type of the name field.
         /// </summary>
         public FeedbackFieldType Name { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the required type of the comment field.
         /// </summary>

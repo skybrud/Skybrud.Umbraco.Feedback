@@ -11,7 +11,7 @@ using Umbraco.Cms.Infrastructure.Migrations.Upgrade;
 namespace Skybrud.Umbraco.Feedback.Components {
 
     public class MigrationComponent : IComponent {
-        
+
         private readonly IMigrationPlanExecutor _migrationPlanExecutor;
         private readonly IScopeProvider _scopeProvider;
         private readonly IKeyValueService _keyValueService;

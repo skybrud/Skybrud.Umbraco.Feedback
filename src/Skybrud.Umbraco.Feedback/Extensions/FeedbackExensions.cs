@@ -7,7 +7,7 @@ using Umbraco.Cms.Core.Models.ContentEditing;
 using Umbraco.Cms.Core.Models.Membership;
 
 namespace Skybrud.Umbraco.Feedback.Extensions {
-    
+
     /// <summary>
     /// Static class with various Feedback related extension methods.
     /// </summary>

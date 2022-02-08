@@ -1,5 +1,5 @@
-﻿using NPoco;
-using System;
+﻿using System;
+using NPoco;
 using Umbraco.Cms.Infrastructure.Persistence.DatabaseAnnotations;
 
 #pragma warning disable 1591

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
+using Skybrud.Umbraco.Feedback.Extensions;
 using Skybrud.Umbraco.Feedback.Models.Api.Post;
 using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Ratings;
@@ -6,8 +8,6 @@ using Skybrud.Umbraco.Feedback.Models.Results;
 using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Plugins;
 using Skybrud.Umbraco.Feedback.Services;
-using System;
-using Skybrud.Umbraco.Feedback.Extensions;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Web;
 using Umbraco.Cms.Web.Common.Controllers;

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Skybrud.Essentials.Enums;
 using Skybrud.Essentials.Json.Extensions;
@@ -9,9 +12,6 @@ using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
 using Skybrud.Umbraco.Feedback.Models.Users;
 using Skybrud.Umbraco.Feedback.Services;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Security;

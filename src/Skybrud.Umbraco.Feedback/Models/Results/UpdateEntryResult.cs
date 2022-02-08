@@ -1,7 +1,7 @@
 ﻿using Skybrud.Umbraco.Feedback.Models.Entries;
 
 namespace Skybrud.Umbraco.Feedback.Models.Results {
-    
+
     /// <summary>
     /// Class representing the result when updating a feedback comment.
     /// </summary>
@@ -13,12 +13,12 @@ namespace Skybrud.Umbraco.Feedback.Models.Results {
         /// Gets the status of the result.
         /// </summary>
         public AddRatingStatus Status { get; }
-        
+
         /// <summary>
         /// Gets a reference to the entry.
         /// </summary>
         public FeedbackEntry Entry { get; }
-        
+
         /// <summary>
         /// Gets the message of the result - eg. an error message.
         /// </summary>
@@ -52,7 +52,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Results {
         public static UpdateEntryResult Failed(string message) {
             return new UpdateEntryResult(AddRatingStatus.Failed, null, message);
         }
-        
+
         /// <summary>
         /// Initializes a new <see cref="AddRatingStatus.Cancelled"/> result.
         /// </summary>

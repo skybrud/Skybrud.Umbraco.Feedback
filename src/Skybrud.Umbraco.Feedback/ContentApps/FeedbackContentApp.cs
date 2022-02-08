@@ -1,6 +1,6 @@
-﻿using Skybrud.Umbraco.Feedback.Plugins;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Skybrud.Umbraco.Feedback.Extensions;
+using Skybrud.Umbraco.Feedback.Plugins;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.ContentEditing;
 using Umbraco.Cms.Core.Models.Membership;

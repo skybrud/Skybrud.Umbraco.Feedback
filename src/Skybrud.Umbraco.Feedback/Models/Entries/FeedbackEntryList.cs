@@ -9,7 +9,7 @@
         /// Gets the page number of the returned page.
         /// </summary>
         public int Page { get; }
-        
+
         /// <summary>
         /// Gets the maxmimum amount of items that was returned per page.
         /// </summary>

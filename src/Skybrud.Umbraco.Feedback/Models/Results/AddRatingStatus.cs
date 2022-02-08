@@ -1,10 +1,10 @@
 ﻿namespace Skybrud.Umbraco.Feedback.Models.Results {
-    
+
     /// <summary>
     /// Enum class indicating the status of a <see cref="AddRatingResult"/>.
     /// </summary>
     public enum AddRatingStatus {
-        
+
         /// <summary>
         /// Indicates that the add operation failed.
         /// </summary>

@@ -1,33 +1,33 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Skybrud.Umbraco.Feedback.Models.Ratings {
-    
+
     /// <summary>
     /// Class representing a feedback rating.
     /// </summary>
     public class FeedbackRating {
 
         #region Properties
-        
+
         /// <summary>
         /// Gets the alias of the rating.
         /// </summary>
         [JsonProperty("alias")]
         public string Alias { get; }
-        
+
         /// <summary>
         /// Gets the key (GUID) of the rating.
         /// </summary>
         [JsonProperty("key")]
         public Guid Key { get; }
-        
+
         /// <summary>
         /// Gets the name of the rating.
         /// </summary>
         [JsonProperty("name")]
         public string Name { get; }
-        
+
         /// <summary>
         /// Gets whether the rating is active.
         /// </summary>
@@ -37,7 +37,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Ratings {
         #endregion
 
         #region Constructors
-        
+
         /// <summary>
         /// Initializes a new rating based on the specified <paramref name="key"/> and <paramref name="alias"/>.
         /// </summary>
@@ -48,7 +48,7 @@ namespace Skybrud.Umbraco.Feedback.Models.Ratings {
             Alias = alias;
             IsActive = true;
         }
-        
+
         /// <summary>
         /// Initializes a new rating based on the specified <paramref name="key"/>, <paramref name="alias"/> and <paramref name="name"/>.
         /// </summary>

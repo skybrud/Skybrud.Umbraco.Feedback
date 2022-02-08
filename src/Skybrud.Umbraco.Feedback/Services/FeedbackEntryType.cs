@@ -14,7 +14,7 @@
         /// Indicates that only entries with a rating should be returned.
         /// </summary>
         Rating,
-        
+
         /// <summary>
         /// Indicates that only entries with a comment should be returned.
         /// </summary>
