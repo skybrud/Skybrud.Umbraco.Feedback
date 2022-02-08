@@ -1,9 +1,3 @@
-src/packages/
+﻿src/.vs/
 src/Skybrud.Umbraco.Feedback/bin/
-src/Skybrud.Umbraco.Feedback hmm/
-src/Skybrud.Umbraco.Feedback.Web/obj/
 src/Skybrud.Umbraco.Feedback/obj/
-src/Skybrud.Umbraco.Feedback.Web/bin/
-src/Skybrud.Umbraco.Feedback/App_Data/NuGetBackup/
-node_modules/
-src/.vs/
