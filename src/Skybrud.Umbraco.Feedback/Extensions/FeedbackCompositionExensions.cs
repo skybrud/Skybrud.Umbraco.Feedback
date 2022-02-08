@@ -1,6 +1,7 @@
-﻿using Umbraco.Cms.Core.DependencyInjection;
+﻿using Skybrud.Umbraco.Feedback.Plugins;
+using Umbraco.Cms.Core.DependencyInjection;
 
-namespace Skybrud.Umbraco.Feedback.Plugins {
+namespace Skybrud.Umbraco.Feedback.Extensions {
 
     /// <summary>
     /// Provides extension methods to the <see cref="IUmbracoBuilder"/> class.
