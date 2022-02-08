@@ -1,6 +1,6 @@
-﻿using System;
-using Skybrud.Umbraco.Feedback.Models.Ratings;
+﻿using Skybrud.Umbraco.Feedback.Models.Ratings;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
+using System;
 
 // ReSharper disable MemberHidesStaticFromOuterClass
 
@@ -30,11 +30,11 @@ namespace Skybrud.Umbraco.Feedback.Constants {
 
             public static class Keys {
 
-                public static readonly Guid New =        new Guid("00000000-0000-0000-0002-000000001000");
+                public static readonly Guid New = new Guid("00000000-0000-0000-0002-000000001000");
 
                 public static readonly Guid InProgress = new Guid("00000000-0000-0000-0002-000000002000");
 
-                public static readonly Guid Closed =     new Guid("00000000-0000-0000-0002-000000003000");
+                public static readonly Guid Closed = new Guid("00000000-0000-0000-0002-000000003000");
 
             }
 

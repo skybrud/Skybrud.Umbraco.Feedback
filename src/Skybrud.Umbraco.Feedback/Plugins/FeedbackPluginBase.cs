@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Skybrud.Umbraco.Feedback.Models.Entries;
+﻿using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
 using Skybrud.Umbraco.Feedback.Models.Users;
 using Skybrud.Umbraco.Feedback.Services;
-using Umbraco.Core.Models;
-using Umbraco.Core.Models.ContentEditing;
-using Umbraco.Core.Models.Membership;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.ContentEditing;
+using Umbraco.Cms.Core.Models.Membership;
 
 namespace Skybrud.Umbraco.Feedback.Plugins {
-    
+
     /// <summary>
     /// Abstract implementation of the <see cref="IFeedbackPlugin"/> interface.
     /// </summary>
     public abstract class FeedbackPluginBase : IFeedbackPlugin {
-        
+
         public virtual bool OnEntrySubmitting(FeedbackService service, FeedbackEntry entry) {
             return true;
         }
@@ -48,7 +48,7 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         public virtual void OnUserAssigned(FeedbackService service, FeedbackEntry entry, IFeedbackUser oldUser, IFeedbackUser newUser) { }
 
         //public virtual void OnEntryResultRender(FeedbackService service, FeedbackEntryResult result) { }
-        
+
         public virtual bool TryGetSite(Guid key, out FeedbackSiteSettings site) {
             site = null;
             return false;

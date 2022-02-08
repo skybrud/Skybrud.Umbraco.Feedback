@@ -1,8 +1,8 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Skybrud.Umbraco.Feedback.Models.Api.Post {
-        
+
     public class AddRatingModel {
 
         [JsonProperty("siteKey")]

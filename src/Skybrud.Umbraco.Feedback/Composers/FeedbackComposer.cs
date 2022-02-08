@@ -1,25 +1,19 @@
-﻿using Skybrud.Umbraco.Feedback.ContentApps;
-using Skybrud.Umbraco.Feedback.Plugins;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Skybrud.Umbraco.Feedback.ContentApps;
 using Skybrud.Umbraco.Feedback.Services;
-using Umbraco.Core;
-using Umbraco.Core.Composing;
-using Umbraco.Web;
+using Umbraco.Cms.Core.Composing;
+using Umbraco.Cms.Core.DependencyInjection;
 
 namespace Skybrud.Umbraco.Feedback.Composers {
-    
-    public class FeedbackComposer : IUserComposer {
 
-        public void Compose(Composition composition) {
+    public class FeedbackComposer : IComposer {
 
-            composition.Register<FeedbackDatabaseService>();
-            composition.Register<FeedbackService>();
+        public void Compose(IUmbracoBuilder builder) {
+            builder.Services.AddScoped<FeedbackDatabaseService>();
+            builder.Services.AddScoped<FeedbackService>();
 
-            composition.RegisterUnique<FeedbackPluginCollection>();
-
-            composition.ContentApps().Append<FeedbackContentApp>();
-
+            builder.ContentApps().Append<FeedbackContentApp>();
         }
-
     }
 
 }
