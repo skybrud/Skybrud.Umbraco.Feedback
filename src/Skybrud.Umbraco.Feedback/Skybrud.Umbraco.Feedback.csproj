@@ -12,7 +12,7 @@
     <Authors>Anders Bjerner</Authors>
     <Copyright>Copyright © 2022</Copyright>
     <Title>Skybrud Feedback</Title>
-    <Description>Small package introducing a feedback module for Umbraco 9.</Description>
+    <Description>Feedback module for Umbraco 9.</Description>
   </PropertyGroup>
 
   <!-- Information for the NuGet package -->
