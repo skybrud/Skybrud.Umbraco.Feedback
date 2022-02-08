@@ -57,33 +57,6 @@ namespace Skybrud.Umbraco.Feedback.Services {
             return Plugins.SelectMany(x => x.GetUsers()).Distinct().OrderBy(x => x.Name).ToArray();
         }
 
-        ///// <summary>
-        ///// Gets an unpaginated array of all feedback entries.
-        ///// </summary>
-        ///// <returns>An array of <see cref="FeedbackEntry"/>.</returns>
-        //public FeedbackEntry[] GetAll() {
-
-        //    // Call this to make sure the users have been loaded before quering the database
-        //    Dictionary<int, IFeedbackUser> users = _feedbackModule.GetUsers();
-
-        //    using (var scope = _scopeProvider.CreateScope()) {
-
-        //        // Declare the SQL for the query
-        //        var sql = new Sql("SELECT * FROM SkybrudFeedback WHERE Archived = 0 ORDER BY created DESC");
-
-        //        // Make the call to the database
-        //        return scope.Database
-        //            .Fetch<FeedbackEntryDto>(sql)
-        //            .Select(x => new FeedbackEntry(x, users))
-        //            .ToArray();
-
-        //    }
-
-        //}
-
-
-
-
         public FeedbackEntryList GetEntries(FeedbackGetEntriesOptions options) {
 
             // Look up the entries in the database
@@ -144,30 +117,6 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
         }
 
-
-        ///// <summary>
-        ///// Updates the status of the specified <paramref name="entry"/>.
-        ///// </summary>
-        ///// <param name="entry">The entry to be updated.</param>
-        ///// <param name="status">The new status.</param>
-        //public void SetStatus(FeedbackEntry entry, FeedbackStatus status) {
-        //    if (entry == null) throw new ArgumentNullException(nameof(entry));
-        //    if (status == null) throw new ArgumentNullException(nameof(status));
-        //    entry.Status = status;
-        //    Save(entry._entry);
-        //}
-
-        ///// <summary>
-        ///// Updates the assigned user of the specified <paramref name="entry"/>.
-        ///// </summary>
-        ///// <param name="entry">The entry to be updated.</param>
-        ///// <param name="user">The user who should be assigned. Use <c>null</c> if the item should be unassigned.</param>
-        //public void SetAssignedTo(FeedbackEntry entry, IFeedbackUser user) {
-        //    if (entry == null) throw new ArgumentNullException(nameof(entry));
-        //    entry.AssignedTo = user;
-        //    Save(entry._entry);
-        //}
-
         /// <summary>
         /// Deletes the specified <paramref name="entry"/>.
         /// </summary>
@@ -179,94 +128,6 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
             _databaseService.Delete(entry._entry);
         }
-
-        ///// <summary>
-        ///// Deletes all entries before the specified <paramref name="date"/>.
-        ///// </summary>
-        ///// <param name="date">The date.</param>
-        ///// <returns>The amount of affected/deleted rows.</returns>
-        //public int DeleteAll(DateTime date) {
-
-        //    using (var scope = _scopeProvider.CreateScope()) {
-
-        //        // Delete everything before the start of the day after "date"
-        //        Sql sql = new Sql($"DELETE FROM {FeedbackConstants.TableName} WHERE Created < '{date.Date.AddDays(1):yyyy-MM-dd}';");
-
-        //        // Make the call to the database
-        //        return scope.Database.Execute(sql);
-
-        //    }
-
-        //}
-
-        ///// <summary>
-        ///// Returns the user with the specified <paramref name="userId"/>, or <c>null</c> if not found.
-        ///// </summary>
-        ///// <param name="userId">The numeric ID of the user.</param>
-        ///// <returns>An instance of <see cref="IFeedbackUser"/>, or <c>null</c> if not found.</returns>
-        //public IFeedbackUser GetUser(int userId) {
-        //    foreach (IFeedbackPlugin plugin in Plugins) {
-        //        try {
-        //            IFeedbackUser user = plugin.GetUser(userId);
-        //            if (user != null) return user;
-        //        } catch (Exception ex) {
-        //            _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method GetUser.", plugin.GetType().FullName);
-        //        }
-        //    }
-        //    return null;
-        //}
-
-        ///// <summary>
-        ///// Returns a dictionary will the users of all available plugins.
-        ///// </summary>
-        ///// <returns>An dictionary containing the users.</returns>
-        //public Dictionary<int, IFeedbackUser> GetUsers() {
-        //    Dictionary<int, IFeedbackUser> users = new Dictionary<int, IFeedbackUser>();
-        //    foreach (IFeedbackPlugin plugin in Plugins) {
-        //        try {
-        //            foreach (IFeedbackUser user in plugin.GetUsers()) {
-        //                users.Add(user.Id, user);
-        //            }
-        //        } catch (Exception ex) {
-        //            _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method GetUsers.", plugin.GetType().FullName);
-        //        }
-        //    }
-        //    return users;
-        //}
-
-        ///// <summary>
-        ///// Gets an array of all available ratings for the site with the specified <paramref name="siteId"/>.
-        ///// </summary>
-        ///// <param name="siteId">The ID of the site.</param>
-        //public FeedbackRating[] GetRatingsForSite(int siteId) {
-        //    foreach (IFeedbackPlugin plugin in Plugins) {
-        //        try {
-        //            FeedbackRating[] ratings = plugin.GetRatingsForSite(this, siteId);
-        //            if (ratings != null) return ratings;
-        //        } catch (Exception ex) {
-        //            _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method GetRatingsForSite({SiteId}).", plugin.GetType().FullName, siteId);
-        //        }
-        //    }
-        //    return new FeedbackRating[0];
-        //}
-
-        ///// <summary>
-        ///// Gets an array of all available statuses for the site with the specified <paramref name="siteId"/>.
-        ///// </summary>
-        ///// <param name="siteId">The ID of the site.</param>
-        //public FeedbackStatus[] GetStatusesForSite(int siteId) {
-        //    foreach (IFeedbackPlugin plugin in Plugins) {
-        //        try {
-        //            FeedbackStatus[] statuses = plugin.GetStatusesForSite(this, siteId);
-        //            if (statuses != null) return statuses;
-        //        } catch (Exception ex) {
-        //            _logger.Error<FeedbackService>(ex, "Plugin of type {PluginType} failed for method GetStatusesForSite({SiteId}).", plugin.GetType().FullName, siteId);
-        //        }
-        //    }
-        //    return new FeedbackStatus[0];
-        //}
-
-
 
         public AddRatingResult AddRating(FeedbackSiteSettings site, IPublishedContent page, FeedbackRating rating) {
 
@@ -496,11 +357,6 @@ namespace Skybrud.Umbraco.Feedback.Services {
             return true;
 
         }
-
-        #endregion
-
-        #region Private methods
-
 
         #endregion
 
