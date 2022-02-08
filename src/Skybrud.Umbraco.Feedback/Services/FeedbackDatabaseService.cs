@@ -86,14 +86,29 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
                 sql.Where<FeedbackEntryDto>(x => !x.IsArchived);
 
-                if (options.Rating != null) sql.Where<FeedbackEntryDto>(x => x.Rating == options.Rating);
-                if (options.Responsible != null) sql.Where<FeedbackEntryDto>(x => x.AssignedTo == options.Responsible);
-                if (options.Status != null) sql.Where<FeedbackEntryDto>(x => x.Status == options.Status);
+                if (options.Rating != null) {
+                    sql.Where<FeedbackEntryDto>(x => x.Rating == options.Rating);
+                }
 
-                if (options.Type == FeedbackEntryType.Comment) sql.Where<FeedbackEntryDto>(x => x.Comment != null);
-                if (options.Type == FeedbackEntryType.Rating) sql.Where<FeedbackEntryDto>(x => x.Comment == null);
+                if (options.Responsible != null) {
+                    sql.Where<FeedbackEntryDto>(x => x.AssignedTo == options.Responsible);
+                }
 
-                if (options.SiteKey != Guid.Empty) sql = sql.Where<FeedbackEntryDto>(x => x.SiteKey == options.SiteKey);
+                if (options.Status != null) {
+                    sql.Where<FeedbackEntryDto>(x => x.Status == options.Status);
+                }
+
+                if (options.Type == FeedbackEntryType.Comment) {
+                    sql.Where<FeedbackEntryDto>(x => x.Comment != null);
+                }
+
+                if (options.Type == FeedbackEntryType.Rating) {
+                    sql.Where<FeedbackEntryDto>(x => x.Comment == null);
+                }
+
+                if (options.SiteKey != Guid.Empty) {
+                    sql = sql.Where<FeedbackEntryDto>(x => x.SiteKey == options.SiteKey);
+                }
 
                 switch (options.SortField) {
 
@@ -181,7 +196,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
         public void Insert(FeedbackEntryDto entry) {
             using (var scope = _scopeProvider.CreateScope()) {
-                entry.Id = (int)(decimal)scope.Database.Insert(entry);
+                entry.Id = (int) (decimal) scope.Database.Insert(entry);
                 scope.Complete();
             }
         }

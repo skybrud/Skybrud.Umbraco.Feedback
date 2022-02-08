@@ -4,7 +4,6 @@ using Skybrud.Umbraco.Feedback.Models.Ratings;
 using System;
 using System.Globalization;
 using Umbraco.Cms.Core.Services;
-using Umbraco.Extensions;
 
 namespace Skybrud.Umbraco.Feedback.Models.Api {
 

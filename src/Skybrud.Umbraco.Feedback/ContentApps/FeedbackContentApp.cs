@@ -15,7 +15,10 @@ namespace Skybrud.Umbraco.Feedback.ContentApps {
         }
 
         public ContentApp GetContentAppFor(object source, IEnumerable<IReadOnlyUserGroup> userGroups) {
-            if (!(source is IContent content)) return null;
+            if (!(source is IContent content)) {
+                return null;
+            }
+
             return _pluginCollection.TryGetContentApp(content, userGroups, out ContentApp contentApp) ? contentApp : null;
 
         }

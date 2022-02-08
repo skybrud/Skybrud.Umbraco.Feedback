@@ -110,7 +110,9 @@ namespace Skybrud.Umbraco.Feedback.Services {
         public FeedbackEntry GetEntryByKey(Guid key) {
 
             FeedbackEntryDto dto = _databaseService.GetEntryByKey(key);
-            if (dto == null) return null;
+            if (dto == null) {
+                return null;
+            }
 
             TryGetSite(dto.SiteKey, out var site);
 
@@ -120,8 +122,7 @@ namespace Skybrud.Umbraco.Feedback.Services {
             FeedbackStatus status = null;
             site?.TryGetStatus(dto.Status, out status);
 
-            IFeedbackUser user = null;
-            TryGetUser(dto.AssignedTo, out user);
+            TryGetUser(dto.AssignedTo, out IFeedbackUser user);
 
             return new FeedbackEntry(dto, rating, status, user);
 
@@ -133,7 +134,9 @@ namespace Skybrud.Umbraco.Feedback.Services {
         /// <param name="entry">The entry to be archived.</param>
         public void Archive(FeedbackEntry entry) {
 
-            if (entry == null) throw new ArgumentNullException(nameof(entry));
+            if (entry == null) {
+                throw new ArgumentNullException(nameof(entry));
+            }
 
             entry.IsArchived = true;
 
@@ -170,7 +173,10 @@ namespace Skybrud.Umbraco.Feedback.Services {
         /// </summary>
         /// <param name="entry">The entry to be delete.</param>
         public void Delete(FeedbackEntry entry) {
-            if (entry == null) throw new ArgumentNullException(nameof(entry));
+            if (entry == null) {
+                throw new ArgumentNullException(nameof(entry));
+            }
+
             _databaseService.Delete(entry._entry);
         }
 
@@ -414,7 +420,9 @@ namespace Skybrud.Umbraco.Feedback.Services {
         public bool SetAssignedTo(FeedbackEntry entry, IFeedbackUser user) {
 
             // Some input validation
-            if (entry == null) throw new ArgumentNullException(nameof(entry));
+            if (entry == null) {
+                throw new ArgumentNullException(nameof(entry));
+            }
 
             // Get the current (old) user
             IFeedbackUser oldUser = entry.AssignedTo;
@@ -453,7 +461,9 @@ namespace Skybrud.Umbraco.Feedback.Services {
         public bool SetStatus(FeedbackEntry entry, FeedbackStatus status) {
 
             // Some input validation
-            if (entry == null) throw new ArgumentNullException(nameof(entry));
+            if (entry == null) {
+                throw new ArgumentNullException(nameof(entry));
+            }
 
             // Get the current (old) status
             FeedbackStatus oldStatus = entry.Status;

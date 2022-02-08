@@ -1,5 +1,4 @@
 ﻿using Skybrud.Umbraco.Feedback.Components;
-using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 

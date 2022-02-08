@@ -28,7 +28,9 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         public static bool TryGetSite(this FeedbackPluginCollection collection, Guid key, out FeedbackSiteSettings site) {
 
             foreach (IFeedbackPlugin plugin in collection) {
-                if (plugin.TryGetSite(key, out site)) return true;
+                if (plugin.TryGetSite(key, out site)) {
+                    return true;
+                }
             }
 
             site = null;
@@ -39,7 +41,9 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         public static bool TryGetContentApp(this FeedbackPluginCollection collection, IContent content, IEnumerable<IReadOnlyUserGroup> userGroups, out ContentApp result) {
 
             foreach (IFeedbackPlugin plugin in collection) {
-                if (plugin.TryGetContentApp(content, userGroups, out result)) return true;
+                if (plugin.TryGetContentApp(content, userGroups, out result)) {
+                    return true;
+                }
             }
 
             result = null;

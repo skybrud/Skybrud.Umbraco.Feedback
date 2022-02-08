@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NPoco.Expressions;
 using Skybrud.Umbraco.Feedback.Models.Api.Post;
 using Skybrud.Umbraco.Feedback.Models.Entries;
 using Skybrud.Umbraco.Feedback.Models.Ratings;
@@ -8,8 +7,6 @@ using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Plugins;
 using Skybrud.Umbraco.Feedback.Services;
 using System;
-using System.Drawing;
-using System.Net;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Web;
 using Umbraco.Cms.Web.Common.Controllers;
@@ -47,7 +44,9 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
             // Get the page
             umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
             IPublishedContent page = umbracoContext.Content.GetById(model.PageKey);
-            if (page == null) return NotFound("A page with the specified key could not be found.");
+            if (page == null) {
+                return NotFound("A page with the specified key could not be found.");
+            }
 
             // Get the rating
             if (!site.TryGetRating(model.Rating, out FeedbackRating rating)) {
@@ -85,7 +84,9 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
             // Get the page
             umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
             IPublishedContent page = umbracoContext.Content.GetById(model.PageKey);
-            if (page == null) return NotFound("A page with the specified key could not be found.");
+            if (page == null) {
+                return NotFound("A page with the specified key could not be found.");
+            }
 
             // Get the rating
             if (!site.TryGetRating(model.Rating, out FeedbackRating rating)) {
@@ -123,11 +124,15 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api {
             // Get the page
             umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext);
             IPublishedContent page = umbracoContext.Content.GetById(model.PageKey);
-            if (page == null) return NotFound("A page with the specified key could not be found.");
+            if (page == null) {
+                return NotFound("A page with the specified key could not be found.");
+            }
 
             // Get a reference to the entry
             FeedbackEntry entry = _feedbackService.GetEntryByKey(key);
-            if (entry == null) return NotFound("An entry with the specified key could not be found.");
+            if (entry == null) {
+                return NotFound("An entry with the specified key could not be found.");
+            }
 
             // TODO: Should we validate the entry against the specified site and page?
 

@@ -35,7 +35,10 @@ namespace Skybrud.Umbraco.Feedback.Models.Users {
             Description = user.Email;
             Language = user.Language;
 
-            if (string.IsNullOrWhiteSpace(user.Avatar)) return;
+            if (string.IsNullOrWhiteSpace(user.Avatar)) {
+                return;
+            }
+
             Avatar = user.Avatar.StartsWith("UserAvatars/") ? "/media/" + user.Avatar : user.Avatar;
 
         }

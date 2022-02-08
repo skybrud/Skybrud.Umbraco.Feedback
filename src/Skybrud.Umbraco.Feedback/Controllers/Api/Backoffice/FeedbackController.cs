@@ -12,7 +12,6 @@ using Skybrud.Umbraco.Feedback.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Net;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Security;
@@ -46,7 +45,9 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
         public object Archive(Guid key) {
 
             var entry = _feedbackService.GetEntryByKey(key);
-            if (entry == null) return NotFound();
+            if (entry == null) {
+                return NotFound();
+            }
 
             _feedbackService.Archive(entry);
 
@@ -58,7 +59,9 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
         public object Delete(Guid key) {
 
             var entry = _feedbackService.GetEntryByKey(key);
-            if (entry == null) return NotFound();
+            if (entry == null) {
+                return NotFound();
+            }
 
             _feedbackService.Delete(entry);
 
@@ -160,7 +163,9 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
                 }
 
                 IFeedbackUser user = null;
-                if (entry.Dto.AssignedTo != Guid.Empty) _feedbackService.TryGetUser(entry.Dto.AssignedTo, out user);
+                if (entry.Dto.AssignedTo != Guid.Empty) {
+                    _feedbackService.TryGetUser(entry.Dto.AssignedTo, out user);
+                }
 
                 var r = new RatingApiModel(er, _localizedTextService, culture);
                 var s = new StatusApiModel(es, _localizedTextService, culture);
@@ -174,7 +179,7 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
                 entries = new {
                     pagination = new {
                         page,
-                        pages = (int)Math.Ceiling(result.Total / (double)result.PerPage),
+                        pages = (int) Math.Ceiling(result.Total / (double) result.PerPage),
                         limit = result.PerPage,
                         total = result.Total,
                         offset = (result.Page - 1) * result.PerPage,
@@ -199,12 +204,19 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
             Guid entryKey = model.GetGuid("entry");
             Guid statusKey = model.GetGuid("status");
 
-            if (entryKey == Guid.Empty) return BadRequest();
-            if (statusKey == Guid.Empty) return BadRequest();
+            if (entryKey == Guid.Empty) {
+                return BadRequest();
+            }
+
+            if (statusKey == Guid.Empty) {
+                return BadRequest();
+            }
 
             // Get the entry
             FeedbackEntry entry = _feedbackService.GetEntryByKey(entryKey);
-            if (entry == null) return NotFound();
+            if (entry == null) {
+                return NotFound();
+            }
 
             // Get the site of the entry
             if (_feedbackService.TryGetSite(entry.SiteKey, out FeedbackSiteSettings site) == false) {
@@ -227,7 +239,9 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
             var siteModel = new SiteApiModel(site, _localizedTextService, culture);
 
             IFeedbackUser user = null;
-            if (entry.Dto.AssignedTo != Guid.Empty) _feedbackService.TryGetUser(entry.Dto.AssignedTo, out user);
+            if (entry.Dto.AssignedTo != Guid.Empty) {
+                _feedbackService.TryGetUser(entry.Dto.AssignedTo, out user);
+            }
 
             return new EntryApiModel(entry, siteModel, TryGetPage(entry.PageKey, out var page) ? page : null, s, r, user);
 
@@ -241,11 +255,15 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
             Guid entryKey = model.GetGuid("entry");
             Guid responsibleKey = model.GetGuid("responsible");
 
-            if (entryKey == Guid.Empty) return BadRequest();
+            if (entryKey == Guid.Empty) {
+                return BadRequest();
+            }
 
             // Get the entry
             FeedbackEntry entry = _feedbackService.GetEntryByKey(entryKey);
-            if (entry == null) return NotFound();
+            if (entry == null) {
+                return NotFound();
+            }
 
             // Get the site of the entry
             if (_feedbackService.TryGetSite(entry.SiteKey, out FeedbackSiteSettings site) == false) {

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Skybrud.Umbraco.Feedback.Migrations;
+﻿using Skybrud.Umbraco.Feedback.Migrations;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.Migrations;
 using Umbraco.Cms.Core.Scoping;

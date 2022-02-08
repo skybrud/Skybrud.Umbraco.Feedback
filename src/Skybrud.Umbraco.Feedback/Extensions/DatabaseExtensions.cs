@@ -14,7 +14,7 @@ namespace Skybrud.Umbraco.Feedback.Extensions {
 
             var result = database.Page<T>(page, itemsPerPage, sql);
 
-            total = (int)result.TotalItems;
+            total = (int) result.TotalItems;
 
             return result.Items.ToArray();
 

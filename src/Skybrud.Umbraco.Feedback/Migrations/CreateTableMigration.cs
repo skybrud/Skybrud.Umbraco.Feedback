@@ -9,7 +9,10 @@ namespace Skybrud.Umbraco.Feedback.Migrations {
         public CreateTableMigration(IMigrationContext context) : base(context) { }
 
         protected override void Migrate() {
-            if (TableExists(FeedbackConstants.TableName)) return;
+            if (TableExists(FeedbackConstants.TableName)) {
+                return;
+            }
+
             Create.Table<FeedbackEntrySchema>().Do();
         }
 

@@ -10,7 +10,9 @@ namespace Skybrud.Umbraco.Feedback.Migrations {
 
         protected override void Migrate() {
 
-            if (!TableExists(FeedbackConstants.TableName)) return;
+            if (!TableExists(FeedbackConstants.TableName)) {
+                return;
+            }
 
             int affected1 = Context.Database.Execute("UPDATE [SkybrudFeedback] SET [Name] = null WHERE [Name] LIKE '';");
             int affected2 = Context.Database.Execute("UPDATE [SkybrudFeedback] SET [Email] = null WHERE [Email] LIKE '';");
