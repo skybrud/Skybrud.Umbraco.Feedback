@@ -486,11 +486,25 @@ namespace Skybrud.Umbraco.Feedback.Services {
 
         }
 
-        #endregion
 
-        #region Private methods
-
+        /// <summary>
+        /// Deletes all entries older than the specified amount of <paramref name="days"/>.
+        /// </summary>
+        /// <param name="days">The amount of days.</param>
+        /// <returns>The amount of affected/deleted rows.</returns>
+        public int DeleteAll(int days) {
+            return DeleteAll(DateTime.Now.AddDays(-days));
+        }
         
+        /// <summary>
+        /// Deletes all entries before the specified <paramref name="date"/>.
+        /// </summary>
+        /// <param name="date">The date.</param>
+        /// <returns>The amount of affected/deleted rows.</returns>
+        public int DeleteAll(DateTime date) {
+            return _databaseService.DeleteAll(date);
+        }
+
         #endregion
 
     }

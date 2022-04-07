@@ -211,11 +211,12 @@ namespace Skybrud.Umbraco.Feedback.Services {
             using (var scope = _scopeProvider.CreateScope()) {
 
                 // Delete everything before the start of the day after "date"
-                Sql sql = new Sql($"DELETE FROM {FeedbackConstants.TableName} WHERE Created < '{date.Date.AddDays(1):yyyy-MM-dd}';");
+                Sql sql = new Sql($"DELETE FROM {FeedbackConstants.TableName} WHERE CreateDate < '{date.Date.AddDays(1):yyyy-MM-dd}';");
 
                 // Make the call to the database
                 affected = scope.Database.Execute(sql);
 
+                // Complete the scope
                 scope.Complete();
 
             }
