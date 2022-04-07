@@ -5,23 +5,25 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>3.0.0-alpha004</Version>
+    <Version>3.0.0</Version>
+    <Company>Limbo</Company>
     <Authors>Anders Bjerner</Authors>
-    <Company>Skybrud.dk</Company>
+    <Copyright>Copyright © 2022</Copyright>
     <Description>Small package introducing a feedback module for Umbraco 8.</Description>
-    <Copyright>Copyright © 2021</Copyright>
   </PropertyGroup>
 
+  <!-- Information for the NuGet package -->
   <PropertyGroup>
     <PackageId>Skybrud.Umbraco.Feedback</PackageId>
     <PackageTags>Skybrud, Umbraco, Feedback</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://packages.skybrud.dk/skybrud.umbraco.feedback/</PackageProjectUrl>
-    <PackageIconUrl>http://www.skybrud.dk/img/5431sk/icon/favicon.ico</PackageIconUrl>
+    <PackageIcon>Limbo.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/skybrud/Skybrud.Umbraco.Feedback</RepositoryUrl>
   </PropertyGroup>
 
+  <!-- Include NuGet dependencies -->
   <ItemGroup>
     <Reference Include="System.Web" />
     <PackageReference Include="Skybrud.Essentials" Version="1.1.24" />
@@ -33,13 +35,19 @@
     </PackageReference>
     <PackageReference Include="Skybrud.WebApi.Json" Version="1.0.4" />
   </ItemGroup>
-  
+
+  <!-- Include backoffice assets -->
   <ItemGroup>
     <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\**\*.css" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\**\*.html" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\**\*.js" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\Lang\*.xml" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\package.manifest" />
+  </ItemGroup>
+  
+  <!-- Include package icon for NuGet -->
+  <ItemGroup>
+    <Content Include="../build/Limbo.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(ConfigurationName)'=='Release' AND '$(BuildTools)'=='1'">
