@@ -39,9 +39,29 @@ namespace Skybrud.Umbraco.Feedback.Extensions {
         }
 
         /// <summary>
+        /// Attempts to get the parent site of the specified <paramref name="content"/>.
+        /// </summary>
+        /// <param name="collection">A collection with the registered feedback plugins.</param>
+        /// <param name="content">The content representing a page under the site.</param>
+        /// <param name="site">When this method returns, holds an instance of <see cref="FeedbackSiteSettings"/> representing the parent site if successful; otherwise, <see langword="null"/>.</param>
+        /// <returns><see langword="true"/> if successful; otherwise, <see langword="false"/>.</returns>
+        public static bool TryGetSite(this FeedbackPluginCollection collection, IContent content, out FeedbackSiteSettings site) {
+
+            foreach (IFeedbackPlugin plugin in collection) {
+                if (plugin.TryGetSite(content, out site)) {
+                    return true;
+                }
+            }
+
+            site = null;
+            return false;
+
+        }
+
+        /// <summary>
         /// Gets the content app for the specified <paramref name="content"/> item, or <c>null</c> if no feedback
         /// plugins provide a content app for <paramref name="content"/>.
-        /// 
+        ///
         /// The content app is found by asking each registered feedback plugin whether they provide a content app for
         /// <paramref name="content"/>. The method will return once it's finds the first provider that returns a
         /// content app.

@@ -42,7 +42,6 @@
     <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\**\*.html" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\**\*.js" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\Lang\*.xml" />
-    <Content Include="App_Plugins\Skybrud.Umbraco.Feedback\package.manifest" />
   </ItemGroup>
 
   <!-- Include the targets file -->

@@ -1,0 +1,197 @@
+﻿<div class="skybrud-feedback" ng-controller="Skybrud.Feedback.ContentAppPageController">
+    <div class="skybrud-feedback-options">
+        <div class="skybrud-feedback-filters">
+            <select ng-options="item as item.name for item in filters.ratings track by item.value" ng-model="selected.rating"></select>
+            <select ng-options="item as item.name for item in filters.users track by item.value" ng-model="selected.responsible"></select>
+            <select ng-options="item as item.name for item in filters.statuses track by item.value" ng-model="selected.status"></select>
+            <select ng-options="item as item.name for item in filters.types track by item.value" ng-model="selected.type"></select>
+        </div>
+        <div class="skybrud-feedback-actions">
+            <!--<a href="#" class="btn btn-default" ng-click="deleteAll()" prevent-default>
+                <i class="icon icon-trash"></i>
+                <localize key="feedback_btnCleaning">Cleaning</localize>
+            </a>-->
+            <button type="button" class="btn btn-default" ng-click="refresh()">
+                <i class="icon icon-refresh"></i>
+                <localize key="feedback_labelRefresh">Refresh</localize>
+            </button>
+        </div>
+    </div>
+    <table class="table list" ng-class="{loading: loading}">
+        <thead>
+            <tr>
+                <th>
+                    <a href="#" prevent-default="" ng-click="sort('rating', 'asc');"><localize key="feedback_labelRating">Rating</localize></a>
+                    <i class="icon" ng-class="{'icon-navigation-up': isSortDirection('rating', 'asc'), 'icon-navigation-down': isSortDirection('rating', 'desc')}"></i>
+                </th>
+                <th><localize key="feedback_labelResponsible">Responsible</localize></th>
+                <th><localize key="feedback_labelComment">Comment</localize></th>
+                <th>
+                    <a href="#" prevent-default="" ng-click="sort('status', 'asc');"><localize key="feedback_labelStatus">Status</localize></a>
+                    <i class="icon" ng-class="{'icon-navigation-up': isSortDirection('status', 'asc'), 'icon-navigation-down': isSortDirection('status', 'desc')}"></i>
+                </th>
+                <th>
+                    <a href="#" prevent-default="" ng-click="sort('createDate', 'desc');"><localize key="feedback_labelAdded">Added</localize></a>
+                    <i class="icon" ng-class="{'icon-navigation-up': isSortDirection('createDate', 'asc'), 'icon-navigation-down': isSortDirection('createDate', 'desc')}"></i>
+                </th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="entry in entries" ng-class="{expanded: entry.expanded}">
+            <tr ng-click="entry.expanded = !entry.expanded">
+                <td class="col col-rating">
+                    <div class="rating rating-{{entry.rating.alias}}">
+                        <span>{{entry.rating.name}}</span>
+                    </div>
+                </td>
+                <td class="col col-responsible">
+                    <span ng-show="entry.assignedTo">{{entry.assignedTo.name}}</span>
+                    <span ng-hide="entry.assignedTo"><em><localize key="feedback_labelNoResponsible">No responsible</localize></em></span>
+                </td>
+                <td class="col col-comment">
+                    <div ng-show="entry.comment"><localize key="feedback_labelYes">Yes</localize></div>
+                    <div ng-hide="entry.comment"><localize key="feedback_labelNo">No</localize></div>
+                </td>
+                <td class="col col-status">
+                    <div class="status status-{{entry.status.alias}}">
+                        <span>{{entry.status.name}}</span>
+                    </div>
+                </td>
+                <td class="col col-createDate">
+                    {{entry.createDate | date: 'dd-MM-yyyy HH:mm'}}
+                </td>
+            </tr>
+            <tr ng-show="entry.expanded">
+                <td colspan="6">
+                    <table class="table details">
+                        <tr>
+                            <th>ID</th>
+                            <td>{{entry.id}}</td>
+                        </tr>
+                        <tr>
+                            <th>Key</th>
+                            <td><code>{{entry.key}}</code></td>
+                        </tr>
+                        <tr>
+                            <th><localize key="feedback_labelPageTitle">Page Title</localize></th>
+                            <td>
+                                <span ng-show="entry.page">{{entry.page.name}}</span>
+                                <span ng-show="!entry.page"><em>The page no longer exists</em></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><localize key="feedback_labelPageUrl">URL</localize></th>
+                            <td>
+                                <span ng-show="entry.page">
+                                    {{entry.page.url}}
+                                </span>
+                                <span ng-show="!entry.page"><em>The page no longer exists</em></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><localize key="feedback_labelAssignedTo">Assigned to</localize></th>
+                            <td>
+                                <span ng-show="entry.assignedTo">
+                                    {{entry.assignedTo.name}}
+                                    <small ng-show="entry.assignedTo.description">({{entry.assignedTo.description}})</small>
+                                </span>
+                                <span ng-show="!entry.assignedTo"><em><localize key="feedback_labelNoResponsible">No responsible</localize></em></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><localize key="feedback_labelRating">Rating</localize></th>
+                            <td>
+                                <div class="rating rating-{{entry.rating.alias}}">
+                                    <span>{{entry.rating.name}}</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><localize key="feedback_labelName">Name</localize></th>
+                            <td>
+                                <span ng-show="entry.name">{{entry.name}}</span>
+                                <span ng-show="!entry.name"><em><localize key="feedback_labelNotSpecified">Not specified</localize></em></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><localize key="feedback_labelEmail">E-mail</localize></th>
+                            <td>
+                                <span ng-show="entry.email"><a href="mailto:{{entry.email}}">{{entry.email}}</a></span>
+                                <span ng-show="!entry.email"><em><localize key="feedback_labelNotSpecified">Not specified</localize></em></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><localize key="feedback_labelAdded">Added</localize></th>
+                            <td>{{entry.createDate | date: 'dd-MM-yyyy HH:mm'}}</td>
+                        </tr>
+                        <tr>
+                            <th><localize key="feedback_labelUpdateDate">Updated</localize></th>
+                            <td>{{entry.updateDate | date: 'dd-MM-yyyy HH:mm'}}</td>
+                        </tr>
+                        <tr>
+                            <th><localize key="feedback_labelStatus">Status</localize></th>
+                            <td>
+                                <div class="status status-{{entry.status.alias}}">
+                                    <span>{{entry.status.name}}</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><localize key="feedback_labelComment">Comment</localize></th>
+                            <td>
+                                <div ng-show="entry.comment" ng-repeat="line in entry.$comment track by $index">
+                                    <div style="min-height: 11px;">{{line}}</div>
+                                </div>
+                                <span ng-show="!entry.comment"><em><localize key="feedback_labelNotSpecified">Not specified</localize></em></span>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="options">
+                        <umb-button-group state="entry.archiveButton.state"
+                                          default-button="entry.archiveButton.defaultButton"
+                                          sub-buttons="entry.archiveButton.subButtons"
+                                          direction="down"
+                                          float="left">
+                        </umb-button-group>
+                        <button type="button" class="btn" ng-click="openSelectStatus(entry)"><localize key="feedback_btnSelectStatus">Select status</localize></button>
+                        <button type="button" class="btn" ng-click="openSelectResponsible(entry)"><localize key="feedback_btnSelectResponsible">Select responsible</localize></button>
+                        <a ng-show="entry.page" href="/umbraco/#/content/content/edit/{{entry.page.id}}" class="btn">
+                            <localize key="feedback_btnShowInUmbraco">Show in Umbraco</localize>
+                        </a>
+                        <a ng-show="entry.page" href="{{entry.page.url}}" target="_blank" class="btn">
+                            <localize key="feedback_btnShowAtWebsite">Show at website</localize>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="7">
+                    <div class="pull-left pagination pagination-left" style="margin: 0;">
+                        <div ng-show="pagination.page > 0 && pagination.total > 0">
+                            Viser {{pagination.offset + 1}}-{{pagination.offset + entries.length}} af {{pagination.total}} &ndash; Side {{pagination.page}} af {{pagination.pages}}
+                        </div>
+                    </div>
+                    <div class="pagination pagination-right" style="margin: 0;">
+                        <ul>
+                            <li ng-class="{disabled:pagination.page <= 1}">
+                                <button type="button" href="#" ng-click="prev()">
+                                    <localize key="general_previous">Previous</localize>
+                                </button>
+                            </li>
+                            <li ng-repeat="pgn in pagination.pagination" ng-class="{active: pgn.active}">
+                                <button type="button" ng-click="update(pgn.page)" prevent-default="">{{pgn.page}}</button>
+                            </li>
+                            <li ng-class="{disabled:pagination.page >= pagination.pages}" class="">
+                                <button type="button" href="#" ng-click="next()">
+                                    <localize key="general_next">Next</localize>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </th>
+            </tr>
+        </tfoot>
+    </table>
+    <umb-load-indicator ng-if="loading"></umb-load-indicator>
+</div>

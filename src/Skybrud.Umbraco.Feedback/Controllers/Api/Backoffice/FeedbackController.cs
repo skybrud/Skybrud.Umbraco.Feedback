@@ -199,6 +199,130 @@ namespace Skybrud.Umbraco.Feedback.Controllers.Api.Backoffice {
 
         }
 
+        public object GetEntriesForPage(Guid key, int page = 1, string sort = null, string order = null, string rating = null, string responsible = null, string status = null, string type = null) {
+
+            CultureInfo culture = new(_backOfficeSecurityAccessor.BackOfficeSecurity.CurrentUser.Language);
+
+            // Get a reference to the current page
+            IContent content = _contentService.GetById(key);
+            if (content is null) return NotFound("Page not found.");
+
+            // Attempt to find the parent site
+            if (!_feedbackService.TryGetSite(content, out FeedbackSiteSettings site)) return NotFound("Site not found.");
+
+            FeedbackGetEntriesOptions options = new() {
+                Page = page,
+                PerPage = 10,
+                PageKey = content.Key
+            };
+
+            switch (sort) {
+
+                case "rating":
+                    options.SortField = EntriesSortField.Rating;
+                    options.SortOrder = EnumUtils.ParseEnum(order, EntriesSortOrder.Asc);
+                    break;
+
+                case "status":
+                    options.SortField = EntriesSortField.Status;
+                    options.SortOrder = EnumUtils.ParseEnum(order, EntriesSortOrder.Asc);
+                    break;
+
+                default:
+                    options.SortField = EntriesSortField.CreateDate;
+                    options.SortOrder = EnumUtils.ParseEnum(order, EntriesSortOrder.Desc);
+                    break;
+
+            }
+
+
+            if (Guid.TryParse(rating, out Guid ratingKey)) {
+                options.Rating = ratingKey;
+            }
+
+            if (int.TryParse(responsible, out int responsibleId)) {
+                options.Responsible = _userService.GetUserById(responsibleId)?.Key;
+            } else if (Guid.TryParse(responsible, out Guid responsibleKey)) {
+                options.Responsible = responsibleKey;
+            }
+
+            if (Guid.TryParse(status, out Guid statusKey)) {
+                options.Status = statusKey;
+            }
+
+            options.Type = EnumUtils.ParseEnum(type, FeedbackEntryType.All);
+
+
+
+
+
+
+
+
+
+
+
+
+            var result = _feedbackService.GetEntries(options);
+
+            var siteModel = new SiteApiModel(site, _localizedTextService, culture);
+
+            List<EntryApiModel> entries = new List<EntryApiModel>();
+
+            Dictionary<Guid, PageApiModel> pages = new Dictionary<Guid, PageApiModel>();
+
+            foreach (var entry in result.Entries) {
+
+                if (!site.TryGetRating(entry.Dto.Rating, out var er)) {
+                    er = new FeedbackRating(entry.Dto.Rating, "not-found");
+                }
+
+                if (!site.TryGetStatus(entry.Dto.Status, out var es)) {
+                    es = new FeedbackStatus(entry.Dto.Status, "not-found");
+                }
+
+                if (!pages.TryGetValue(entry.PageKey, out PageApiModel pageModel) && _umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext)) {
+                    var c1 = umbracoContext.Content.GetById(entry.PageKey);
+                    if (c1 != null) {
+                        pages.Add(entry.PageKey, pageModel = new PageApiModel(c1));
+                    } else {
+                        var c2 = _contentService.GetById(entry.PageKey);
+                        if (c2 != null) {
+                            pages.Add(entry.PageKey, pageModel = new PageApiModel(c2));
+
+                        }
+                    }
+                }
+
+                IFeedbackUser user = null;
+                if (entry.Dto.AssignedTo != Guid.Empty) {
+                    _feedbackService.TryGetUser(entry.Dto.AssignedTo, out user);
+                }
+
+                var r = new RatingApiModel(er, _localizedTextService, culture);
+                var s = new StatusApiModel(es, _localizedTextService, culture);
+
+                entries.Add(new EntryApiModel(entry, siteModel, pageModel, s, r, user));
+
+            }
+
+            return new {
+                site = siteModel,
+                entries = new {
+                    pagination = new {
+                        page,
+                        pages = (int) Math.Ceiling(result.Total / (double) result.PerPage),
+                        limit = result.PerPage,
+                        total = result.Total,
+                        offset = (result.Page - 1) * result.PerPage,
+                    },
+                    sorting = new { field = options.SortField, order = options.SortOrder },
+                    data = entries
+                }
+            };
+
+        }
+
         [HttpGet]
         public object GetUsers() {
             return _feedbackService.GetUsers();

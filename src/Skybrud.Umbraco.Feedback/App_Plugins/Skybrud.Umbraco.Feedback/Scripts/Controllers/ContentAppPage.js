@@ -1,4 +1,4 @@
-﻿angular.module("umbraco").controller("Skybrud.Feedback.ContentAppController", function ($scope, $http, editorService, editorState, localizationService, notificationsService, userService) {
+﻿angular.module("umbraco").controller("Skybrud.Feedback.ContentAppPageController", function ($scope, $http, editorService, editorState, localizationService, notificationsService, userService) {
 
     $scope.current = editorState.current;
 
@@ -58,23 +58,23 @@
         if ($scope.pagination.page < $scope.pagination.pages) $scope.update($scope.pagination.page + 1);
     };
 
-    $scope.refresh = function() {
+    $scope.refresh = function () {
         $scope.update();
     };
 
-    $scope.openSelectStatus = function(entry) {
+    $scope.openSelectStatus = function (entry) {
         editorService.open({
             title: "Vælg status",
             size: "medium",
             view: "/App_Plugins/Skybrud.Umbraco.Feedback/Views/SelectStatus.html",
             entry: entry,
             submit: function (model) {
-                Object.keys(model.entry).forEach(function(key) {
+                Object.keys(model.entry).forEach(function (key) {
                     entry[key] = model.entry[key];
                 });
                 editorService.close();
             },
-            close: function() {
+            close: function () {
                 editorService.close();
             }
         });
@@ -243,7 +243,7 @@
         localizationService.localizeMany(labelKeys).then(function (data) {
 
             // Update the labels object
-            labelKeys.forEach(function(key, index) {
+            labelKeys.forEach(function (key, index) {
                 $scope.labels[key.substr(9)] = data[index];
             });
 
@@ -287,7 +287,7 @@
         if ($scope.selected.status.value) params.status = $scope.selected.status.value;
         if ($scope.selected.type.value) params.type = $scope.selected.type.value;
 
-        $http.get("/umbraco/backoffice/Skybrud/FeedbackAdmin/GetEntriesForSite", { params: params }).then(function (res) {
+        $http.get("/umbraco/backoffice/Skybrud/FeedbackAdmin/GetEntriesForPage", { params: params }).then(function (res) {
 
             setSite(res.data.site);
 

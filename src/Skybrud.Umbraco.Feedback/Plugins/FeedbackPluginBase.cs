@@ -120,6 +120,17 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         }
 
         /// <summary>
+        /// Attempts to get the parent site of the specified <paramref name="content"/>.
+        /// </summary>
+        /// <param name="content">The content representing a page under the site.</param>
+        /// <param name="site">When this method returns, holds an instance of <see cref="FeedbackSiteSettings"/> representing the parent site if successful; otherwise, <see langword="null"/>.</param>
+        /// <returns><see langword="true"/> if successful; otherwise, <see langword="false"/>.</returns>
+        public virtual bool TryGetSite(IContent content, out FeedbackSiteSettings site) {
+            site = null;
+            return false;
+        }
+
+        /// <summary>
         /// Returns the user with the specified <paramref name="userId"/>, or <c>null</c> if not found.
         /// </summary>
         /// <param name="userId">The ID of the user.</param>
@@ -175,7 +186,6 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
                 Icon = "icon-chat",
                 View = "/App_Plugins/Skybrud.Umbraco.Feedback/Views/ContentApp.html",
                 ViewModel = new {
-                    mode = "site",
                     siteKey = site.Key
                 }
             };
@@ -195,9 +205,8 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
                 Alias = "skybrud-feedback",
                 Name = "Feedback",
                 Icon = "icon-chat",
-                View = "/App_Plugins/Skybrud.Umbraco.Feedback/Views/ContentApp.html",
+                View = "/App_Plugins/Skybrud.Umbraco.Feedback/Views/ContentAppPage.html",
                 ViewModel = new {
-                    mode = "page",
                     siteKey = site.Key,
                     pageKey = page.Key
                 }

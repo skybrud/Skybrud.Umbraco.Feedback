@@ -16,6 +16,7 @@ namespace Skybrud.Umbraco.Feedback.Manifests {
                 BundleOptions = BundleOptions.Independent,
                 Scripts = new[] {
                     $"/App_Plugins/{FeedbackPackage.Alias}/Scripts/Controllers/ContentApp.js",
+                    $"/App_Plugins/{FeedbackPackage.Alias}/Scripts/Controllers/ContentAppPage.js",
                     $"/App_Plugins/{FeedbackPackage.Alias}/Scripts/Controllers/SelectStatus.js",
                     $"/App_Plugins/{FeedbackPackage.Alias}/Scripts/Controllers/SelectResponsible.js"
                 },

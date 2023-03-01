@@ -9,6 +9,7 @@ using Skybrud.Umbraco.Feedback.Models.Sites;
 using Skybrud.Umbraco.Feedback.Models.Statuses;
 using Skybrud.Umbraco.Feedback.Models.Users;
 using Skybrud.Umbraco.Feedback.Plugins;
+using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 
 namespace Skybrud.Umbraco.Feedback.Services {
@@ -54,6 +55,16 @@ namespace Skybrud.Umbraco.Feedback.Services {
         /// <returns><c>true</c> if a site was found; otherwise, <c>false</c>.</returns>
         public bool TryGetSite(Guid key, out FeedbackSiteSettings site) {
             return Plugins.TryGetSite(key, out site);
+        }
+
+        /// <summary>
+        /// Attempts to get the parent site of the specified <paramref name="content"/>.
+        /// </summary>
+        /// <param name="content">The content representing a page under the site.</param>
+        /// <param name="site">When this method returns, holds an instance of <see cref="FeedbackSiteSettings"/> representing the parent site if successful; otherwise, <see langword="null"/>.</param>
+        /// <returns><see langword="true"/> if successful; otherwise, <see langword="false"/>.</returns>
+        public bool TryGetSite(IContent content, out FeedbackSiteSettings site) {
+            return Plugins.TryGetSite(content, out site);
         }
 
         /// <summary>

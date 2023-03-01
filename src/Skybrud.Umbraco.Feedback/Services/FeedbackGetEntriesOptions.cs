@@ -13,6 +13,11 @@ namespace Skybrud.Umbraco.Feedback.Services {
         public Guid SiteKey { get; set; }
 
         /// <summary>
+        /// Gets or sets the key (GUID) of a specific page.
+        /// </summary>
+        public Guid PageKey { get; set; }
+
+        /// <summary>
         /// Gets or sets the page to be returned.
         /// </summary>
         public int Page { get; set; }

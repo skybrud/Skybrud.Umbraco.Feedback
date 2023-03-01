@@ -106,6 +106,14 @@ namespace Skybrud.Umbraco.Feedback.Plugins {
         bool TryGetSite(Guid key, out FeedbackSiteSettings site);
 
         /// <summary>
+        /// Attempts to get the parent site of the specified <paramref name="content"/>.
+        /// </summary>
+        /// <param name="content">The content representing a page under the site.</param>
+        /// <param name="site">When this method returns, holds an instance of <see cref="FeedbackSiteSettings"/> representing the parent site if successful; otherwise, <see langword="null"/>.</param>
+        /// <returns><see langword="true"/> if successful; otherwise, <see langword="false"/>.</returns>
+        bool TryGetSite(IContent content, out FeedbackSiteSettings site);
+
+        /// <summary>
         /// Returns the user with the specified <paramref name="userId"/>, or <c>null</c> if not found.
         /// </summary>
         /// <param name="userId">The ID of the user.</param>

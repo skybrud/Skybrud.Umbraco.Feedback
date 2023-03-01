@@ -112,6 +112,10 @@ namespace Skybrud.Umbraco.Feedback.Services {
                     sql = sql.Where<FeedbackEntryDto>(x => x.SiteKey == options.SiteKey);
                 }
 
+                if (options.PageKey != Guid.Empty) {
+                    sql = sql.Where<FeedbackEntryDto>(x => x.PageKey == options.PageKey);
+                }
+
                 switch (options.SortField) {
 
                     case EntriesSortField.Rating:
