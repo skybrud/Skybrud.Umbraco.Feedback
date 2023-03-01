@@ -38,7 +38,7 @@
     <key alias="btnSelectStatus">Vælg status</key>
     <key alias="btnSelectResponsible">Vælg ansvarlig</key>
     <key alias="btnShowInUmbraco">Vis i Umbraco</key>
-    <key alias="btnShowAtWebsite">Vis på hjemmesiden website</key>
+    <key alias="btnShowAtWebsite">Vis på hjemmesiden</key>
   </area>
   <area alias="feedback">
     <key alias="labelAllRatings">Alle bedømmelser</key>
