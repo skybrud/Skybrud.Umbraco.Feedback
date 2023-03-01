@@ -4,13 +4,15 @@
     <LangVersion>9.0</LangVersion>
     <TargetFramework>net5.0</TargetFramework>
     <ContentTargetFolders>content</ContentTargetFolders>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>4.0.0-alpha001</Version>
+    <VersionPrefix>4.0.0-alpha001</VersionPrefix>
+    <VersionSuffix Condition="'$(Configuration)'=='Debug'">build$([System.DateTime]::UtcNow.ToString(`yyyyMMddHHmm`))</VersionSuffix>
     <Company>Limbo</Company>
     <Authors>Anders Bjerner</Authors>
-    <Copyright>Copyright © 2022</Copyright>
+    <Copyright>Copyright © $([System.DateTime]::UtcNow.ToString(`yyyy`))</Copyright>
     <Title>Skybrud Feedback</Title>
     <Description>Feedback module for Umbraco 9.</Description>
   </PropertyGroup>
